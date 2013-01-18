@@ -24,9 +24,12 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
 
-@SuppressWarnings({"serial", "deprecation"})
 public class PublicacaoView extends Panel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private GridLayout		 layoutPanel;
 	private AbsoluteLayout 	 layoutButton;
 	private	VerticalLayout	 verticalLayout;
