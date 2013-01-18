@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 import com.midiasocial.controller.PublicacaoController;
 import com.midiasocial.model.Publicacao;
-import com.restfb.types.Post;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbsoluteLayout;
