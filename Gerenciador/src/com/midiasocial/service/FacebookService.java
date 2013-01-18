@@ -260,7 +260,7 @@ public class FacebookService {
 			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
 			FacebookType publishMessageResponse = facebookClient.publish(pub.getIdDestino() + "/feed", FacebookType.class,
 					Parameter.with("message", pub.getMensagem()));
-			
+				
 			 Post post = getPostById(publishMessageResponse.getId(), usuario);
 			 
 			 pub.setIdMidia(post.getId());

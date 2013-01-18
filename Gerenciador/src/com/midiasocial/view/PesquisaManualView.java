@@ -260,8 +260,7 @@ public class PesquisaManualView extends VerticalLayout {
                             // Replace links
                             String regex = "(\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
 
-                            value = text.replaceAll(regex,
-                                    "<a target=\"_blank\" href=\"$1\">$1</a>");
+                            value = text.replaceAll(regex, "<a target=\"_blank\" href=\"$1\">$1</a>");
 
                             Label lbl = new Label(value.toString(),
                                     Label.CONTENT_RAW);
