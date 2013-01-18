@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory name="">
+   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+  <property name="hibernate.connection.password"/>
+  <property name="hibernate.connection.url">jdbc:mysql://localhost/gerenciadorteste</property>
+  <property name="hibernate.connection.username">root</property>
+  <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+  <property name="hibernate.show_sql">true</property>
+  <property name="hibernate.use_sql_comments">true</property>
+  <property name="hibernate.format_sql">true</property>
+  <property name="hibernate.hbm2ddl.auto">update</property>
+  <property name="hibernate.jdbc.batch_size">20</property>
+  <property name="hibernate.cache.use_second_level_cache">false</property>
+  <property name="hibernate.current_session_context_class">thread</property>
+  <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+  <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+  <property name="hibernate.current_session_context_class">org.hibernate.context.ThreadLocalSessionContext</property>  
+  <mapping class="com.usuario.model.Usuario"/>
+  <mapping class="com.login.model.Login"/>
+  <mapping class="com.funcionario.model.Funcionario"/>
+  <mapping class="com.endereco.model.Endereco"/>
+  <mapping class="com.telefone.model.TelefoneContato"/>
+  <mapping class="com.contato.model.Contato"/>
+  <mapping class="com.midiasocial.model.MidiaSocial"/>
+   <mapping class="com.auditor.model.CentroCusto"/>
+  <mapping class="com.auditor.model.Organizacao"/>
+  <mapping class="com.auditor.model.Unidade"/>
+  <mapping class="com.auditor.model.Departamento"/>
+  <mapping class="com.auditor.model.contato.Telefone"/>
+  <mapping class="com.auditor.model.ReferenciaServico"/>
+  <mapping class="com.auditor.model.contato.PrestadoraTelefonia"/>
+  <mapping class="com.auditor.model.contato.EnderecoAuditor"/>
+  <mapping class="com.auditor.model.Conta"/>
+  <mapping class="com.auditor.model.TipoServico"/>
+  <mapping class="com.auditor.model.PalavraChave"/>
+  <mapping class="com.auditor.model.Medida"/>
+  <mapping class="com.auditor.model.ItemConta"/>
+  <mapping class="com.dispositivo.model.Dispositivo"/>
+  <mapping class="com.regiao.model.Regiao"/>
+  <mapping class="com.regiao.model.AreaCobertura"/>
+  <mapping class="com.cliente.model.Cliente"/>
+  <mapping class="com.ticket.model.Anexo"/>
+  <mapping class="com.ticket.model.Nota"/>
+  <mapping class="com.ticket.model.Ordem"/>
+  <mapping class="com.ticket.model.Prioridade"/>
+  <mapping class="com.ticket.model.Mensagem"/>
+  <mapping class="com.ticket.model.Topico"/>
+  <mapping class="com.midiasocial.model.UsuarioAppMidiaSocial"/>
+  <mapping class="com.midiasocial.model.UsuarioPubMidiaSocial"/>
+  <mapping class="com.midiasocial.model.Publicacao"/>
+  <mapping class="com.midiasocial.model.Comentario"/>
+  <mapping class="com.midiasocial.model.Servico"/>
+  <mapping class="com.midiasocial.model.AplicacaoMidiaSocial"/>
+  <mapping class="com.midiasocial.model.Criterio"/>
+  <mapping class="com.midiasocial.model.PalavraChaveMidia"/>
+  <mapping class="com.midiasocial.model.ResultadoBusca"/>
+  </session-factory>
+</hibernate-configuration>

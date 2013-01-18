@@ -1,0 +1,173 @@
+@import "../reindeer/styles.css";
+
+@import "button/button.css";
+@import "window/window.css";
+@import "layout/layout.css";
+
+
+.v-sa .v-app,
+.v-sa .v-window,
+.v-sa .v-popupview-popup,
+.v-sa .v-tooltip,
+.v-sa .v-app input,
+.v-sa .v-app select,
+.v-sa .v-app button,
+.v-sa .v-app textarea,
+.v-sa .v-window input,
+.v-sa .v-window select,
+.v-sa .v-window button,
+.v-sa .v-window textarea,
+.v-sa .v-popupview-popup input,
+.v-sa .v-popupview-popup select,
+.v-sa .v-popupview-popup button,
+.v-sa .v-popupview-popup textarea,
+.v-sa .v-filterselect-suggestpopup,
+.v-sa .v-datefield-popup,
+.v-sa .v-contextmenu,
+.v-Notification,
+.v-menubar-submenu {
+	font-family: Arial, Helvetica, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
+}
+
+.v-table-components-inside .v-table-cell-content {
+ height: 54px;
+}
+.selecionado{
+ background-color:#bcd0de;
+}
+
+ .normal{
+ background-color:#eaf1f4;
+}
+
+/**
+ * Green 
+ */
+ 
+/* For month view */
+.v-calendar .v-calendar-event-color1 {
+        color: #4f8324;
+        }
+.v-calendar .v-calendar-event-color1-all-day {
+        background-color: #61c114;
+        }
+ 
+/* For week/day view */
+.v-calendar .v-calendar-event-color1 .v-calendar-event-caption {
+        color: #4f8324;
+        }
+.v-calendar .v-calendar-event-color1 .v-calendar-event-content {
+        border-color: #61c114;
+        background-color: #daff70;
+        }
+ 
+ 
+/**
+ * Blue 
+ */
+ 
+/* For month view */
+.v-calendar .v-calendar-event-color2 {
+        color: #1c4b8b;
+        }
+.v-calendar .v-calendar-event-color2-all-day {
+        background-color: #0a56bc;
+        }
+ 
+/* For week/day view */
+.v-calendar .v-calendar-event-color2 .v-calendar-event-caption {
+        color: #1c4b8b;
+        }
+.v-calendar .v-calendar-event-color2 .v-calendar-event-content {
+        border-color: #0a56bc;
+        background-color: #529bff;
+        }
+ 
+ 
+/**
+ * Red 
+ */
+ 
+/* For month view */
+.v-calendar .v-calendar-event-color3 {
+        color: #831d1d;
+        }
+.v-calendar .v-calendar-event-color3-all-day {
+        background-color: #bd1a1a;
+        }
+ 
+/* For week/day view */
+.v-calendar .v-calendar-event-color3 .v-calendar-event-caption {
+        color: #831d1d;
+        }
+.v-calendar .v-calendar-event-color3 .v-calendar-event-content {
+        border-color: #bd1a1a;
+        background-color: #ff9d9d;
+        }
+ 
+/** CALENDAR STYLE **/
+/**
+
+ * Orange 
+ */
+ 
+/* For month view */
+.v-calendar .v-calendar-event-color4 {
+        color: #8b5923;
+        }
+.v-calendar .v-calendar-event-color4-all-day {
+        background-color: #cd6a00;
+        }
+ 
+/* For week/day view */
+.v-calendar .v-calendar-event-color4 .v-calendar-event-caption {
+        color: #8b5923;
+        }
+.v-calendar .v-calendar-event-color4 .v-calendar-event-content {
+        border-color: #cd6a00;
+        background-color: #faa345;
+        }
+        
+.v-panel-nota .v-panel-captionwrap {
+	background: #1c4b8b;
+	font-size: 1.2em;
+	border: 1px solid #b3b3b3;
+	border-bottom: none;
+	padding: .2em .6em;
+	}
+
+.v-panel-mensagem .v-panel-captionwrap {
+	background: #b9dcff;
+	font-size: 1.2em;
+	border: 1px solid #b3b3b3;
+	border-bottom: none;
+	padding: .2em .6em;
+	}
+.v-panel-nota .v-panel-caption-nota {
+	background: #1c4b8b;
+	font-size: 1.2em;
+	border: none;
+	border-bottom: none;
+	padding: .2em .6em;
+	}
+	
+.v-panel-mensagem .v-panel-caption-mensagem {
+	background: #b9dcff;
+	font-size: 1.2em;
+	border: none;
+	border-bottom: none;
+	padding: .2em .6em;
+	}
+
+.v-panel-nocaption-nota {
+	padding: 0;
+	margin: 0;
+	border: none;
+	}
+	
+	
+.v-panel-nocaption-mensagem {
+	padding: 0;
+	margin: 0;
+	border: none;
+	}

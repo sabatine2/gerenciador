@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="teste" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.9487171000000134"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="1031"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#A9A9A9">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="New Dataset 1">
+		<parameter name="parameter1" class="java.lang.String"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT
+     itensdespesas.`idi` AS itensdespesas_idi,
+     itensdespesas.`deducao` AS itensdespesas_deducao,
+     itensdespesas.`nome` AS itensdespesas_nome,
+     itensdespesas.`obervacao` AS itensdespesas_obervacao,
+     itensdespesas.`valor` AS itensdespesas_valor,
+     itensdespesas.`id` AS itensdespesas_id
+FROM
+     `itensdespesas` itensdespesas]]>
+		</queryString>
+		<field name="itensdespesas_deducao" class="java.lang.Double"/>
+		<field name="itensdespesas_nome" class="java.lang.String"/>
+		<field name="itensdespesas_obervacao" class="java.lang.String"/>
+		<field name="itensdespesas_valor" class="java.lang.Double"/>
+		<group name="itensdespesas_nome">
+			<groupExpression><![CDATA[$F{itensdespesas_nome}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="id" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     despesas.`id` AS despesas_id,
+     despesas.`adianRecebido` AS despesas_adianRecebido,
+     despesas.`agencia` AS despesas_agencia,
+     despesas.`banco` AS despesas_banco,
+     despesas.`centroDeCusto` AS despesas_centroDeCusto,
+     despesas.`cidadeDestino` AS despesas_cidadeDestino,
+     despesas.`dataAprovacao` AS despesas_dataAprovacao,
+     despesas.`dataCriacao` AS despesas_dataCriacao,
+     despesas.`dataFinal` AS despesas_dataFinal,
+     despesas.`dataInicio` AS despesas_dataInicio,
+     despesas.`dataLiberacao` AS despesas_dataLiberacao,
+     despesas.`deducaoGasto` AS despesas_deducaoGasto,
+     despesas.`motivoDaViagemImplantacao` AS despesas_motivoDaViagemImplantacao,
+     despesas.`motivoDaViagemInstalacao` AS despesas_motivoDaViagemInstalacao,
+     despesas.`motivoDaViagemOutros` AS despesas_motivoDaViagemOutros,
+     despesas.`motivoDaViagemProspec` AS despesas_motivoDaViagemProspec,
+     despesas.`motivoDaViagemTreinamento` AS despesas_motivoDaViagemTreinamento,
+     despesas.`nConta` AS despesas_nConta,
+     despesas.`nomeInterno` AS despesas_nomeInterno,
+     despesas.`observacao` AS despesas_observacao,
+     despesas.`outros` AS despesas_outros,
+     despesas.`saldo` AS despesas_saldo,
+     despesas.`saldoFinal` AS despesas_saldoFinal,
+     despesas.`status` AS despesas_status,
+     despesas.`totalGasto` AS despesas_totalGasto,
+     despesas.`cpf` AS despesas_cpf,
+     itensdespesas.`idi` AS itensdespesas_idi,
+     itensdespesas.`deducao` AS itensdespesas_deducao,
+     itensdespesas.`nome` AS itensdespesas_nome,
+     itensdespesas.`obervacao` AS itensdespesas_obervacao,
+     itensdespesas.`valor` AS itensdespesas_valor,
+     itensdespesas.`id` AS itensdespesas_id,
+     usuario.`cpf` AS usuario_cpf,
+     usuario.`nivel` AS usuario_nivel,
+     usuario.`nome` AS usuario_nome,
+     usuario.`senha` AS usuario_senha
+FROM
+     `despesas` despesas INNER JOIN `itensdespesas` itensdespesas ON  $P{id}= itensdespesas.`id`
+     INNER JOIN `usuario` usuario ON despesas.`cpf` = usuario.`cpf`
+WHERE despesas.`id` = $P{id}]]>
+	</queryString>
+	<field name="despesas_id" class="java.lang.Long"/>
+	<field name="despesas_adianRecebido" class="java.lang.Double"/>
+	<field name="despesas_agencia" class="java.lang.String"/>
+	<field name="despesas_banco" class="java.lang.String"/>
+	<field name="despesas_centroDeCusto" class="java.lang.String"/>
+	<field name="despesas_cidadeDestino" class="java.lang.String"/>
+	<field name="despesas_dataAprovacao" class="java.sql.Timestamp"/>
+	<field name="despesas_dataCriacao" class="java.sql.Timestamp"/>
+	<field name="despesas_dataFinal" class="java.sql.Timestamp"/>
+	<field name="despesas_dataInicio" class="java.sql.Timestamp"/>
+	<field name="despesas_dataLiberacao" class="java.sql.Timestamp"/>
+	<field name="despesas_deducaoGasto" class="java.lang.Double"/>
+	<field name="despesas_motivoDaViagemImplantacao" class="java.lang.Boolean"/>
+	<field name="despesas_motivoDaViagemInstalacao" class="java.lang.Boolean"/>
+	<field name="despesas_motivoDaViagemOutros" class="java.lang.Boolean"/>
+	<field name="despesas_motivoDaViagemProspec" class="java.lang.Boolean"/>
+	<field name="despesas_motivoDaViagemTreinamento" class="java.lang.Boolean"/>
+	<field name="despesas_nConta" class="java.lang.String"/>
+	<field name="despesas_nomeInterno" class="java.lang.String"/>
+	<field name="despesas_observacao" class="java.lang.String"/>
+	<field name="despesas_outros" class="java.lang.String"/>
+	<field name="despesas_saldo" class="java.lang.Double"/>
+	<field name="despesas_saldoFinal" class="java.lang.Double"/>
+	<field name="despesas_status" class="java.lang.String"/>
+	<field name="despesas_totalGasto" class="java.lang.Double"/>
+	<field name="despesas_cpf" class="java.lang.Long"/>
+	<field name="itensdespesas_idi" class="java.lang.Long"/>
+	<field name="itensdespesas_deducao" class="java.lang.Double"/>
+	<field name="itensdespesas_nome" class="java.lang.String"/>
+	<field name="itensdespesas_obervacao" class="java.lang.String"/>
+	<field name="itensdespesas_valor" class="java.lang.Double"/>
+	<field name="itensdespesas_id" class="java.lang.Long"/>
+	<field name="usuario_cpf" class="java.lang.Long"/>
+	<field name="usuario_nivel" class="java.lang.String"/>
+	<field name="usuario_nome" class="java.lang.String"/>
+	<field name="usuario_senha" class="java.lang.String"/>
+	<variable name="itensdespesas_obervacao_1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{itensdespesas_obervacao}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="89" splitType="Stretch">
+			<image>
+				<reportElement x="1" y="5" width="359" height="77"/>
+				<imageExpression><![CDATA["C:\\Users\\Victor\\Downloads\\logo-large.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="244" y="27" width="286" height="41"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Gerenciador de Despesas]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="85" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="1" y="2" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="213" y="3" width="1" height="82"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="1" y="2" width="1" height="84"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="553" y="2" width="1" height="84"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="533" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1 ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+			<rectangle>
+				<reportElement x="0" y="256" width="277" height="90"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="277" y="256" width="278" height="90"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="8" y="164" width="12" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="8" y="189" width="12" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="284" y="164" width="12" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="192" y="164" width="12" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="100" y="164" width="12" height="12"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="1" y="5" width="553" height="33" backcolor="#999999"/>
+			</rectangle>
+			<line>
+				<reportElement x="1" y="38" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="2" y="39" width="42" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ NOME:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="5" width="1" height="210"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="1" y="72" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="553" y="5" width="2" height="210"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="243" y="39" width="1" height="33"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="396" y="39" width="1" height="33"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="397" y="39" width="108" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ CENTRO DE CUSTO:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="106" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="2" y="73" width="103" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ DESTINO CIDADES:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="138" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="2" y="107" width="71" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ DATA INÍCIO:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="268" y="106" width="1" height="33"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="269" y="107" width="71" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ DATA FINAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="139" width="114" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ MOTIVO DA VIAGEM:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="163" width="60" height="17"/>
+				<textElement/>
+				<text><![CDATA[Prospecção]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="116" y="163" width="60" height="17"/>
+				<textElement/>
+				<text><![CDATA[Instalação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="208" y="163" width="60" height="17"/>
+				<textElement/>
+				<text><![CDATA[Implantação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="163" width="60" height="17"/>
+				<textElement/>
+				<text><![CDATA[Treinamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="188" width="60" height="17"/>
+				<textElement/>
+				<text><![CDATA[Outros]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="214" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="89" y="204" width="394" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="244" y="39" width="34" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ CPF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="9" width="84" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DADOS INICIAIS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="4" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="11" y="58" width="228" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{usuario_nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="253" y="58" width="76" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{usuario_cpf}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="91" width="542" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_cidadeDestino}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="124" width="117" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_dataInicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="278" y="124" width="112" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_dataFinal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="406" y="58" width="147" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_centroDeCusto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="99" y="190" width="384" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_outros}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="103" y="165" width="12" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{despesas_motivoDaViagemInstalacao}.equals(true) ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="190" width="12" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{despesas_motivoDaViagemOutros}.equals(true) ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="165" width="12" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{despesas_motivoDaViagemTreinamento}.equals(true) ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="165" width="12" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{despesas_motivoDaViagemProspec}.equals(true) ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="195" y="165" width="12" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{despesas_motivoDaViagemImplantacao}.equals(true) ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="192" y="387" width="118" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Nº CONTA CORRENTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="387" width="131" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ DATA DE LIBERAÇÃO DO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="336" y="401" width="89" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[      PAGAMENTO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="177" y="493" width="163" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_nomeInterno}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="422" width="555" height="33" backcolor="#999999"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="201" y="405" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_nConta}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="355" width="555" height="33" backcolor="#999999"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="97" y="387" width="55" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ AGÊNCIA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="239" y="426" width="76" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ASSINATURAS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="191" y="388" width="1" height="33"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="340" y="455" width="1" height="51"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="2" y="455" width="71" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ CONSULTOR]]></text>
+			</staticText>
+			<line>
+				<reportElement x="167" y="456" width="1" height="51"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="-1" y="355" width="1" height="152"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="319" y="388" width="1" height="33"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="463" y="406" width="77" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_dataLiberacao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="355" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="1" y="387" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="554" y="355" width="1" height="151"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="1" y="387" width="43" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ BANCO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="168" y="455" width="58" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ GESTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="455" width="189" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ ÁREA FINANCEIRA / AUTORIZAÇÃO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="506" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="11" y="406" width="82" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_banco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="106" y="406" width="80" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_agencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="491" width="62" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{usuario_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="257" y="358" width="41" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECIBO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="96" y="388" width="1" height="33"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement x="0" y="223" width="555" height="33" backcolor="#999999"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="257" y="226" width="41" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GASTOS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="287" width="277" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="317" width="277" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="277" y="303" width="278" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="2" y="257" width="103" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE GASTOS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="288" width="88" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ADIANTAMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="318" width="55" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEDUÇÃO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="257" width="41" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="304" width="71" height="15"/>
+				<textElement textAlignment="Justified">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO FINAL:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="336" y="328" width="115" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_saldoFinal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="335" y="285" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_saldo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="300" width="143" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_adianRecebido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="270" width="118" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_totalGasto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="328" width="136" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{despesas_deducaoGasto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="32" backcolor="#999999"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="32" y="5" width="51" height="20"/>
+				<textElement/>
+				<text><![CDATA[DESPESA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="393" y="5" width="77" height="20"/>
+				<textElement/>
+				<text><![CDATA[OBSERVAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="188" y="5" width="38" height="20"/>
+				<textElement/>
+				<text><![CDATA[VALOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="5" width="52" height="20"/>
+				<textElement/>
+				<text><![CDATA[DEDUÇÃO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="166" y="0" width="1" height="32"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="263" y="0" width="1" height="32"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="361" y="0" width="1" height="32"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="25"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="372" y="5" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{itensdespesas_obervacao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="177" y="5" width="82" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{itensdespesas_valor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="274" y="5" width="78" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{itensdespesas_deducao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="5" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{itensdespesas_nome}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="166" y="0" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="263" y="0" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="361" y="0" width="1" height="25"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="31" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="8" width="555" height="23" backcolor="#999999"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="23" y="17" width="100" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="538" y="17" width="14" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="45" splitType="Stretch"/>
+	</summary>
+</jasperReport>
