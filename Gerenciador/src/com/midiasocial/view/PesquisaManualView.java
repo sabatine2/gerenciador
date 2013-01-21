@@ -127,6 +127,7 @@ public class PesquisaManualView extends VerticalLayout {
 				}
 			}
 		});
+        
         addGeneratedColumnsToTable();
         setTableContainer(publicacaoAdapter);
 

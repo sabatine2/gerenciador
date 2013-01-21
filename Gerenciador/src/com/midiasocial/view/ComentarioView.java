@@ -6,6 +6,8 @@ import com.restfb.types.Comment;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
@@ -13,7 +15,7 @@ import com.vaadin.ui.Button.ClickEvent;
 @SuppressWarnings({"serial", "deprecation", "unused"})
 public class ComentarioView extends HorizontalLayout{
 
-	private TextArea		textAComments;
+	private Panel           panelMensagem;
 	private VerticalLayout 	commentsButton;
 	private Button			like;
 	private Button			remover;
@@ -28,13 +30,10 @@ public class ComentarioView extends HorizontalLayout{
 		setMargin(true, false, false, false);
 		setSpacing(true);
 			
-		//TextArea
-		textAComments = new TextArea();
-		textAComments.setWidth("725px");
-		textAComments.setHeight("52px");
-		textAComments.setImmediate(true);
-		
-		addComponent(textAComments);
+		panelMensagem = new Panel();
+		panelMensagem.setWidth("740px");
+		panelMensagem.setHeight("-1px");
+	 	addComponent(panelMensagem);
 			
 		//Layout buttons
 		commentsButton = new VerticalLayout();
@@ -80,17 +79,14 @@ public class ComentarioView extends HorizontalLayout{
 		addComponent(commentsButton);
 	}
 	
-	public void showComments(Comment comment){
-	
-		textAComments.setValue(comment.getMessage());
-		textAComments.setCaption(comment.getFrom().getName().toString() + "   -   "
-		+ comment.getCreatedTime().toLocaleString());
-	}
-
 	public void carregarComentario(Comentario comentario){
 		
-		textAComments.setValue(comentario.getMensagem());
-		textAComments.setCaption(comentario.getNomeUsuario() + "   -   "
+		String text = comentario.getMensagem();
+		String regex = "(\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
+		text.replaceAll(regex, "<a target=\"_blank\" href=\"$1\">$1</a>");
+		Label labelMensagem = new Label(text,Label.CONTENT_RAW);
+		panelMensagem.addComponent(labelMensagem);
+		panelMensagem.setCaption(comentario.getNomeUsuario() + "   -   "
 		+ comentario.getDataCriacaoMidia());
 	}
 	

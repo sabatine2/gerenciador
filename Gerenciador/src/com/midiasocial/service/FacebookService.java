@@ -152,7 +152,6 @@ public class FacebookService {
 			com.alterar();
 			
 		} catch (FacebookNetworkException fe) {
-			
 			com.setCurtirOffline(true);
 			com.alterar();
 		}
@@ -249,181 +248,28 @@ public class FacebookService {
 		}
 	}
 	
-	public void atualizarPublicacaoOff(UsuarioAppMidiaSocial usuario){
-		
-		List<Publicacao> listPub = Publicacao.listOffPublicacao();
-		
-		for (int i = 0; i < listPub.size(); i++) {
-			
-			Publicacao pub = listPub.get(i);
-			
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			FacebookType publishMessageResponse = facebookClient.publish(pub.getIdDestino() + "/feed", FacebookType.class,
-					Parameter.with("message", pub.getMensagem()));
-				
-			 Post post = getPostById(publishMessageResponse.getId(), usuario);
-			 
-			 pub.setIdMidia(post.getId());
-
-			Date dataPost = null;  
-			String datePost = post.getCreatedTime().toLocaleString();
-			DateFormat dfPost = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
-			try {
-				dataPost = dfPost.parse(datePost);
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-			}
-			pub.setDataCriacaoMidia(dataPost);
-			pub.setPublicarOffline(false);
-			pub.setIdDestino(null);
-			pub.alterar();
-		}
-	}
-	
-	public void atualizarDeletarOff(UsuarioAppMidiaSocial usuario){
-		
-		List<Publicacao> listPub = Publicacao.listOffDeletar();
-		List<Comentario> listCom = Comentario.listOffDeletar();
-		
-		for (int i = 0; i < listPub.size(); i++) {
-			
-			Publicacao pub = listPub.get(i);
-			
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.deleteObject(pub.getIdMidia());
-			
-			pub.setDeletado(true);
-			pub.setDataDeletado(new Date());
-			pub.setDeletarOffline(false);
-			pub.alterar();
-		}
-		
-		for (int i = 0; i < listCom.size(); i++) {
-			
-			Comentario com = listCom.get(i);
-			
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.deleteObject(com.getIdMidia());
-			
-			com.setDeletado(true);
-			com.setDataDeletado(new Date());
-			com.setDeletarOffline(false);
-			com.alterar();
-		}
-	}
-	
-	public void atualizarComentarioOff(UsuarioAppMidiaSocial usuario){
-		
-		List<Comentario> listCom = Comentario.listOffComentario();
-		
-		for (int i = 0; i < listCom.size(); i++) {
-			
-			Comentario com = listCom.get(i);
-			
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			FacebookType publishMessageResponse = facebookClient.publish(com.getPublicacao() + "/feed", FacebookType.class,
-					Parameter.with("message", com.getMensagem()));
-			
-			 Comment comment = getCommentById(publishMessageResponse.getId(), usuario);
-			 
-			 com.setIdMidia(comment.getId());
-
-			Date dataComment = null;  
-			String dateComment = comment.getCreatedTime().toLocaleString();
-			DateFormat dfComment = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
-			try {
-				dataComment = dfComment.parse(dateComment);
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-			}
-			com.setDataCriacaoMidia(dataComment);
-			com.setComentarOffline(false);
-			com.alterar();
-		}
-	}
-
-	public void atualizarCurtirOff(UsuarioAppMidiaSocial usuario){
-		
-		List<Publicacao> listPub = Publicacao.listOffCurtir();
-		List<Comentario> listCom = Comentario.listOffCurtir();
-		
-		for (int i = 0; i < listPub.size(); i++) {
-			
-			Publicacao pub = listPub.get(i);
-			
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.publish(pub.getIdMidia() + "/likes", Boolean.class);
-			
-			pub.setCurtir(true);
-			pub.setCurtirOffline(false);
-			pub.alterar();
-		}
-		
-		for (int i = 0; i < listCom.size(); i++) {
-			
-			Comentario com = listCom.get(i);
-			
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.publish(com.getIdMidia() + "/likes", Boolean.class);
-			
-			com.setCurtir(true);
-			com.setCurtirOffline(false);
-			com.alterar();
-		}
-	}
-	
-	public void atualizarCurtirRemoverOff(UsuarioAppMidiaSocial usuario){
-		
-		List<Publicacao> listPub = Publicacao.listOffCurtirRemover();
-		List<Comentario> listCom = Comentario.listOffCurtirRemover();
-		
-		for (int i = 0; i < listPub.size(); i++) {
-			
-			Publicacao pub = listPub.get(i);
-			
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.publish(pub.getIdMidia() + "/likes", Boolean.class);
-			
-			pub.setCurtir(false);
-			pub.setCurtirRemoverOffline(false);
-			pub.alterar();
-		}
-		
-		for (int i = 0; i < listCom.size(); i++) {
-			
-			Comentario com = listCom.get(i);
-			
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.publish(com.getIdMidia() + "/likes", Boolean.class);
-			
-			com.setCurtir(false);
-			com.setCurtirRemoverOffline(false);
-			com.alterar();
-		}
-	}
-	
-	public User getUserById(String id, UsuarioAppMidiaSocial usuario){
+	public static User getUserById(String id, UsuarioAppMidiaSocial usuario){
 
 			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
 			User user = facebookClient.fetchObject( id, User.class );
 			return user;
 	}
 	
-	public Post getPostById(String id, UsuarioAppMidiaSocial usuario){
+	public static Post getPostById(String id, UsuarioAppMidiaSocial usuario){
 		
 		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
 		Post post = facebookClient.fetchObject( id, Post.class );
 		return post;
 	}
 	
-	public Comment getCommentById(String id, UsuarioAppMidiaSocial usuario){
+	public static Comment getCommentById(String id, UsuarioAppMidiaSocial usuario){
 		
 		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
 		Comment comment = facebookClient.fetchObject( id, Comment.class );
 		return comment;
 	}
 	
-	public ArrayList<ResultadoBusca> pesqusiar(String palavra, ArrayList<ResultadoBusca> listaResultadoFacebook){
+	public ArrayList<ResultadoBusca> pesquisar(String palavra, ArrayList<ResultadoBusca> listaResultadoFacebook){
 		
 			FacebookClient facebookClient = new DefaultFacebookClient();		
 			Connection<Post> publicSearch =	facebookClient.fetchConnection("search", Post.class,

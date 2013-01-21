@@ -201,7 +201,6 @@ public class PublicacaoView extends Panel {
 				
 		layoutPost.addComponent(embeddedImagem);
 		
-		//TextArea
 		Panel panel = new Panel();
 		panel.setWidth("745px");
 		panel.setHeight("-1px");

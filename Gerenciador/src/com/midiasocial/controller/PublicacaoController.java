@@ -42,7 +42,7 @@ public class PublicacaoController {
 	public void publicar(String mensagem){
 		if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 			fbService = new FacebookService();
-			fbService.publicar("persystiteste", mensagem, user);
+			fbService.publicar(String.valueOf(user.getIdMidia()), mensagem, user);
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);

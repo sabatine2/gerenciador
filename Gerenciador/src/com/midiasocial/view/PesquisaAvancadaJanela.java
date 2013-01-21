@@ -24,17 +24,17 @@ public class PesquisaAvancadaJanela extends Window {
 	private static final long serialVersionUID = 1L;
 
 	private class PesquisaCampo extends HorizontalLayout {
-
-	/**
+	
+		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
-	private NativeSelect operator;
-
-	private TextField field;
-
-	private Button addButton;
+		private NativeSelect operator;
+	
+		private TextField field;
+	
+		private Button addButton;
 
 	public PesquisaCampo() {
 	    operator = new NativeSelect(null, Arrays.asList("OR", "AND", "NOT",
@@ -143,7 +143,7 @@ public class PesquisaAvancadaJanela extends Window {
     private String query;
 
     public PesquisaAvancadaJanela() {
-	setCaption("Advanced Search");
+	setCaption("Pesquisa Avançada");
 	setStyleName(Reindeer.WINDOW_LIGHT);
 	setResizable(false);
 	setClosable(false);
@@ -162,7 +162,7 @@ public class PesquisaAvancadaJanela extends Window {
 
 	HorizontalLayout buttons = new HorizontalLayout();
 	buttons.setSpacing(true);
-	buttons.addComponent(new Button("Search", new Button.ClickListener() {
+	buttons.addComponent(new Button("Pesquisar", new Button.ClickListener() {
 	    /**
 		 * 
 		 */
@@ -173,7 +173,7 @@ public class PesquisaAvancadaJanela extends Window {
 		close();
 	    }
 	}));
-	buttons.addComponent(new Button("Cancel", new Button.ClickListener() {
+	buttons.addComponent(new Button("Cancelar", new Button.ClickListener() {
 	    /**
 		 * 
 		 */

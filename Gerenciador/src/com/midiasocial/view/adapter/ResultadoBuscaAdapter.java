@@ -35,8 +35,7 @@ public class ResultadoBuscaAdapter extends IndexedContainer implements
 
     private String query = "";
   
-  
-    private int maxResults = 100;
+   private int maxResults = 100;
 
     private short currentPage = 1;
 
@@ -66,14 +65,9 @@ public class ResultadoBuscaAdapter extends IndexedContainer implements
      * @see com.example.twitterquerycontainer.SocialContainer#refresh()
      */
     public void refresh() {
-	if (!querying) {
-	    currentPage = 1;
 	    removeAllItems();
 	    doQuery();
-	} else {
-	    queryIsQueued = true;
 	}
-    }
 
     /*
      * (non-Javadoc)
@@ -92,30 +86,16 @@ public class ResultadoBuscaAdapter extends IndexedContainer implements
      * Does the query and re-populates the container
      */
     protected synchronized void doQuery() {
-	querying = true;
-
-	int resultsProcessed = loadResponse();
-
-	if (resultsProcessed > 0 && size() < maxResults) {
-	    /*
-	     * Query next page if the maximum has not yet been reached
-	     */
-	    currentPage++;
-	    doQuery();
-	} else if (queryIsQueued) {
-	    queryIsQueued = false;
-	    querying = false;
-	    refresh();
-
-	} else {
-	    querying = false;
-	}
+	
+    	int resultsProcessed = loadResponse();
+	
     }
 
     
     protected int loadResponse() {
 	 	ArrayList<com.midiasocial.model.ResultadoBusca> list = MidiaSocialService.busca(query);
-    	for (Iterator<com.midiasocial.model.ResultadoBusca> i = list.iterator(); i.hasNext();) {
+    	
+	 	for (Iterator<com.midiasocial.model.ResultadoBusca> i = list.iterator(); i.hasNext();) {
     		com.midiasocial.model.ResultadoBusca resultado = i.next();
 		    Item item = getItem(addItem());
 		    if (item != null) {
@@ -125,6 +105,7 @@ public class ResultadoBuscaAdapter extends IndexedContainer implements
 			    item.getItemProperty(MENSAGEM).setValue(resultado.getMensagem());
 			    item.getItemProperty(DATA_CRIACAO_MIDIA).setValue(resultado.getDataCriacaoMidia());
 			    this.resultado = resultado;
+			    System.out.println(resultado.getMensagem());
 			 }
 	    }
     	return list.size();

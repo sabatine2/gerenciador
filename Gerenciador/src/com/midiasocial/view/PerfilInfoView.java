@@ -187,13 +187,12 @@ public class PerfilInfoView extends Window {
 		panelPost.setImmediate(false);
 		panelPost.setWidth("100.0%");
 		panelPost.setHeight("-1px");
-		
 		//Build post
 		HorizontalLayout layoutPost = new HorizontalLayout();
 		layoutPost.setWidth("100.0%");
 		layoutPost.setHeight("-1px");
-		layoutPost.setMargin(false);
-				
+		layoutPost.setMargin(true);
+		
 		Embedded embeddedImagem = new Embedded();
 		embeddedImagem.setImmediate(false);
 		embeddedImagem.setWidth("50px");
@@ -211,13 +210,14 @@ public class PerfilInfoView extends Window {
 						
 		layoutPost.addComponent(embeddedImagem);
 		
-		TextArea textAFeed = new TextArea();
-		textAFeed.setWidth("300px");
-		textAFeed.setHeight("50px");
-		textAFeed.setImmediate(true);
-		textAFeed.setCaption(data.toString());
-		textAFeed.setValue(mensagem);
-		layoutPost.addComponent(textAFeed);
+		Panel panelMensagem = new Panel();
+		panelMensagem.setWidth("290px");
+		panelMensagem.setHeight("50px");
+		String regex = "(\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
+		mensagem.replaceAll(regex, "<a target=\"_blank\" href=\"$1\">$1</a>");
+		Label labelMensagem = new Label(data.toString()+": "+mensagem,Label.CONTENT_RAW);
+		panelMensagem.addComponent(labelMensagem);
+		layoutPost.addComponent(panelMensagem);
 		
 		panelPost.setContent(layoutPost);
 		return panelPost;
