@@ -20,7 +20,6 @@ public class ComentarioView extends HorizontalLayout{
 	
 	private ComentarioController comentarioController;
 	
-	//TESTE
 	public ComentarioView(final ComentarioController comentarioController){
 		this.comentarioController = comentarioController;
 			
