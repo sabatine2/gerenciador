@@ -50,7 +50,7 @@ public class Publicacao {
 	
 	@Column(name = "publicacao_nome")
 	private String nomeUsuario;
-	
+		
 	@Column(name = "publicacao_curtir")
 	private boolean curtir;
 	
@@ -356,40 +356,51 @@ public class Publicacao {
 		return workouts;
 	}
 	
-	public static List<Publicacao> listOffPublicacao(){
+	
+	public static List<Publicacao> listOffPublicacao(UsuarioAppMidiaSocial usuario){
 		
 		org.hibernate.Session s = HibernateUtil.openSession();
 		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
 		
-		List<Publicacao> listPub = postDAO.listaOffPublicacao();
+		List<Publicacao> listPub = postDAO.listaOffPublicacao(usuario);
 		return listPub;
 	}
 	
-	public static List<Publicacao> listOffCurtir(){
+	public static List<Publicacao> listOffCurtir(UsuarioAppMidiaSocial usuario){
 		
 		org.hibernate.Session s = HibernateUtil.openSession();
 		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
 		
-		List<Publicacao> listPub = postDAO.listaOffCurtir();
+		List<Publicacao> listPub = postDAO.listaOffCurtir(usuario);
 		return listPub;
 	}
 	
-	public static List<Publicacao> listOffCurtirRemover(){
+	public static List<Publicacao> listOffCurtirRemover(UsuarioAppMidiaSocial usuario){
 		
 		org.hibernate.Session s = HibernateUtil.openSession();
 		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
 		
-		List<Publicacao> listPub = postDAO.listaOffCurtirRemover();
+		List<Publicacao> listPub = postDAO.listaOffCurtirRemover(usuario);
 		return listPub;
 	}
 	
-	public static List<Publicacao> listOffDeletar(){
+	public static List<Publicacao> listOffDeletar(UsuarioAppMidiaSocial usuario){
 		
 		org.hibernate.Session s = HibernateUtil.openSession();
 		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
 		
-		List<Publicacao> listPub = postDAO.listaOffDeletar();
+		List<Publicacao> listPub = postDAO.listaOffDeletar(usuario);
 		return listPub;
+	}
+	
+	public static List<Publicacao> listLastUpdate(String idUsuarioMidia){
+		
+		org.hibernate.Session s = HibernateUtil.openSession();
+		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
+		
+		List<Publicacao> list = postDAO.listlastUpdate(idUsuarioMidia);
+		
+		return list;
 	}
 
 	
@@ -476,15 +487,7 @@ public class Publicacao {
 		}	
 	}
 		
-	public static List<Publicacao> listLastUpdate(String idUsuarioMidia){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		
-		List<Publicacao> list = postDAO.listlastUpdate(idUsuarioMidia);
-		
-		return list;
-	}
+	
 	
 	@SuppressWarnings("unused")
 	public boolean alterar(){

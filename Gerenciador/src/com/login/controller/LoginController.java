@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.login.model.Login;
 import com.login.view.LoginView;
+import com.midiasocial.model.ServicoAtualizacao;
 import com.principal.controller.GerenciadorController;
 import com.principal.helper.Session;
 import com.usuario.model.Usuario;
@@ -24,6 +25,7 @@ public class LoginController {
 		
 		String nome  = (String) dados[0];
 		String senha =(String) dados[1];
+		
 		try{
 		Usuario usuario = Usuario.autenticaUsu(nome, senha);
 	    	if(usuario != null){

@@ -156,12 +156,7 @@ public abstract class OAuthButton {
                         .apiSecret(apiSecret)
                         .callback(b.getWindow().getURL().toString()).build();
 			} catch (Exception e) {
-				/*MessageBox mb = new MessageBox(, 
-						"Erro", 
-                        MessageBox.Icon.ERROR, 
-                        "Dados inv�lidos",  
-                        new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
-              	mb.show();*/
+				
 			}
         }
         return service;

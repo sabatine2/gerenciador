@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
+import com.restfb.exception.FacebookException;
 import com.restfb.exception.FacebookNetworkException;
 import com.restfb.json.JsonObject;
 import com.restfb.types.Comment;
@@ -39,29 +41,41 @@ import com.restfb.types.Post;
 @SuppressWarnings({"deprecation", "static-access", "unused"})
 public class FacebookService {
 
-	public void getAccessToken(String apiId, String apiSecret){
-		
-	}
-	
 	public static Connection<Post> getUserTimeLineRT(UsuarioAppMidiaSocial usuario){
 		
+		Connection<Post> myFeed = null;
+		
+		try{
 			UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuario;
 			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-		
-			Connection<Post> myFeed = facebookClient.fetchConnection("persystiteste/feed", Post.class);
+			myFeed = facebookClient.fetchConnection(usuario.getFanpageScreenName()+"/feed", Post.class);
 			return myFeed;
-		
+		}catch (Exception e) {
+			return myFeed;
+		}	
 	}
 	
 	public Connection<Post> getUserTimeLine(UsuarioAppMidiaSocial usuario){
-		
-			UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuario;
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-		
-			Connection<Post> myFeed = facebookClient.fetchConnection("persystiteste/feed", Post.class);
-			return myFeed;
-		
+		UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuario;
+		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
+		Connection<Post> myFeed = facebookClient.fetchConnection(usuario.getFanpageScreenName()+"/feed", Post.class);
+		return myFeed;
 	}
+	
+
+	public List<Post> getUserTimeLineData(UsuarioAppMidiaSocial usuario){
+		
+		UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuario;
+		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
+		String query = "SELECT post_id, actor_id, target_id, message FROM stream WHERE source_id = 423421014392436 AND created_time < "+ System.currentTimeMillis() +"LIMIT 50 ";
+		List<Post> usuario2 = facebookClient.executeQuery(query, Post.class);
+		for(Iterator<Post> i = usuario2.iterator(); i.hasNext(); ){
+			Post p = i.next();
+			System.out.println("mensagemm "+ p.getMessage());
+		}
+	    return usuario2;
+	}
+	
 	
 	private static boolean isUserLikes(UsuarioAppMidiaSocial usuario, String idComment) throws JSONException{
 		
@@ -80,7 +94,22 @@ public class FacebookService {
 			FacebookType publishCommentResponse = facebookClient.publish(id + "/comments", FacebookType.class, 
 					Parameter.with("message", mensagem));
 			
-			Comment comment = getCommentById(publishCommentResponse.getId(), usuario);
+			Comment comment = null;
+			int tentativas = 0;
+			do{
+				try {
+					Thread.sleep(10l);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			    try{
+			    	comment = getCommentById(publishCommentResponse.getId(), usuario);
+			    }catch (Exception e) {
+					e.printStackTrace();
+					tentativas++;
+				}
+			}while( (comment == null) && (tentativas < 3) );
+			
 			salvarComentario(comment, id, usuario);
 			
 		} catch (FacebookNetworkException fe) {
@@ -102,11 +131,26 @@ public class FacebookService {
 		
 		try{
 			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			FacebookType publishMessageResponse = facebookClient.publish(id + "/feed", FacebookType.class,
+			FacebookType publishMessageResponse = facebookClient.publish(id+"/feed", FacebookType.class,
 					Parameter.with("message", mensagem));
 			
-			 Post post = getPostById(publishMessageResponse.getId(), usuario);
-			 salvarPublicacao(post, usuario);
+			Post post = null;
+			int tentativas = 0;
+			do{
+				try {
+					Thread.sleep(10l);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			    try{
+			    	post = getPostById(publishMessageResponse.getId(), usuario);
+			    }catch (Exception e) {
+					e.printStackTrace();
+					tentativas++;
+				}
+			}while( (post == null) && (tentativas < 3) );
+			
+			salvarPublicacao(post, usuario);
 			
 		} catch (FacebookNetworkException fe) {
 			
@@ -186,6 +230,15 @@ public class FacebookService {
 			pub.setDataDeletado(new Date());
 			pub.alterar();
 			
+			List<Comentario> listaComentario = Comentario.listComentarioPublicacao(pub);
+			
+			for(Iterator<Comentario> i = listaComentario.iterator(); i.hasNext();){
+				Comentario comentario = i.next();
+				comentario.setDeletado(true);
+				comentario.setDataDeletado(new Date());
+				comentario.alterar();
+			}
+			
 		} catch (FacebookNetworkException fe) {
 			
 			pub.setDeletarOffline(true);
@@ -263,7 +316,6 @@ public class FacebookService {
 	}
 	
 	public static Comment getCommentById(String id, UsuarioAppMidiaSocial usuario){
-		
 		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
 		Comment comment = facebookClient.fetchObject( id, Comment.class );
 		return comment;
@@ -325,9 +377,14 @@ public class FacebookService {
 		}
 		pub.setDataCriacaoMidia(dataPost);
 		
-		UsuarioPubMidiaSocial usuarioPub = salvarUsuarioPub(pub, usuario);
+		UsuarioPubMidiaSocial usuarioPub = UsuarioPubMidiaSocial.pesquisaUsuarioIdMidia(post.getFrom().getId()); 
 		
-		pub.setUsuarioPubMidiaSocial(usuarioPub);
+		if(usuarioPub != null){
+			pub.setUsuarioPubMidiaSocial(usuarioPub);
+		}
+		else{
+			pub.setUsuarioPubMidiaSocial(salvarUsuarioPub(pub, usuario));
+		}
 		
 		pub.salvar();		
 		return pub;
@@ -372,7 +429,8 @@ public class FacebookService {
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
-			c.setDataCriacaoMidia(dataComment);
+		
+		c.setDataCriacaoMidia(dataComment);
 			
          try {
 				if (isUserLikes(usuario, c.getIdMidia())) {

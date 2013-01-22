@@ -46,7 +46,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 	@Override
 	public void modoTabela() {
 		
-		tabelaFiltro = new TabelaFiltro("Usuário");
+		tabelaFiltro = new TabelaFiltro("Usuario");
 		tabelaFiltro.filterField.addListener(new TextChangeListener() {
 			
 			public void textChange(TextChangeEvent event) {
@@ -80,7 +80,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
  						MessageBox mb = new MessageBox(getWindow(), 
  							"Remover", 
  							MessageBox.Icon.QUESTION, 
- 							"Remover Usuï¿½rio?",
+ 							"Remover Usuario?",
  							new MessageBox.ButtonConfig(MessageBox.ButtonType.YES, "Sim"),
  							new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Nao"));
  				  	mb.show(new MessageBox.EventListener() {
@@ -94,7 +94,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
  									MessageBox mb = new MessageBox(getWindow(), 
  										"Remover", 
  										MessageBox.Icon.INFO, 
- 										"Usuï¿½rio Removido",  
+ 										"Usuario Removido",  
  										new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
  									mb.show();
  									System.out.println("RESULTADO TARGET: "+target);
@@ -164,7 +164,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 				MessageBox mb = new MessageBox(getWindow(), 
 						"Alterar", 
                         MessageBox.Icon.INFO, 
-                        "Usuï¿½rio Alterado",  
+                        "Usuario Alterado",  
                         new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
               	mb.show();
 	 		
@@ -215,7 +215,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 				MessageBox mb = new MessageBox(getWindow(), 
 					"Remover", 
 					MessageBox.Icon.QUESTION, 
-					"Remover Usuï¿½rio?",
+					"Remover Usuario?",
 					new MessageBox.ButtonConfig(MessageBox.ButtonType.YES, "Sim"),
 					new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Nao"));
 				mb.show(new MessageBox.EventListener() {	 
@@ -239,7 +239,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 							MessageBox mb = new MessageBox(getWindow(), 
 								"Remover", 
 								MessageBox.Icon.INFO, 
-								"Usuï¿½rio Removido",  
+								"Usuario Removido",  
 								new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
 							mb.show();
 						}
@@ -278,6 +278,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 			userForm.getUser().setFotoUrl(user.getPictureUrl());
 			userForm.getUser().setAppMidiaSocial((AplicacaoMidiaSocial) cbAplicacao.getValue());
 			
+			
 			if(this.userController.salvar(userForm.getUser())){
 				removeComponent(getComponent());
 				addComponent(modoLayoutTable);
@@ -285,7 +286,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 				MessageBox mb = new MessageBox(getWindow(), 
 						"Cadastrar", 
                         MessageBox.Icon.INFO, 
-                        "Usuário Cadastrado",  
+                        "Usuario Cadastrado",  
                         new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
               	mb.show(); 
 			
@@ -299,8 +300,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 			else{
 			}
 		}catch(Exception e){	
-			System.out.println("ERRO SALVAR");
-			msgErro("Conecte-se antes de salvar");
+			msgErro("Erro ao salvar " +e.getMessage());
 		}
 	}
 
@@ -336,7 +336,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
       	mb.show(); 
 	}
 	
-private VerticalLayout connectPanel(){
+	private VerticalLayout connectPanel(){
 		
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setMargin(true);
@@ -355,7 +355,7 @@ private VerticalLayout connectPanel(){
 		layoutPanel.setMargin(false);
 		
 		//cbAplicacao
-		cbAplicacao = new ComboBox("Aplicação");
+		cbAplicacao = new ComboBox("Aplicacao");
 		cbAplicacao.setWidth("350px");
 		cbAplicacao.setImmediate(true);
 		cbAplicacao.setContainerDataSource(listaApp());
@@ -373,11 +373,10 @@ private VerticalLayout connectPanel(){
 				
 				if(app.getRedeSocial().equals("Facebook")){
 					new FacebookButton(app.getApiKey(), app.getApiSecret(), oauthListener,buttonConectar);
-					//userForm.getUserInfo(user.getName(), user.getScreenName());
 				}	
 				
 				if(app.getRedeSocial().equals("Twitter")){
-				new TwitterButton(app.getApiKey(), app.getApiSecret(), oauthListener,buttonConectar);
+					new TwitterButton(app.getApiKey(), app.getApiSecret(), oauthListener,buttonConectar);
 				}
 			}
 		});

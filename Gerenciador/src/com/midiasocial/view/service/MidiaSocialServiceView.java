@@ -2,6 +2,7 @@ package com.midiasocial.view.service;
 
 import com.abstracts.view.ViewComponente;
 import com.midiasocial.controller.ServicoController;
+import com.midiasocial.model.ServicoAtualizacao;
 import com.midiasocial.model.Servico;
 import com.midiasocial.view.form.ServicoForm;
 import com.vaadin.event.Action;
@@ -12,6 +13,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
@@ -128,7 +130,10 @@ public class MidiaSocialServiceView extends ViewComponente {
 		VerticalLayout visualizarView = new VerticalLayout();
 		servicoForm = new ServicoForm(serviceController.getServico());
 		visualizarView.addComponent(servicoForm);
-		
+		visualizarView.setSpacing(true);
+		Table table = new Table("",ServicoAtualizacao.listaBens());
+		table.setSizeFull();
+		visualizarView.addComponent(table);
 		return visualizarView;
 	}
 
@@ -261,7 +266,22 @@ public class MidiaSocialServiceView extends ViewComponente {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				serviceController.alteraStatusServico();
+				if (serviceController.alteraStatusServico()){
+					MessageBox mb = new MessageBox(getWindow(), 
+							"Servico", 
+			                MessageBox.Icon.INFO, "Servico Ativo",  
+			                new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
+			      	mb.show(); 
+			      	buttonClonar.setCaption("Desativar");
+				}
+				else{
+					MessageBox mb = new MessageBox(getWindow(), 
+							"Servico", 
+			                MessageBox.Icon.INFO, "Servico desativado",  
+			                new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
+			      	mb.show(); 
+			      	buttonClonar.setCaption("Ativar");
+				}
 			}
 		});
 		

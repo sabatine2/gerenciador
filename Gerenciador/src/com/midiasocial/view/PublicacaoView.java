@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.midiasocial.controller.PublicacaoController;
 import com.midiasocial.model.Publicacao;
+import com.midiasocial.service.FacebookService;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbsoluteLayout;
@@ -106,6 +107,8 @@ public class PublicacaoView extends Panel {
 		verticalLayout.setVisible(false);
 		
 		//Add to layout
+		
+		
 		layoutPanel.addComponent(buildButtonLayout(), 0, 0, 1, 0);
 		layoutPanel.addComponent(buildPostLayout(), 0, 1, 1, 1);
 		layoutPanel.addComponent(layoutLinkButton, 0, 2);
@@ -243,6 +246,7 @@ public class PublicacaoView extends Panel {
 			public void buttonClick(ClickEvent event) {
 				publicacaoController.comentar(textAMensagem.getValue().toString());
 				window.setVisible(false);
+				
 			}
 		});
 		panelLayout.addComponent(buttonPublicar);
@@ -253,7 +257,7 @@ public class PublicacaoView extends Panel {
 	
 	private Window buildAnexoWindow(String anexo){
 		
-		final Window window = new Window("Coment‡rio");
+		final Window window = new Window("Anexo");
 		window.center();
 		window.setWidth("500px");
 		window.setHeight("405px");
@@ -296,13 +300,21 @@ public class PublicacaoView extends Panel {
 			anexo.setVisible(true);
 			anexo.setCaption("anexo ");
 		}
+		
+		if(pub.isDeletado())
+			layoutButton.setVisible(false);
 	}
 
 	public String converte(Date date){
+		long millisecondsAgo = 0l;
 		
-		long millisecondsAgo = System.currentTimeMillis()
+		try{
+		   millisecondsAgo = System.currentTimeMillis()
                 - date.getTime();
-
+		}catch (Exception e) {
+		   millisecondsAgo = 0l;
+		}
+		
         if (TimeUnit.MILLISECONDS.toHours(millisecondsAgo) == 0) {
             return String
                     .format("%d min, %d seg",

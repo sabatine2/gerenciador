@@ -8,6 +8,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.midiasocial.model.Comentario;
+import com.midiasocial.model.Publicacao;
+import com.midiasocial.model.UsuarioAppMidiaSocial;
 import com.abstracts.dao.DAO;
 	
 	public class ComentarioDAO extends DAO<Comentario> {
@@ -75,11 +77,25 @@ import com.abstracts.dao.DAO;
 			return c.list();
 		}
 		
+		public List<Comentario> listaComentarioPublicacao(Publicacao publicacao){
+			
+			Criteria c = session.createCriteria(Comentario.class);
+			c.add(Restrictions.eq("publicacao", publicacao));
+			return c.list();
+		}
 		/**
 		 * Utilizando HQL 
 		 * @param id
 		 * @return
 		 */
+		public List<Comentario> buscaComentariosOff(UsuarioAppMidiaSocial usuarioAppMidiaSocial){
+			Query q = session.createQuery("select p from " + Comentario.class.getName() + " as p inner join p.publicacao as pub where pub.usuarioAppMidiaSocial eq :usuarioAppMidiaSocial");
+			
+			q.setParameter("usuarioAppMidiaSocial", usuarioAppMidiaSocial);
+			
+			return (List<Comentario>) q.list();
+		}    
+		    
 		public Comentario buscaComentarios(String idMidia){
 			Query q = session.createQuery("select p from " + Comentario.class.getName() + " as p where p.idMidia like :idMidia");
 			

@@ -23,17 +23,16 @@ public class ServicoForm extends VerticalLayout {
         ourLayout.setMargin(true, false, false, true);
         ourLayout.setSpacing(true);
   
-        intervalo = new ComboBox("Intervalo de duracao");
+        intervalo = new ComboBox("Intervalo de duracao (em minutos)");
     	intervalo.setWidth("19.7em");
-    	intervalo.addItem(new Long("5"));
-    	intervalo.addItem(new Long("15"));
-    	intervalo.addItem(new Long("25"));
-    	intervalo.addItem(new Long("45"));
-    	intervalo.addItem(new Long("65"));
-    	intervalo.addItem(new Long("125"));
-    	intervalo.addItem(new Long("185"));
-    	intervalo.addItem(new Long("245"));
-    	intervalo.addItem(new Long("605"));
+    	intervalo.addItem(new Long("3"));
+    	intervalo.addItem(new Long("10"));
+    	intervalo.addItem(new Long("40"));
+    	intervalo.addItem(new Long("60"));
+    	intervalo.addItem(new Long("120"));
+    	intervalo.addItem(new Long("240"));
+    	intervalo.addItem(new Long("360"));
+    	intervalo.addItem(new Long("560"));
     	intervalo.setValue(servico.getIntervalo());
         ourLayout.addComponent(intervalo, 0, 1);
         addComponent(ourLayout);

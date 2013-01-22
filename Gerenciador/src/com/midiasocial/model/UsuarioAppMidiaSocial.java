@@ -55,6 +55,13 @@ public class UsuarioAppMidiaSocial {
 	@Column(name = "userapp_consumersecret")
 	private String consumerSecret = "";
 	
+	
+@Column(name = "userapp_fanpageid")
+	private String fanpageId;
+
+	@Column(name = "userapp_fanpagescreenname")
+	private String fanpageScreenName = "";
+	
 	@ManyToOne
 	@JoinColumn( name = "app_id")
     private AplicacaoMidiaSocial appMidiaSocial;
@@ -136,6 +143,23 @@ public class UsuarioAppMidiaSocial {
 		this.screenName = screenName;
 	}
 	
+	public String getFanpageId() {
+		return fanpageId;
+	}
+
+	public void setFanpageId(String fanpageId) {
+		this.fanpageId = fanpageId;
+	}
+
+	public String getFanpageScreenName() {
+		return fanpageScreenName;
+	}
+
+	public void setFanpageScreenName(String fanpageScreenName) {
+		this.fanpageScreenName = fanpageScreenName;
+
+	}
+
 	public String getTokenAccessSecret() {
 		return tokenAccessSecret;
 	}

@@ -88,6 +88,10 @@ public class ComentarioView extends HorizontalLayout{
 		panelMensagem.addComponent(labelMensagem);
 		panelMensagem.setCaption(comentario.getNomeUsuario() + "   -   "
 		+ comentario.getDataCriacaoMidia());
+		
+		if(comentario.isDeletado()){
+			commentsButton.setVisible(false);
+		}
 	}
 	
 	public Button getLike() {

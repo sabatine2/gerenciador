@@ -310,6 +310,15 @@ public class Comentario {
 		return listCom;
 	}
 	
+	public static List<Comentario> listOffComentario(UsuarioAppMidiaSocial usuario){
+		
+		org.hibernate.Session s = HibernateUtil.openSession();
+		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
+	
+		List<Comentario> listCom = comentarioDAO.buscaComentariosOff(usuario);
+		return listCom;
+	}
+	
 	public static List<Comentario> listOffCurtirRemover(){
 		
 		org.hibernate.Session s = HibernateUtil.openSession();
@@ -325,6 +334,16 @@ public class Comentario {
 		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
 	
 		List<Comentario> listCom = comentarioDAO.listaOffDeletar();
+		return listCom;
+	}
+	
+	public static List<Comentario> listComentarioPublicacao(Publicacao publicacao){
+		
+		org.hibernate.Session s = HibernateUtil.openSession();
+		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
+	
+		List<Comentario> listCom = comentarioDAO.listaComentarioPublicacao(publicacao);
+	
 		return listCom;
 	}
 		

@@ -32,7 +32,7 @@ public class ComentarioController {
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.curtirComentario(Long.parseLong(comentario.getIdMidia()));
+            twService.curtirComentario(Long.parseLong(comentario.getIdMidia()), TwitterService.MODO_ON);
        }
 	}
 	
@@ -43,7 +43,7 @@ public class ComentarioController {
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
 			  TwitterService twService = new TwitterService(user);
-	          twService.curtirRemoverComentario(Long.parseLong(comentario.getIdMidia()));
+	          twService.curtirRemoverComentario(Long.parseLong(comentario.getIdMidia()), TwitterService.MODO_ON);
 	    }
 		
 	}
@@ -55,7 +55,7 @@ public class ComentarioController {
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
 			  TwitterService twService = new TwitterService(user);
-	          twService.deletarComentario(Long.parseLong(comentario.getIdMidia()));
+	          twService.deletarComentario(Long.parseLong(comentario.getIdMidia()),TwitterService.MODO_ON);
 	    }
     }
 

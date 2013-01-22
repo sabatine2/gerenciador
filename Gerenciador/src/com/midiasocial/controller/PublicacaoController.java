@@ -30,7 +30,7 @@ public class PublicacaoController {
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.comentar(Long.parseLong(publicacao.getIdMidia()), mensagem);
+            twService.comentar(Long.parseLong(publicacao.getIdMidia()), mensagem, TwitterService.MODO_ON);
         }
 	}
 	
@@ -42,11 +42,11 @@ public class PublicacaoController {
 	public void publicar(String mensagem){
 		if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 			fbService = new FacebookService();
-			fbService.publicar(String.valueOf(user.getIdMidia()), mensagem, user);
+			fbService.publicar(String.valueOf(user.getFanpageScreenName()), mensagem, user);
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.publicar(mensagem);
+            twService.publicar(mensagem,user, 1);
         }
 	}
 	
@@ -62,7 +62,7 @@ public class PublicacaoController {
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.curtirPublicacao(Long.parseLong(publicacao.getIdMidia()));
+            twService.curtirPublicacao(Long.parseLong(publicacao.getIdMidia()),TwitterService.MODO_ON);
         }	
 	}
 	
@@ -73,7 +73,7 @@ public class PublicacaoController {
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.curtirRemoverPublicacao(Long.parseLong(publicacao.getIdMidia()));
+            twService.curtirRemoverPublicacao(Long.parseLong(publicacao.getIdMidia()), TwitterService.MODO_ON);
         }
 	}
 	
@@ -84,16 +84,8 @@ public class PublicacaoController {
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.deletarPublicacao(Long.parseLong(publicacao.getIdMidia()));
+            twService.deletarPublicacao(Long.parseLong(publicacao.getIdMidia()),TwitterService.MODO_ON);
         }	
-	}
-	
-	public User getUserById(String id){
-		
-		User u;
-		fbService = new FacebookService();
-		u = fbService.getUserById(id, user);
-		return u;
 	}
 
 	public PublicacaoView getPublicacaoView() {

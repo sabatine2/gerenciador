@@ -53,6 +53,7 @@
   <mapping class="com.midiasocial.model.Publicacao"/>
   <mapping class="com.midiasocial.model.Comentario"/>
   <mapping class="com.midiasocial.model.Servico"/>
+  <mapping class="com.midiasocial.model.ServicoAtualizacao"/>
   <mapping class="com.midiasocial.model.AplicacaoMidiaSocial"/>
   <mapping class="com.midiasocial.model.Criterio"/>
   <mapping class="com.midiasocial.model.PalavraChaveMidia"/>

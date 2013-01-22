@@ -90,6 +90,7 @@ public class FacebookButton extends OAuthButton {
         return FacebookUser.class;
     }
 
+    
     public static class FacebookUser implements User {
         @SerializedName("first_name")
         private String firstName;

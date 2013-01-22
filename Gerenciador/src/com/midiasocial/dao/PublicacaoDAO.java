@@ -48,39 +48,44 @@ import com.abstracts.dao.DAO;
 			return c.list();
 		}
 		
-       public List<Publicacao> listaOffPublicacao(){
+       
+       public List<Publicacao> listaOffPublicacao(UsuarioAppMidiaSocial usuario){
 			
 			Criteria c = session.createCriteria(Publicacao.class);
 			c.add(Restrictions.eq("publicarOffline", true));
+			c.add(Restrictions.eq("usuarioAppMidiaSocial", usuario));
 			c.addOrder(Order.asc("dataCriacao"));
 			
 			return c.list();
 		}
 		
-		public List<Publicacao> listaOffCurtir(){
+		
+		public List<Publicacao> listaOffCurtir(UsuarioAppMidiaSocial usuario){
 			
 			Criteria c = session.createCriteria(Publicacao.class);
 			c.add(Restrictions.eq("curtirOffline", true));
+			c.add(Restrictions.eq("usuarioAppMidiaSocial", usuario));
 			c.addOrder(Order.asc("dataCriacao"));
 			
 			return c.list();
 		}
 		
-		public List<Publicacao> listaOffCurtirRemover(){
+		public List<Publicacao> listaOffCurtirRemover(UsuarioAppMidiaSocial usuario){
 			
 			Criteria c = session.createCriteria(Publicacao.class);
 			c.add(Restrictions.eq("curtirRemoverOffline", true));
+			c.add(Restrictions.eq("usuarioAppMidiaSocial", usuario));
 			c.addOrder(Order.asc("dataCriacao"));
 			
 			return c.list();
 		}
 		
-		public List<Publicacao> listaOffDeletar(){
+		public List<Publicacao> listaOffDeletar(UsuarioAppMidiaSocial usuario){
 			
 			Criteria c = session.createCriteria(Publicacao.class);
 			c.add(Restrictions.eq("deletarOffline", true));
+			c.add(Restrictions.eq("usuarioAppMidiaSocial", usuario));
 			c.addOrder(Order.asc("dataCriacao"));
-			
 			return c.list();
 		}
 	

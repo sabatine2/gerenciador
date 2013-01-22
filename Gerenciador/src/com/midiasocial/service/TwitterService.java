@@ -47,6 +47,9 @@ public class TwitterService{
 	private String accessTokenSecret= " ";
 	private UsuarioAppMidiaSocial usuarioMidiaSocial;
 	
+	public static int MODO_OFF = 1;
+	public static int MODO_ON = 0;
+	
 	private short currentPage = 1;
 	private boolean querying = false;
 	private boolean queryIsQueued = false;
@@ -264,20 +267,23 @@ public class TwitterService{
 	       }
 	   }
 	
-	public void publicar(String mensagem){
-	
+	public Status publicar(String mensagem, UsuarioAppMidiaSocial usuarioMidiaSocial, int modo){
+			
 		try {
-			AccessToken accessToken = new AccessToken(accessT,accessTokenSecret);
+			AccessToken accessToken = new AccessToken(usuarioMidiaSocial.getTokenAccess(),usuarioMidiaSocial.getTokenAccessSecret());
 			TwitterFactory factory = new TwitterFactory();
 			Twitter twitter = factory.getInstance();
-			twitter.setOAuthConsumer(consumerKey,consumerSecret);
+			twitter.setOAuthConsumer(usuarioMidiaSocial.getAppMidiaSocial().getApiKey(),usuarioMidiaSocial.getAppMidiaSocial().getApiSecret());
 			twitter.setOAuthAccessToken(accessToken);
 			Status status = twitter.updateStatus(mensagem);
 		
-			salvarPublicacao(status);
-	
+			if(modo == 1)
+			   salvarPublicacao(status);
+			
+			return status;
+			
           } catch (TwitterException te) {
-        	  Publicacao pub = new Publicacao();
+        	    Publicacao pub = new Publicacao();
 	  			pub.setDataCriacao(new Date());
 	  			pub.setMensagem(mensagem);
 	  			pub.setFotoUrl(usuarioMidiaSocial.getFotoUrl());
@@ -287,25 +293,41 @@ public class TwitterService{
 	  			pub.setUsuarioAppMidiaSocial(usuarioMidiaSocial);
 	  			pub.setPublicarOffline(true);
 	  			pub.setIdDestino("");
+	  			
+	  			UsuarioPubMidiaSocial usuarioPub = UsuarioPubMidiaSocial.pesquisaUsuarioIdMidia(String.valueOf(usuarioMidiaSocial.getIdMidia())); 
+	  			
+	  			if(usuarioPub != null){
+	  				pub.setUsuarioPubMidiaSocial(usuarioPub);
+	  			}
+	  			else{
+	  				pub.setUsuarioPubMidiaSocial(null);
+	  			}
+	  			
 	  			pub.salvar();
-		  }
+	  			return null;
+	  	  }
+		
+		
 	}
 	
-	public void comentar(Long id, String texto){
+	public Status comentar(Long id, String texto, int modo){
+		
+		Publicacao pub = Publicacao.pesquisaPostIdMidia(String.valueOf(id));
 		
 		try {
-			     
 			AccessToken accessToken = new AccessToken(accessT,accessTokenSecret);
 			TwitterFactory factory = new TwitterFactory();
 			Twitter twitter = factory.getInstance();
 			twitter.setOAuthConsumer(consumerKey,consumerSecret);
 			twitter.setOAuthAccessToken(accessToken);
-			Status status = twitter.updateStatus(new StatusUpdate(texto).inReplyToStatusId(id)); 
-	        salvarComentario(status);
+			Status status = twitter.updateStatus(new StatusUpdate("@"+pub.getUsuarioPubMidiaSocial().getScreenName()+" "+texto).inReplyToStatusId(id)); 
+	        
+			if(modo == MODO_ON)
+			salvarComentario(status);
 			
+			return status;
+		
 		} catch (TwitterException te) {
-			
-			Publicacao pub = Publicacao.pesquisaPostIdMidia(String.valueOf(id));
 			
 			Comentario com = new Comentario();
 			com.setComentarOffline(true);
@@ -315,6 +337,7 @@ public class TwitterService{
 			com.setNomeUsuario(usuarioMidiaSocial.getNome());
 			com.setPublicacao(pub);
 			com.salvar();
+			return null;
 		  }
 	}
 	
@@ -334,7 +357,7 @@ public class TwitterService{
 	     }
 	}
 	
-	public void curtirPublicacao(Long id){
+	public void curtirPublicacao(Long id, int modo){
 	
 		Publicacao pub = Publicacao.pesquisaPostIdMidia(String.valueOf(id));
 		
@@ -347,6 +370,12 @@ public class TwitterService{
 		    twitter.setOAuthAccessToken(accessToken);
 	        twitter.retweetStatus(id);
 	        pub.setCurtir(true);
+	        
+	        if(modo == MODO_OFF){
+	        	pub.setCurtir(true);
+				pub.setCurtirOffline(false);
+			}
+	        
 			pub.alterar();
 	      
 	   } catch (TwitterException te) {
@@ -355,7 +384,7 @@ public class TwitterService{
 	   }
 	}  
 	
-	public void curtirComentario(Long id){
+	public void curtirComentario(Long id, int modo){
 		
 		Comentario com = Comentario.pesquisaComentarioIdMidia(String.valueOf(id));
 		
@@ -368,6 +397,12 @@ public class TwitterService{
 		    twitter.setOAuthAccessToken(accessToken);
 	        twitter.retweetStatus(id);
 	    	com.setCurtir(true);
+	    	
+	        if(modo == MODO_OFF){
+	        	com.setCurtir(true);
+				com.setCurtirOffline(false);
+			}
+	        
 			com.alterar();
 	      
 	   } catch (TwitterException te) {
@@ -376,7 +411,7 @@ public class TwitterService{
 	   }
 	}  
 	
-	public void curtirRemoverPublicacao(Long id){
+	public void curtirRemoverPublicacao(Long id, int modo){
 		
 		Publicacao pub = Publicacao.pesquisaPostIdMidia(String.valueOf(id));
 		
@@ -386,10 +421,16 @@ public class TwitterService{
 			AccessToken accessToken = new AccessToken(accessT,accessTokenSecret);
 			TwitterFactory factory = new TwitterFactory();
 			Twitter twitter = factory.getInstance();
-		   twitter.setOAuthConsumer(consumerKey,consumerSecret);
-		   twitter.setOAuthAccessToken(accessToken);
-	       twitter.destroyStatus(id);
+		    twitter.setOAuthConsumer(consumerKey,consumerSecret);
+		    twitter.setOAuthAccessToken(accessToken);
+	        twitter.destroyStatus(id);
             pub.setCurtir(false);
+            
+            if(modo == MODO_OFF){
+     	        pub.setCurtir(false);
+				pub.setCurtirRemoverOffline(false);
+            }
+            
 			pub.alterar();
 	      
 	   } catch (TwitterException te) {
@@ -398,7 +439,7 @@ public class TwitterService{
 	   }
 	}  
 	
-	public void curtirRemoverComentario(Long id){
+	public void curtirRemoverComentario(Long id, int modo){
 		
 		Comentario com = Comentario.pesquisaComentarioIdMidia(String.valueOf(id));
 		
@@ -411,6 +452,12 @@ public class TwitterService{
 		   twitter.setOAuthAccessToken(accessToken);
 	       twitter.destroyStatus(id);
 	       com.setCurtir(false);
+	       
+	       if(modo == MODO_OFF){
+    	        com.setCurtir(false);
+				com.setCurtirRemoverOffline(false);
+           }
+	       
 		   com.alterar();
 	      
 	   } catch (TwitterException te) {
@@ -419,7 +466,7 @@ public class TwitterService{
 	   }
 	}  
 	
-	public void deletarPublicacao(Long id){
+	public void deletarPublicacao(Long id, int modo){
 	
 		Publicacao pub = Publicacao.pesquisaPostIdMidia(String.valueOf(id));
 		
@@ -433,6 +480,11 @@ public class TwitterService{
 	        twitter.destroyStatus(id);
 	        pub.setDeletado(true);
 			pub.setDataDeletado(new Date());
+			
+			if(modo == MODO_OFF){
+				pub.setDeletarOffline(false);
+			} 
+			
 			pub.alterar();
 			
 	    } catch (TwitterException te) {
@@ -441,7 +493,7 @@ public class TwitterService{
 	   }
 	}
 	
-	public void deletarComentario(Long id){
+	public void deletarComentario(Long id, int modo){
 		
 		Comentario com = Comentario.pesquisaComentarioIdMidia(String.valueOf(id));
 		
@@ -455,6 +507,11 @@ public class TwitterService{
 	        twitter.destroyStatus(id);
 	        com.setDeletado(true);
 			com.setDataDeletado(new Date());
+			
+			if(modo == MODO_OFF){
+				com.setDeletarOffline(false);
+			}    
+			
 			com.alterar();
 			
 	    } catch (TwitterException te) {
@@ -621,7 +678,7 @@ public class TwitterService{
 	   }
 	 }
 	
-	public ArrayList<Publicacao> postToPublish( List<Status> statuses){
+	public ArrayList<Publicacao> postToPublish(List<Status> statuses){
 		
 		ArrayList<Publicacao> pubs = new ArrayList<Publicacao>();
 	  
@@ -639,42 +696,82 @@ public class TwitterService{
 	
 	 public Publicacao salvarPublicacao(Status status){
 		  
-		 Publicacao p = new Publicacao();
-   	      p.setIdMidia(String.valueOf(status.getId()));
-   	      p.setMensagem(status.getText());
-   	      p.setCurtir(status.isRetweetedByMe());
-   	      p.setFotoUrl(status.getUser().getMiniProfileImageURL());
-   	      p.setIdUsuario(String.valueOf(status.getUser().getId()));	
-   	      p.setNomeUsuario(status.getUser().getName());
-		  p.setUsuarioMediaId(usuarioMidiaSocial.getIdInterno());
-		  p.setUsuarioAppMidiaSocial(usuarioMidiaSocial);
+		Publicacao pub = new Publicacao();
+   	    pub.setIdMidia(String.valueOf(status.getId()));
+   	    pub.setMensagem(status.getText());
+   	    pub.setCurtir(status.isRetweetedByMe());
+   	    pub.setFotoUrl(status.getUser().getMiniProfileImageURL());
+   	    pub.setIdUsuario(String.valueOf(status.getUser().getId()));	
+   	    pub.setNomeUsuario(status.getUser().getName());
+		pub.setUsuarioMediaId(usuarioMidiaSocial.getIdInterno());
+		pub.setUsuarioAppMidiaSocial(usuarioMidiaSocial);
 			
+		Date dataPost = null;  
+		String datePost = status.getCreatedAt().toLocaleString();
+		DateFormat dfPost = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
+		try {
+				dataPost = dfPost.parse(datePost);
+		} catch (ParseException e1) {
+				e1.printStackTrace();
+		}
+			
+		pub.setDataCriacaoMidia(dataPost);
+		UsuarioPubMidiaSocial usuarioPub = UsuarioPubMidiaSocial.pesquisaUsuarioIdMidia(String.valueOf(status.getUser().getId())); 
+		
+		if(usuarioPub != null){
+			pub.setUsuarioPubMidiaSocial(usuarioPub);
+		}
+		else{
+			pub.setUsuarioPubMidiaSocial(salvarUsuarioPublicacao(status.getUser()));
+		}
+		
+		pub.salvar();
+			
+		return pub;
+	}
+	 
+	 public Publicacao alterarPublicacao(Publicacao pub, Status status){
+		  
+		    pub.setIdMidia(String.valueOf(status.getId()));
+			pub.setCurtir(status.isRetweetedByMe());
+			pub.setFotoUrl(status.getUser().getMiniProfileImageURL());
+				   	    
 			Date dataPost = null;  
 			String datePost = status.getCreatedAt().toLocaleString();
 			DateFormat dfPost = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
 			try {
-				dataPost = dfPost.parse(datePost);
+					dataPost = dfPost.parse(datePost);
 			} catch (ParseException e1) {
-				e1.printStackTrace();
+					e1.printStackTrace();
 			}
-			
-			p.setDataCriacaoMidia(dataPost);
-			
-			User user = status.getUser();
-			UsuarioPubMidiaSocial usuarioPub = new UsuarioPubMidiaSocial();
-			usuarioPub.setIdMidia(String.valueOf(user.getId()));
-			usuarioPub.setNome(user.getName());
-			usuarioPub.setScreenName(user.getScreenName());
-			usuarioPub.setFotoUrl(user.getOriginalProfileImageURL());
-			usuarioPub.setFotoPerfilUrl(user.getOriginalProfileImageURL());
-			usuarioPub.setUrlPerfil(user.getURL());
-			usuarioPub.setNomeRedeSocial(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial());
-			usuarioPub.salvar();
-			p.setUsuarioPubMidiaSocial(usuarioPub);
-			p.salvar();
-			
-			return p;
-	}
+			pub.setDataCriacaoMidia(dataPost); 
+						
+			UsuarioPubMidiaSocial usuarioPub = UsuarioPubMidiaSocial.pesquisaUsuarioIdMidia(String.valueOf(status.getUser().getId())); 
+						
+			if(usuarioPub != null){
+				pub.setUsuarioPubMidiaSocial(usuarioPub);
+			}
+			else{
+				pub.setUsuarioPubMidiaSocial(salvarUsuarioPublicacao(status.getUser()));
+			}
+						
+			pub.alterar();
+			return pub;
+		}
+	 
+	public UsuarioPubMidiaSocial salvarUsuarioPublicacao(User user){
+		
+		UsuarioPubMidiaSocial usuarioPub = new UsuarioPubMidiaSocial();
+		usuarioPub.setIdMidia(String.valueOf(user.getId()));
+		usuarioPub.setNome(user.getName());
+		usuarioPub.setScreenName(user.getScreenName());
+		usuarioPub.setFotoUrl(user.getOriginalProfileImageURL());
+		usuarioPub.setFotoPerfilUrl(user.getOriginalProfileImageURL());
+		usuarioPub.setUrlPerfil(user.getURL());
+		usuarioPub.setNomeRedeSocial(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial());
+	    usuarioPub.salvar();
+		return usuarioPub;
+	} 
 	  
 	public Comentario salvarComentario(Status status){
 	    
@@ -684,7 +781,16 @@ public class TwitterService{
 		c.setMensagem(status.getText());
 		c.setNomeUsuario(status.getUser().getName());
 		
-		System.out.println(status.getText());
+		Date dataPost = null;  
+		String datePost = status.getCreatedAt().toLocaleString();
+		DateFormat dfPost = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
+		try {
+				dataPost = dfPost.parse(datePost);
+		} catch (ParseException e1) {
+				e1.printStackTrace();
+		}
+		
+		c.setDataCriacaoMidia(dataPost);
 		
 		Publicacao pub = Publicacao.pesquisaPostIdMidia(String.valueOf(status.getInReplyToStatusId()));
 		
@@ -700,6 +806,41 @@ public class TwitterService{
 		c.salvar();
 		
 		return c;
+		
+	}
+	
+	public Comentario alterarComentario(Comentario comentario,Status status){
+	    
+		comentario.setIdMidia(String.valueOf(status.getId()));
+		comentario.setIdUsuario(String.valueOf(status.getUser().getId()));
+		comentario.setMensagem(status.getText());
+		comentario.setNomeUsuario(status.getUser().getName());
+		
+		Date dataPost = null;  
+		String datePost = status.getCreatedAt().toLocaleString();
+		DateFormat dfPost = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
+		try {
+				dataPost = dfPost.parse(datePost);
+		} catch (ParseException e1) {
+				e1.printStackTrace();
+		}
+		
+		comentario.setDataCriacaoMidia(dataPost);
+		
+		Publicacao pub = Publicacao.pesquisaPostIdMidia(String.valueOf(status.getInReplyToStatusId()));
+		
+		if(pub == null){
+			try{
+			salvarPublicacao(mostrarStatusPublicacao(status.getInReplyToStatusId()));
+			pub = Publicacao.pesquisaPostIdMidia(String.valueOf(status.getInReplyToStatusId()));
+			}catch (Exception e) {
+				return null;
+			}
+		}
+		comentario.setPublicacao(pub);
+		comentario.alterar();
+		
+		return comentario;
 		
 	}
 	 

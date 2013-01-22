@@ -38,6 +38,7 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/wizards-for-vaadin-0.4.5.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/twitterquerycontainer-0.1.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/vaadin-6.8.4.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/restfb-1.6.11.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/classes"/>

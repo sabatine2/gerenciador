@@ -75,12 +75,14 @@ public class ServicoController {
 		midiaSocialServiceView.visualizar(dados);
 	}
 	
-	public void alteraStatusServico(){
+	public boolean alteraStatusServico(){
 		if(getServico().servicoAtivo()){
 			getServico().pararServico();
+			return getServico().servicoAtivo();
 		}
 		else{
 			getServico().iniciarServico();
+			return getServico().servicoAtivo();
 		}
 	}
 	

@@ -182,7 +182,6 @@ public class Servico {
 		} catch (Exception e) {
 			return false;
 		}
-		
 	}
 	
 	public void iniciarServico(){

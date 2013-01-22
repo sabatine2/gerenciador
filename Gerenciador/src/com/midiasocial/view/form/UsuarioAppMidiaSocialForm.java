@@ -3,6 +3,8 @@ package com.midiasocial.view.form;
 import java.util.Arrays;
 
 import com.midiasocial.model.UsuarioAppMidiaSocial;
+import com.midiasocial.service.FacebookService;
+import com.restfb.types.User;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.ComboBox;
@@ -27,6 +29,7 @@ public class UsuarioAppMidiaSocialForm extends VerticalLayout {
 	public TextField consumerKey;
 	public TextField consumerSecret;
 	public TextField appMidiaSocial;
+	public TextField fanpageScreenName;
 
     public UsuarioAppMidiaSocialForm(UsuarioAppMidiaSocial user) {
 
@@ -34,7 +37,7 @@ public class UsuarioAppMidiaSocialForm extends VerticalLayout {
         BeanItem<UsuarioAppMidiaSocial> userItem = new BeanItem<UsuarioAppMidiaSocial>(user); 
         
         // Create the Form
-        userForm = new FormWithComplexLayout(userItem,"Usu·rio");
+        userForm = new FormWithComplexLayout(userItem,"Usuário");
         userForm.setWidth("-1px");
 
         // Add form to layout
@@ -44,6 +47,7 @@ public class UsuarioAppMidiaSocialForm extends VerticalLayout {
     }
     
     public UsuarioAppMidiaSocial getUser(){
+    	
     	userForm.commit();
     	return user; 	
     }
@@ -104,9 +108,9 @@ public class UsuarioAppMidiaSocialForm extends VerticalLayout {
 
             // Determines which properties are shown, and in which order:
             setVisibleItemProperties(Arrays.asList(new String[] { "nome", "screenName", "status",
-            		"tokenAccess", "tokenAccessSecret", "consumerKey", "consumerSecret"}));
+            		"tokenAccess", "tokenAccessSecret", "consumerKey", "consumerSecret", "fanpageScreenName"}));
         
-            ourLayout.addComponent(appMidiaSocial, 1, 1);
+            //ourLayout.addComponent(appMidiaSocial, 1, 1);
             try{
                 appMidiaSocial.setValue(user.getAppMidiaSocial().getNome());
 			} catch (Exception e) {
@@ -122,6 +126,8 @@ public class UsuarioAppMidiaSocialForm extends VerticalLayout {
                 ourLayout.addComponent(field, 1, 0);
             } else if (propertyId.equals("screenName")) {
                 ourLayout.addComponent(field, 0, 1);
+            } else if (propertyId.equals("fanpageScreenName")) {
+                ourLayout.addComponent(field, 1, 1);
             } else if (propertyId.equals("tokenAccess")) {
                 ourLayout.addComponent(field, 0, 2, 1, 2);
             } else if (propertyId.equals("tokenAccessSecret")) {
@@ -136,14 +142,14 @@ public class UsuarioAppMidiaSocialForm extends VerticalLayout {
     
     private class PersonFieldFactory extends DefaultFieldFactory {
     	/**
-		 * CONFIGURA«√O DOS CAMPOS
+		 * CONFIGURAÇÃO DOS CAMPOS
 		 */
         public PersonFieldFactory() {
      
         	nome =  new TextField("Nome");
 	    	nome.setWidth("19em");
 
-	    	appMidiaSocial = new TextField("AplicaÁ„o");
+	    	appMidiaSocial = new TextField("Aplicação");
 	    	appMidiaSocial.setWidth("19em");
 	    	appMidiaSocial.setNullRepresentation("");
 	    	
@@ -171,6 +177,9 @@ public class UsuarioAppMidiaSocialForm extends VerticalLayout {
 			consumerSecret = new TextField("Consumer Secret");
 			consumerSecret.setWidth("40em");
 			consumerSecret.setNullRepresentation("");
+			
+			fanpageScreenName = new TextField("Nome Página");
+	    	fanpageScreenName.setWidth("19em");
         }
 
         @Override
@@ -190,7 +199,11 @@ public class UsuarioAppMidiaSocialForm extends VerticalLayout {
                 // filtering ComboBox w/ country names
                 return screenName;
                 
-            } else if ("tokenAccess".equals(propertyId)) {
+            } else if ("fanpageScreenName".equals(propertyId)) {
+                // filtering ComboBox w/ country names
+                return fanpageScreenName;
+                
+            }else if ("tokenAccess".equals(propertyId)) {
                 // filtering ComboBox w/ country names
                 return tokenAccess;
                 
