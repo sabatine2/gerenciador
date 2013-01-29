@@ -27,23 +27,23 @@ public class ComentarioController {
 	public void curtir(){
 		if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 			FacebookService fbService = new FacebookService();
-			fbService.curtirComentario(comentario.getIdMidia(), user);
+			fbService.curtirComentario(comentario, user);
 		
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.curtirComentario(Long.parseLong(comentario.getIdMidia()), TwitterService.MODO_ON);
+            twService.curtirComentario(comentario, TwitterService.MODO_ON);
        }
 	}
 	
 	public void curtirRemover(){
 	    if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 	    	FacebookService fbService = new FacebookService();
-			fbService.curtirRemoverComentario(comentario.getIdMidia(), user);
+			fbService.curtirRemoverComentario(comentario, user);
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
 			  TwitterService twService = new TwitterService(user);
-	          twService.curtirRemoverComentario(Long.parseLong(comentario.getIdMidia()), TwitterService.MODO_ON);
+	          twService.curtirRemoverComentario(comentario, TwitterService.MODO_ON);
 	    }
 		
 	}
@@ -51,11 +51,11 @@ public class ComentarioController {
 	public void deletar(){
 	    if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 	    	FacebookService fbService = new FacebookService();
-			fbService.deletarComentario(comentario.getIdMidia(), user);
+			fbService.deletarComentario(comentario, user);
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
 			  TwitterService twService = new TwitterService(user);
-	          twService.deletarComentario(Long.parseLong(comentario.getIdMidia()),TwitterService.MODO_ON);
+	          twService.deletarComentario(comentario,TwitterService.MODO_ON);
 	    }
     }
 

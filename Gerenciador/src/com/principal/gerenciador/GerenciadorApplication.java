@@ -6,11 +6,11 @@ import org.vaadin.teemu.wizards.event.WizardCompletedEvent;
 import org.vaadin.teemu.wizards.event.WizardProgressListener;
 import org.vaadin.teemu.wizards.event.WizardStepActivationEvent;
 import org.vaadin.teemu.wizards.event.WizardStepSetChangedEvent;
+
 import com.principal.controller.GerenciadorController;
 import com.principal.model.Aplicacao;
 import com.principal.view.install.EtapaUsuarioView;
 import com.principal.view.install.EtapaFinal;
-import com.usuario.model.Usuario;
 import com.vaadin.Application;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
@@ -21,7 +21,8 @@ WizardProgressListener{
 	 * 
 	 */
 	private static final long serialVersionUID = -8386840850098025245L;
-    public static Application app = null;
+    public static  Application app = null;
+ 
     private GerenciadorController gerenciador;
 	VerticalLayout main = new VerticalLayout();
 
@@ -36,6 +37,7 @@ WizardProgressListener{
         mainLayout.setSizeFull();
         mainLayout.setMargin(true);
         
+        
         if(!Aplicacao.isAtivo()){
 	        Window mainWindow = new Window("Persys Gerenciador");
 	        mainWindow.setContent(mainLayout);
@@ -45,7 +47,7 @@ WizardProgressListener{
 	        wizard.setUriFragmentEnabled(true);
 	        wizard.addListener(this);
 	        wizard.addStep(new EtapaUsuarioView(), "Usuario");
-	        wizard.addStep(new EtapaFinal(wizard), "Conclusão");
+	        wizard.addStep(new EtapaFinal(wizard), "Conclusao");
 	        wizard.setHeight("600px");
 	        wizard.setWidth("800px");
 	
@@ -59,8 +61,8 @@ WizardProgressListener{
 	        setMainWindow(mainWindow);
 	        app = this;
 	        gerenciador = new GerenciadorController(mainWindow, main);
-        }
- }
+	    }
+   }
      
     
     @Override
@@ -91,7 +93,7 @@ WizardProgressListener{
         wizard.setVisible(false);
         getMainWindow().showNotification(message);
         getMainWindow().setCaption(message);
-        Button startOverButton = new Button("Iniciar Aplicação",
+        Button startOverButton = new Button("Iniciar Aplicacao",
                 new Button.ClickListener() {
                     /**
 					 * 
@@ -105,7 +107,5 @@ WizardProgressListener{
         mainLayout.addComponent(startOverButton);
         mainLayout.setComponentAlignment(startOverButton,
                 Alignment.MIDDLE_CENTER);
-    }
-    
-    
+    }   
 }

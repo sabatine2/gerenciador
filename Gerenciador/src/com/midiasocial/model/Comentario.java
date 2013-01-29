@@ -14,7 +14,6 @@ import javax.persistence.Table;
 
 import com.midiasocial.dao.ComentarioDAO;
 import com.principal.helper.HibernateUtil;
-import com.vaadin.data.util.BeanItemContainer;
 
 @Entity
 @Table(name = "comentario")
@@ -79,6 +78,10 @@ public class Comentario {
 	}
 
 	public String getIdMidia() {
+		String converte = this.idMidia;
+		if(converte.split(":").length > 1){
+			return converte.split(":")[1];
+		}	
 		return idMidia;
 	}
 
@@ -135,6 +138,10 @@ public class Comentario {
 	}
 
 	public String getIdUsuario() {
+		String converte = this.idUsuario;
+		if(converte.split(":").length > 1){
+			return converte.split(":")[1];
+		}	
 		return idUsuario;
 	}
 
@@ -212,23 +219,6 @@ public class Comentario {
 	 */
 	public void setDeletarOffline(boolean deletarOffline) {
 		this.deletarOffline = deletarOffline;
-	}
-
-	@SuppressWarnings("rawtypes")
-	public static BeanItemContainer listaBens(){
-		BeanItemContainer<Comentario>beans = new BeanItemContainer<Comentario>(Comentario.class);
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-		  
-		List workouts = comentarioDAO.list();
-			
-		for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
-			Comentario wo = (Comentario) iterator.next();
-			beans.addBean(wo);
-	   	}	
-		//s.close();
-		return beans;
 	}
 		
 	@SuppressWarnings("rawtypes")

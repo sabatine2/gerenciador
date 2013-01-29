@@ -17,7 +17,6 @@ import javax.persistence.Table;
 
 import com.midiasocial.dao.AplicacaoMidiaSocialDAO;
 import com.principal.helper.HibernateUtil;
-import com.vaadin.data.util.BeanItemContainer;
 
 @Entity
 @Table(name = "appmidiasocial")
@@ -103,23 +102,6 @@ public class AplicacaoMidiaSocial {
 		this.usuarioappmediasocial = usuariomediasocial;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static BeanItemContainer listaBeans(){
-		BeanItemContainer<AplicacaoMidiaSocial>beans = new BeanItemContainer<AplicacaoMidiaSocial>(AplicacaoMidiaSocial.class);
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(s, AplicacaoMidiaSocial.class);
-	  
-		List workouts = appDAO.list();
-		
-		for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
-			AplicacaoMidiaSocial wo = (AplicacaoMidiaSocial) iterator.next();
-			beans.addBean(wo);
-       	}	
-		 //s.close();
-		 return beans;
-	}
-	
 	@SuppressWarnings("rawtypes")
 	public static List listaApp(){
 		

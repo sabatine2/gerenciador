@@ -8,6 +8,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.abstracts.dao.DAO;
+import com.cliente.model.Cliente;
 import com.contato.model.Contato;
 	
 	public class ContatoDAO extends DAO<Contato> {
@@ -25,6 +26,13 @@ import com.contato.model.Contato;
 			System.out.print("pesquisaContatoNome : " + nome);
 			Criteria c = session.createCriteria(Contato.class);
 			c.add(Restrictions.ilike("nome", "%" + nome + "%"));
+
+			return (Contato)c.uniqueResult();
+		}
+		
+		public Contato pesquisaContatoCliente(Cliente cliente) {
+			Criteria c = session.createCriteria(Contato.class);
+			c.add(Restrictions.eq("cliente",cliente));
 
 			return (Contato)c.uniqueResult();
 		}

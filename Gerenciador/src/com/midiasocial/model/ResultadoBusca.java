@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 import com.midiasocial.dao.ResultadoBuscaDAO;
 import com.principal.helper.HibernateUtil;
-import com.vaadin.data.util.BeanItemContainer;
 
 @Entity
 @Table(name = "resultadoBusca")
@@ -173,25 +172,6 @@ public class ResultadoBusca {
 		this.fotoUrl = fotoUrl;
 	}
 
-
-	@SuppressWarnings("rawtypes")
-	public static BeanItemContainer listaBens(){
-		BeanItemContainer<ResultadoBusca>beans = new BeanItemContainer<ResultadoBusca>(ResultadoBusca.class);
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ResultadoBuscaDAO postDAO = new ResultadoBuscaDAO(s, ResultadoBusca.class);
-		  
-		List workouts = postDAO.list();
-			
-		for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
-			ResultadoBusca wo = (ResultadoBusca) iterator.next();
-			beans.addBean(wo);
-	   	}	
-		//s.close();
-		return beans;
-	}
-		
-	
 	@SuppressWarnings("rawtypes")
 	public static List listaPost(){
 		

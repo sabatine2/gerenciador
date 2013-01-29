@@ -17,7 +17,6 @@ import javax.persistence.Table;
 
 import com.midiasocial.dao.UsuarioPubMidiaSocialDAO;
 import com.principal.helper.HibernateUtil;
-import com.vaadin.data.util.BeanItemContainer;
 
 @Entity
 @Table(name = "usuariopubmediasocial")
@@ -134,23 +133,6 @@ public class UsuarioPubMidiaSocial {
 	 */
 	public void setNomeRedeSocial(String nomeRedeSocial) {
 		this.nomeRedeSocial = nomeRedeSocial;
-	}
-
-	@SuppressWarnings("rawtypes")
-	public static BeanItemContainer listaBens(){
-		BeanItemContainer<UsuarioPubMidiaSocial>beans = new BeanItemContainer<UsuarioPubMidiaSocial>(UsuarioPubMidiaSocial.class);
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(s, UsuarioPubMidiaSocial.class);
-	  
-		List workouts = usuarioDAO.list();
-		
-		for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
-			UsuarioPubMidiaSocial wo = (UsuarioPubMidiaSocial) iterator.next();
-			beans.addBean(wo);
-       	}	
-		 //s.close();
-		 return beans;
 	}
 	
 	@SuppressWarnings("rawtypes")

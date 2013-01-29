@@ -5,16 +5,14 @@ import com.midiasocial.controller.ServicoController;
 import com.midiasocial.model.ServicoAtualizacao;
 import com.midiasocial.model.Servico;
 import com.midiasocial.view.form.ServicoForm;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.view.componente.TabelaFiltro;
@@ -26,7 +24,7 @@ public class MidiaSocialServiceView extends ViewComponente {
 
 	public ServicoController serviceController;
 	public TabelaFiltro tabelaFiltro;
-	public boolean isRemover;
+	public boolean iser;
 	private ServicoForm servicoForm;
 	
 	public MidiaSocialServiceView(ServicoController serviceController){
@@ -36,7 +34,7 @@ public class MidiaSocialServiceView extends ViewComponente {
 	@Override
 	public void modoTabela() {
 		
-		tabelaFiltro = new TabelaFiltro("Servi√ßo");
+		tabelaFiltro = new TabelaFiltro("Servico");
 		tabelaFiltro.filterField.addListener(new TextChangeListener() {
 			
 			public void textChange(TextChangeEvent event) {
@@ -68,9 +66,9 @@ public class MidiaSocialServiceView extends ViewComponente {
 				if (target != null) {
 					if (action == REMOVE_ITEM_ACTION) {
  						MessageBox mb = new MessageBox(getWindow(), 
- 							"Remover", 
+ 							"er", 
  							MessageBox.Icon.QUESTION, 
- 							"Remover Servico?",
+ 							"er Servico?",
  							new MessageBox.ButtonConfig(MessageBox.ButtonType.YES, "Sim"),
  							new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Nao"));
  				  	mb.show(new MessageBox.EventListener() {
@@ -82,14 +80,14 @@ public class MidiaSocialServiceView extends ViewComponente {
  									tabelaFiltro.tableMain.removeItem(target);
  									remover(target);
  									MessageBox mb = new MessageBox(getWindow(), 
- 										"Remover", 
+ 										"er", 
  										MessageBox.Icon.INFO, 
- 										"Servico Removido",  
+ 										"Servico ido",  
  										new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
  									mb.show();
  									System.out.println("RESULTADO TARGET: "+target);
  								} catch (Exception e) {
- 									msgErro("remover.view: "+e.getMessage() + isRemover);
+ 									msgErro("remover.view: "+e.getMessage() + iser);
 								}
  							}
  							else {
@@ -112,7 +110,7 @@ public class MidiaSocialServiceView extends ViewComponente {
 		
 			addComponent(modotabelaFiltro());
 			setComponent(modoLayoutTable);
-			isRemover = true;
+			iser = true;
 	}
 
 	@Override
@@ -131,7 +129,8 @@ public class MidiaSocialServiceView extends ViewComponente {
 		servicoForm = new ServicoForm(serviceController.getServico());
 		visualizarView.addComponent(servicoForm);
 		visualizarView.setSpacing(true);
-		Table table = new Table("",ServicoAtualizacao.listaBens());
+		@SuppressWarnings("unchecked")
+		Table table = new Table("",new BeanItemContainer<ServicoAtualizacao>(ServicoAtualizacao.class,ServicoAtualizacao.listaServico()));
 		table.setSizeFull();
 		visualizarView.addComponent(table);
 		return visualizarView;
@@ -205,7 +204,7 @@ public class MidiaSocialServiceView extends ViewComponente {
 		removeComponent(getComponent());
     	addComponent(modoLayoutTable);
     	setComponent(modoLayoutTable);
-    	isRemover= true;
+    	iser= true;
 		
     	buttonAdicionar.setVisible(true);
 		buttonSalvar.setVisible(false);
@@ -253,26 +252,35 @@ public class MidiaSocialServiceView extends ViewComponente {
 		}
 		addComponent(modoLayoutView);
 		setComponent(modoLayoutView);
-		isRemover = false;
+		iser = false;
 		
-		//ativar servico
-		if(serviceController.getServico().servicoAtivo())
-			buttonClonar.setCaption("Desativar");
-		else 
-			buttonClonar.setCaption("Ativar");
-		
+		buttonClonar.setCaption("Força Atualização");
 		buttonClonar.setVisible(true);
 		buttonClonar.addListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				serviceController.ativarServico();
+			}
+		});	
+		
+		//ativar servico
+		if(serviceController.getServico().isAtivo())
+			buttonEditar.setCaption("Desativar");
+		else 
+			buttonEditar.setCaption("Ativar");
+		
+		buttonEditar.setVisible(true);
+		buttonEditar.addListener(new ClickListener() {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if (serviceController.alteraStatusServico()){
+				if (serviceController.alterarServico()){
 					MessageBox mb = new MessageBox(getWindow(), 
 							"Servico", 
 			                MessageBox.Icon.INFO, "Servico Ativo",  
 			                new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
 			      	mb.show(); 
-			      	buttonClonar.setCaption("Desativar");
+			      	buttonEditar.setCaption("Desativar");
 				}
 				else{
 					MessageBox mb = new MessageBox(getWindow(), 
@@ -280,14 +288,13 @@ public class MidiaSocialServiceView extends ViewComponente {
 			                MessageBox.Icon.INFO, "Servico desativado",  
 			                new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
 			      	mb.show(); 
-			      	buttonClonar.setCaption("Ativar");
+			      	buttonEditar.setCaption("Ativar");
 				}
 			}
 		});
 		
 		buttonAdicionar.setVisible(false);
 		buttonDeletar.setVisible(false);
-		buttonEditar.setVisible(true);
 		buttonSalvar.setVisible(false);
 		buttonVoltar.setVisible(true);
 	}
@@ -306,7 +313,7 @@ public class MidiaSocialServiceView extends ViewComponente {
 	}
 	
 	public void defaultTable(){
-		tabelaFiltro.tableMain.setContainerDataSource(Servico.listaBens());
+		tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<Servico>(Servico.class, Servico.listaServico()));
 		//midiaSocialServiceView.tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"idInterno", "nome", "screenName", "status"});
 	}
 }

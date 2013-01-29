@@ -1,5 +1,6 @@
 package com.midiasocial.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +16,6 @@ import com.midiasocial.dao.ServicoDAO;
 import com.midiasocial.service.MidiaSocialService;
 import com.principal.helper.HibernateUtil;
 import com.usuario.model.Usuario;
-import com.vaadin.data.util.BeanItemContainer;
 
 @Entity
 @Table(name="servico")
@@ -33,6 +33,9 @@ public class Servico {
 	
 	@Column(name = "intervalo")
 	private Long intervalo = new Long(100l);
+	
+	@Column(name = "ativo")
+	private Boolean ativo = false;
 	
 	@OneToOne
 	private Usuario usuario;
@@ -79,6 +82,14 @@ public class Servico {
 		this.intervalo = intervalo;
 	}
 
+	public Boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+	
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -86,36 +97,14 @@ public class Servico {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
-	//METODOS
-	
+
 	@SuppressWarnings("rawtypes")
-	public static BeanItemContainer listaBens(){
-		BeanItemContainer<Servico>beans = new BeanItemContainer<Servico>(Servico.class);
+	public static List<Servico> listaServico(){
 		
 		org.hibernate.Session s = HibernateUtil.openSession();
 		ServicoDAO servicoDAO = new ServicoDAO(s, Servico.class);
+		return servicoDAO.list();
 	  
-		List workouts = servicoDAO.list();
-		
-		for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
-			Servico wo = (Servico) iterator.next();
-			beans.addBean(wo);
-       	}	
-		 //s.close();
-		 return beans;
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public static List listaUsuario(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ServicoDAO servicoDAO = new ServicoDAO(s, Servico.class);
-	  
-		List workouts = servicoDAO.list();
-		
-		 //s.close();
-		 return workouts;
 	}
 	
 	public static Servico pesquisaServicoID(Long id){
@@ -125,8 +114,7 @@ public class Servico {
 		try{
 		  	org.hibernate.Session s = HibernateUtil.openSession();
 	    	ServicoDAO servicoDAO = new ServicoDAO(s, Servico.class);
-	    	servico = servicoDAO.pesquisaUsuarioID(id);
-	    	s.close();
+	    	servico = servicoDAO.pesquisaServicoID(id);
 	    	return servico;
 	    }
 		catch (Exception e) {
@@ -171,33 +159,53 @@ public class Servico {
 		}	
 	}
 	
-	@Transient
-	public boolean servicoAtivo(){
-		
-		try {
-			if(midiaServico.isAlive()){
-				return true;
+	public void ativar(){
+		try{
+			StringBuilder mensagemErro = new StringBuilder();
+			MidiaSocialService midiaSocialService = new MidiaSocialService(mensagemErro);	
+					
+			ServicoAtualizacao servicoAtualizar = new ServicoAtualizacao();
+			servicoAtualizar.setDataCriacao(new Date());
+			StringBuilder listaHome = new StringBuilder();
+					
+			@SuppressWarnings("unchecked")
+			ArrayList<UsuarioAppMidiaSocial> usuarioLista = (ArrayList<UsuarioAppMidiaSocial>) UsuarioAppMidiaSocial.listaUsuario();
+			for (Iterator<UsuarioAppMidiaSocial> i = usuarioLista.iterator();i.hasNext();){
+				UsuarioAppMidiaSocial u = i.next();
+					
+				listaHome.append(" "+u.getNome());
+				if(u.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
+					midiaSocialService.servicoFacebook(u);
+				}
+				else if(u.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
+					midiaSocialService.servicoTwitter(u);
+				}
+						
+				midiaSocialService.atualizarPublicacaoOff(u);
+		     	midiaSocialService.atualizarCurtirOff(u);
+				midiaSocialService.atualizarCurtirRemoverOff(u);
+				midiaSocialService.atualizarDeletarOff(u);
+			}		
+					
+				midiaSocialService.atualizarComentarioOff();
+					
+				servicoAtualizar.setDataEncerramento(new Date());
+				servicoAtualizar.setHomeMonitorada(listaHome.toString());
+				servicoAtualizar.setMensagemErro(mensagemErro.toString());
+				servicoAtualizar.salvar();
+					
+				mensagemErro = null;
+					
+				try {
+					Thread.sleep(intervalo*60*1000);
+				} catch (InterruptedException e) {
+						e.printStackTrace();
+				}
+			
+			} catch (Exception e) {
+				//servico.setAtivo(false);
 			}
-			else return false;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+		
+	   }
 	
-	public void iniciarServico(){
-	
-		if(midiaServico == null)
-			midiaServico = new MidiaSocialService(getIntervalo());
-		
-		midiaServico.start();
-		
-	}
-	
-	public void pararServico(){
-		
-		midiaServico.parar();
-		midiaServico = null;
-		
-	}
-
 }

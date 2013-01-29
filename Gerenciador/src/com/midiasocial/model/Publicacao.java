@@ -19,7 +19,6 @@ import javax.persistence.Table;
 
 import com.midiasocial.dao.PublicacaoDAO;
 import com.principal.helper.HibernateUtil;
-import com.vaadin.data.util.BeanItemContainer;
 
 @Entity
 @Table(name = "publicacao")
@@ -54,8 +53,6 @@ public class Publicacao {
 	@Column(name = "publicacao_curtir")
 	private boolean curtir;
 	
-	@Column(name = "publicacao_usuariomediaid")
-	private Long usuarioMediaId;
 	
 	@Column(name = "publicacao_deletado")
 	private boolean deletado;
@@ -106,6 +103,10 @@ public class Publicacao {
 	}
 
 	public String getIdMidia() {
+		String converte = this.idMidia;
+		if(converte.split(":").length > 1){
+			return converte.split(":")[1];
+		}	
 		return idMidia;
 	}
 
@@ -167,14 +168,6 @@ public class Publicacao {
 
 	public void setComentario(Collection<Comentario> comentario) {
 		this.comentario = comentario;
-	}
-
-	public Long getUsuarioMediaId() {
-		return usuarioMediaId;
-	}
-
-	public void setUsuarioMediaId(Long usuarioMediaId) {
-		this.usuarioMediaId = usuarioMediaId;
 	}
 
 	public Date getDataCriacao() {
@@ -316,33 +309,13 @@ public class Publicacao {
 	}
 	
 	//METODOS
-	
-	@SuppressWarnings("rawtypes")
-	public static BeanItemContainer listaBens(){
-		BeanItemContainer<Publicacao>beans = new BeanItemContainer<Publicacao>(Publicacao.class);
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		  
-		List workouts = postDAO.list();
-			
-		for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
-			Publicacao wo = (Publicacao) iterator.next();
-			beans.addBean(wo);
-	   	}	
-		//s.close();
-		return beans;
-	}
 		
 	@SuppressWarnings("rawtypes")
 	public static List listaPost(){
 		
 		org.hibernate.Session s = HibernateUtil.openSession();
 		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		  
 		List workouts = postDAO.list();
-			
-		//s.close();
 		return workouts;
 		
 	}

@@ -26,11 +26,11 @@ public class PublicacaoController {
 	public void comentar(String mensagem){
 		if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 			fbService = new FacebookService();
-			fbService.comentar(publicacao.getIdMidia(), mensagem, user);
+			fbService.comentar(publicacao, mensagem, user);
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.comentar(Long.parseLong(publicacao.getIdMidia()), mensagem, TwitterService.MODO_ON);
+             twService.comentar(publicacao, mensagem, TwitterService.MODO_ON);
         }
 	}
 	
@@ -58,33 +58,33 @@ public class PublicacaoController {
 	public void curtir(){
 		if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 			fbService = new FacebookService();
-			fbService.curtirPublicacao(publicacao.getIdMidia(), user);
+			fbService.curtirPublicacao(publicacao, user);
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.curtirPublicacao(Long.parseLong(publicacao.getIdMidia()),TwitterService.MODO_ON);
+            twService.curtirPublicacao(publicacao,TwitterService.MODO_ON);
         }	
 	}
 	
 	public void curtirRemover(){
 		if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 			fbService = new FacebookService();
-			fbService.curtirRemoverPublicacao(publicacao.getIdMidia(), user);
+			fbService.curtirRemoverPublicacao(publicacao, user);
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.curtirRemoverPublicacao(Long.parseLong(publicacao.getIdMidia()), TwitterService.MODO_ON);
+            twService.curtirRemoverPublicacao(publicacao, TwitterService.MODO_ON);
         }
 	}
 	
 	public void deletar(){
 		if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Facebook")){
 			fbService = new FacebookService();
-			fbService.deletarPublicacao(publicacao.getIdMidia(), user);
+			fbService.deletarPublicacao(publicacao, user);
 		}
 		else if(user.getAppMidiaSocial().getRedeSocial().contentEquals("Twitter")){
             TwitterService twService = new TwitterService(user);
-            twService.deletarPublicacao(Long.parseLong(publicacao.getIdMidia()),TwitterService.MODO_ON);
+            twService.deletarPublicacao(publicacao,TwitterService.MODO_ON);
         }	
 	}
 

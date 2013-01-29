@@ -66,7 +66,7 @@ public class FacebookButton extends OAuthButton {
     protected String getAuthUrl() {
         String url = getService().getAuthorizationUrl(null);
         url += "&scope=email" + ",user_status" + ",friends_status" + ",publish_actions" +
-        		",manage_pages" + ",publish_stream" + ",read_mailbox" + ",read_stream";
+        		",manage_pages" + ",publish_stream" + ",read_mailbox" + ",read_stream, manage_notifications" ;
         return url;
     }
 

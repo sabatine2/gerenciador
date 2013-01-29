@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,15 +17,11 @@ import java.util.Locale;
 
 import org.json.JSONException;
 
-import com.auditor.helper.Conexao;
-import com.midiasocial.controller.PublicacaoController;
 import com.midiasocial.model.Comentario;
 import com.midiasocial.model.Publicacao;
 import com.midiasocial.model.ResultadoBusca;
 import com.midiasocial.model.UsuarioAppMidiaSocial;
 import com.midiasocial.model.UsuarioPubMidiaSocial;
-import com.midiasocial.view.PublicacaoView;
-import com.midiasocial.view.PaginaView;
 import com.restfb.types.User;
 import com.restfb.BinaryAttachment;
 import com.restfb.Connection;
@@ -41,45 +38,39 @@ import com.restfb.types.Post;
 @SuppressWarnings({"deprecation", "static-access", "unused"})
 public class FacebookService {
 
-	public static Connection<Post> getUserTimeLineRT(UsuarioAppMidiaSocial usuario){
+	public static Connection<Post> getUserTimeLineRT(UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		Connection<Post> myFeed = null;
 		
 		try{
-			UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuario;
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			myFeed = facebookClient.fetchConnection(usuario.getFanpageScreenName()+"/feed", Post.class);
+			UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuarioMidiaSocial;
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			myFeed = facebookClient.fetchConnection(usuarioMidiaSocial.getFanpageScreenName()+"/feed", Post.class);
 			return myFeed;
 		}catch (Exception e) {
 			return myFeed;
 		}	
 	}
 	
-	public Connection<Post> getUserTimeLine(UsuarioAppMidiaSocial usuario){
-		UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuario;
-		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-		Connection<Post> myFeed = facebookClient.fetchConnection(usuario.getFanpageScreenName()+"/feed", Post.class);
+	public Connection<Post> getUserTimeLine(UsuarioAppMidiaSocial usuarioMidiaSocial){
+		UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuarioMidiaSocial;
+		FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+		Connection<Post> myFeed = facebookClient.fetchConnection(usuarioMidiaSocial.getFanpageScreenName()+"/feed", Post.class);
 		return myFeed;
 	}
 	
-
-	public List<Post> getUserTimeLineData(UsuarioAppMidiaSocial usuario){
-		
-		UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuario;
-		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-		String query = "SELECT post_id, actor_id, target_id, message FROM stream WHERE source_id = 423421014392436 AND created_time < "+ System.currentTimeMillis() +"LIMIT 50 ";
-		List<Post> usuario2 = facebookClient.executeQuery(query, Post.class);
-		for(Iterator<Post> i = usuario2.iterator(); i.hasNext(); ){
-			Post p = i.next();
-			System.out.println("mensagemm "+ p.getMessage());
-		}
-	    return usuario2;
+	public Connection<Post> getUserTimeLineData(UsuarioAppMidiaSocial usuarioMidiaSocial, Date dataInicial){
+		UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuarioMidiaSocial;
+		System.out.println("data inicial "+ dataInicial.toLocaleString());
+		Parameter.with("since",dataInicial.toLocaleString());
+		FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+		Connection<Post> myFeed = facebookClient.fetchConnection(usuarioMidiaSocial.getFanpageScreenName()+"/feed", Post.class);
+		return myFeed;
 	}
 	
-	
-	private static boolean isUserLikes(UsuarioAppMidiaSocial usuario, String idComment) throws JSONException{
+	private static boolean isUserLikes(UsuarioAppMidiaSocial usuarioMidiaSocial, String idComment) throws JSONException{
 		
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
 			JsonObject jsonObj = facebookClient.fetchObject(idComment, JsonObject.class);
 			System.out.println(jsonObj.toString());
 			boolean userLikes = jsonObj.getBoolean("user_likes");
@@ -87,11 +78,11 @@ public class FacebookService {
 		
 	}
 	
-	public void comentar(String id, String mensagem, UsuarioAppMidiaSocial usuario){
+	public void comentar(Publicacao publicacao, String mensagem, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		try{
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			FacebookType publishCommentResponse = facebookClient.publish(id + "/comments", FacebookType.class, 
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			FacebookType publishCommentResponse = facebookClient.publish(publicacao.getIdMidia() + "/comments", FacebookType.class, 
 					Parameter.with("message", mensagem));
 			
 			Comment comment = null;
@@ -103,35 +94,33 @@ public class FacebookService {
 					e.printStackTrace();
 				}
 			    try{
-			    	comment = getCommentById(publishCommentResponse.getId(), usuario);
+			    	comment = getCommentById(publishCommentResponse.getId(), usuarioMidiaSocial);
 			    }catch (Exception e) {
 					e.printStackTrace();
 					tentativas++;
 				}
 			}while( (comment == null) && (tentativas < 3) );
 			
-			salvarComentario(comment, id, usuario);
+			salvarComentario(comment, publicacao, usuarioMidiaSocial);
 			
 		} catch (FacebookNetworkException fe) {
-			
-			Publicacao pub = new Publicacao().pesquisaPostIdMidia(id);
 			
 			Comentario com = new Comentario();
 			com.setComentarOffline(true);
 			com.setDataCriacao(new Date());
-			com.setIdUsuario(usuario.getIdMidia());
+			com.setIdUsuario(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+usuarioMidiaSocial.getIdMidia());
 			com.setMensagem(mensagem);
-			com.setNomeUsuario(usuario.getNome());
-			com.setPublicacao(pub);
+			com.setNomeUsuario(usuarioMidiaSocial.getNome());
+			com.setPublicacao(publicacao);
 			com.salvar();
 		}
 	}
 	
-	public void publicar(String id, String mensagem, UsuarioAppMidiaSocial usuario){
+	public void publicar(String idDestino, String mensagem, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		try{
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			FacebookType publishMessageResponse = facebookClient.publish(id+"/feed", FacebookType.class,
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			FacebookType publishMessageResponse = facebookClient.publish(idDestino+"/feed", FacebookType.class,
 					Parameter.with("message", mensagem));
 			
 			Post post = null;
@@ -143,36 +132,35 @@ public class FacebookService {
 					e.printStackTrace();
 				}
 			    try{
-			    	post = getPostById(publishMessageResponse.getId(), usuario);
+			    	post = getPostById(publishMessageResponse.getId(), usuarioMidiaSocial);
 			    }catch (Exception e) {
 					e.printStackTrace();
 					tentativas++;
 				}
 			}while( (post == null) && (tentativas < 3) );
 			
-			salvarPublicacao(post, usuario);
+			salvarPublicacao(post, usuarioMidiaSocial);
 			
 		} catch (FacebookNetworkException fe) {
 			
 			Publicacao pub = new Publicacao();
 			pub.setDataCriacao(new Date());
 			pub.setMensagem(mensagem);
-			pub.setFotoUrl(usuario.getFotoUrl());
-			pub.setIdUsuario(usuario.getIdMidia());
-			pub.setNomeUsuario(usuario.getNome());
-			pub.setUsuarioMediaId(usuario.getIdInterno());
-			pub.setUsuarioAppMidiaSocial(usuario);
+			pub.setFotoUrl(usuarioMidiaSocial.getFotoUrl());
+			pub.setIdUsuario(usuarioMidiaSocial.getIdMidia());
+			pub.setNomeUsuario(usuarioMidiaSocial.getNome());
+			pub.setUsuarioAppMidiaSocial(usuarioMidiaSocial);
 			pub.setPublicarOffline(true);
-			pub.setIdDestino(id);
+			pub.setIdDestino(idDestino);
 			pub.salvar();
 		}	
 	}
 	
-	public void postarFoto(String id, String caminhoImagem, String mensagem, UsuarioAppMidiaSocial usuario) throws IOException{
+	public void postarFoto(String id, String caminhoImagem, String mensagem, UsuarioAppMidiaSocial usuarioMidiaSocial) throws IOException{
 
 		try{
 			InputStream is = new FileInputStream(caminhoImagem);
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
 			facebookClient.publish(id + "/picture", FacebookType.class,
 					BinaryAttachment.with("img" , is),
 					Parameter.with("message", mensagem));
@@ -184,47 +172,47 @@ public class FacebookService {
 		}
 	}
 	
-	public void curtirComentario(String id, UsuarioAppMidiaSocial usuario){
+	public void curtirComentario(Comentario comentario, UsuarioAppMidiaSocial usuarioMidiaSocial){
 
-		Comentario com = Comentario.pesquisaComentarioIdMidia(id);
 		
 		try{
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.publish(id + "/likes", Boolean.class);
-			
-			com.setCurtir(true);
-			com.alterar();
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			try{
+			facebookClient.publish(comentario.getIdMidia() + "/likes", Boolean.class);
+			}catch (NullPointerException e) {
+				
+			}
+			comentario.setCurtir(true);
+			comentario.alterar();
 			
 		} catch (FacebookNetworkException fe) {
-			com.setCurtirOffline(true);
-			com.alterar();
+			comentario.setCurtirOffline(true);
+			comentario.setCurtir(true);
+			comentario.alterar();
 		}
 	}
 	
-	public void curtirPublicacao(String id, UsuarioAppMidiaSocial usuario){
+	public void curtirPublicacao(Publicacao pub, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
-		Publicacao pub = Publicacao.pesquisaPostIdMidia(id);
 		
 		try{
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.publish(id + "/likes", Boolean.class);
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			facebookClient.publish(pub.getIdMidia() + "/likes", Boolean.class);
 			pub.setCurtir(true);
 			pub.alterar();
 			
 		} catch (FacebookNetworkException fe) {
-			
+			pub.setCurtir(true);
 			pub.setCurtirOffline(true);
 			pub.alterar();
 		}
 	}
 	
-	public void deletarPublicacao(String id, UsuarioAppMidiaSocial usuario){
-		
-		Publicacao pub = Publicacao.pesquisaPostIdMidia(id);
+	public void deletarPublicacao(Publicacao pub, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		try{
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.deleteObject(id);
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			facebookClient.deleteObject(pub.getIdMidia());
 			
 			pub.setDeletado(true);
 			pub.setDataDeletado(new Date());
@@ -240,38 +228,33 @@ public class FacebookService {
 			}
 			
 		} catch (FacebookNetworkException fe) {
-			
+			pub.setDeletado(true);
 			pub.setDeletarOffline(true);
 			pub.alterar();
 		}
 	}
 	
-	public void deletarComentario(String id, UsuarioAppMidiaSocial usuario){
-		
-		Comentario com = Comentario.pesquisaComentarioIdMidia(id);
+	public void deletarComentario(Comentario com, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		try{
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.deleteObject(id);
-			
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			facebookClient.deleteObject(com.getIdMidia());
 			com.setDeletado(true);
 			com.setDataDeletado(new Date());
 			com.alterar();
 			
 		} catch (FacebookNetworkException fe) {
-			
+			com.setDeletado(true);
 			com.setDeletarOffline(true);
 			com.alterar();
 		}
 	}
 	
-	public void curtirRemoverPublicacao(String id, UsuarioAppMidiaSocial usuario){
+	public void curtirRemoverPublicacao(Publicacao pub, UsuarioAppMidiaSocial usuarioMidiaSocial){
 
-		Publicacao pub = Publicacao.pesquisaPostIdMidia(id);
-		
 		try{
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.deleteObject(id + "/likes");
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			facebookClient.deleteObject(pub.getIdMidia() + "/likes");
 			
 			pub.setCurtir(false);
 			pub.alterar();
@@ -283,13 +266,11 @@ public class FacebookService {
 		}
 	}
 	
-	public void curtirRemoverComentario(String id, UsuarioAppMidiaSocial usuario){
+	public void curtirRemoverComentario(Comentario com, UsuarioAppMidiaSocial usuarioMidiaSocial){
 
-		Comentario com = Comentario.pesquisaComentarioIdMidia(id);
-		
 		try{
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
-			facebookClient.deleteObject(id + "/likes");
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
+			facebookClient.deleteObject(com.getIdMidia() + "/likes");
 			
 			com.setCurtir(false);
 			com.alterar();
@@ -301,22 +282,22 @@ public class FacebookService {
 		}
 	}
 	
-	public static User getUserById(String id, UsuarioAppMidiaSocial usuario){
+	public static User getUserById(String id, UsuarioAppMidiaSocial usuarioMidiaSocial){
 
-			FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
+			FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
 			User user = facebookClient.fetchObject( id, User.class );
 			return user;
 	}
 	
-	public static Post getPostById(String id, UsuarioAppMidiaSocial usuario){
+	public static Post getPostById(String id, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
-		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
+		FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
 		Post post = facebookClient.fetchObject( id, Post.class );
 		return post;
 	}
 	
-	public static Comment getCommentById(String id, UsuarioAppMidiaSocial usuario){
-		FacebookClient facebookClient = new DefaultFacebookClient(usuario.getTokenAccess());
+	public static Comment getCommentById(String id, UsuarioAppMidiaSocial usuarioMidiaSocial){
+		FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
 		Comment comment = facebookClient.fetchObject( id, Comment.class );
 		return comment;
 	}
@@ -355,16 +336,15 @@ public class FacebookService {
 			return listaResultadoFacebook;
 	}
 	
-	public Publicacao salvarPublicacao(Post post, UsuarioAppMidiaSocial usuario){
+	public Publicacao salvarPublicacao(Post post, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		Publicacao pub = new Publicacao();
 		pub.setMensagem(post.getMessage());
-		pub.setIdMidia(post.getId());
+		pub.setIdMidia(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+post.getId());
 		pub.setFotoUrl("https://graph.facebook.com/"+post.getFrom().getId()+"/picture");
 		pub.setIdUsuario(post.getFrom().getId());
 		pub.setNomeUsuario(post.getFrom().getName());
-		pub.setUsuarioMediaId(usuario.getIdInterno());
-		pub.setUsuarioAppMidiaSocial(usuario);
+		pub.setUsuarioAppMidiaSocial(usuarioMidiaSocial);
 		pub.setAnexoUrl(post.getPicture());
 			
 		Date dataPost = null;  
@@ -377,49 +357,48 @@ public class FacebookService {
 		}
 		pub.setDataCriacaoMidia(dataPost);
 		
-		UsuarioPubMidiaSocial usuarioPub = UsuarioPubMidiaSocial.pesquisaUsuarioIdMidia(post.getFrom().getId()); 
+		UsuarioPubMidiaSocial usuarioMidiaSocialPub = UsuarioPubMidiaSocial.pesquisaUsuarioIdMidia(post.getFrom().getId()); 
 		
-		if(usuarioPub != null){
-			pub.setUsuarioPubMidiaSocial(usuarioPub);
+		if(usuarioMidiaSocialPub != null){
+			pub.setUsuarioPubMidiaSocial(usuarioMidiaSocialPub);
 		}
 		else{
-			pub.setUsuarioPubMidiaSocial(salvarUsuarioPub(pub, usuario));
+			pub.setUsuarioPubMidiaSocial(salvarUsuarioPub(pub, usuarioMidiaSocial));
 		}
 		
 		pub.salvar();		
 		return pub;
 	}
 	
-	public UsuarioPubMidiaSocial salvarUsuarioPub(Publicacao pub, UsuarioAppMidiaSocial usuario){
+	public UsuarioPubMidiaSocial salvarUsuarioPub(Publicacao pub, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
-		User user = getUserById(pub.getIdUsuario(), usuario);
-		UsuarioPubMidiaSocial usuarioPub = new UsuarioPubMidiaSocial();
+		User user = getUserById(pub.getIdUsuario(), usuarioMidiaSocial);
+		UsuarioPubMidiaSocial usuarioMidiaSocialPub = new UsuarioPubMidiaSocial();
 		
-		usuarioPub.setIdMidia(user.getId());
-		usuarioPub.setNome(user.getName());
-		usuarioPub.setScreenName(user.getUsername());
-		usuarioPub.setFotoUrl("https://graph.facebook.com/"+user.getId()+"/picture");
-		usuarioPub.setFotoPerfilUrl("https://graph.facebook.com/"+user.getId()+"/picture?width=148&height=148");
-		usuarioPub.setNomeRedeSocial("Facebook");
-		usuarioPub.setUrlPerfil("http://www.facebook.com/"+user.getUsername());
-		usuarioPub.salvar();
+		usuarioMidiaSocialPub.setIdMidia(user.getId());
+		usuarioMidiaSocialPub.setNome(user.getName());
+		usuarioMidiaSocialPub.setScreenName(user.getUsername());
+		usuarioMidiaSocialPub.setFotoUrl("https://graph.facebook.com/"+user.getId()+"/picture");
+		usuarioMidiaSocialPub.setFotoPerfilUrl("https://graph.facebook.com/"+user.getId()+"/picture?width=148&height=148");
+		usuarioMidiaSocialPub.setNomeRedeSocial("Facebook");
+		usuarioMidiaSocialPub.setUrlPerfil("http://www.facebook.com/"+user.getUsername());
+		usuarioMidiaSocialPub.salvar();
 		
-		return usuarioPub;
+		return usuarioMidiaSocialPub;
 	}
 	
-	public Comentario salvarComentario(Comment comment, String idMidia, UsuarioAppMidiaSocial usuario){
+	public Comentario salvarComentario(Comment comment, Publicacao pub, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		Comentario c = new Comentario();	
 
-		c.setIdMidia(comment.getId());
-		c.setIdUsuario(comment.getFrom().getId());
+		c.setIdMidia(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+comment.getId());
+		c.setIdUsuario(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+comment.getFrom().getId());
 		c.setMensagem(comment.getMessage());
 		c.setNomeUsuario(comment.getFrom().getName());
 		c.setComentarOffline(false);
 		c.setCurtirOffline(false);
 		c.setCurtirRemoverOffline(false);
-		Publicacao p = new Publicacao().pesquisaPostIdMidia(idMidia);
-		c.setPublicacao(p);
+		c.setPublicacao(pub);
 			
 		Date dataComment = null;  
 		String dateComment = comment.getCreatedTime().toLocaleString();
@@ -433,7 +412,7 @@ public class FacebookService {
 		c.setDataCriacaoMidia(dataComment);
 			
          try {
-				if (isUserLikes(usuario, c.getIdMidia())) {
+				if (isUserLikes(usuarioMidiaSocial, c.getIdMidia())) {
 					c.setCurtir(true);
 				}
 				else {
@@ -447,7 +426,7 @@ public class FacebookService {
 			return c;
 	}
 	
-	public ArrayList<Publicacao> postToPublish(Connection<Post> posts, UsuarioAppMidiaSocial usuario){
+	public ArrayList<Publicacao> postToPublish(Connection<Post> posts, UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		ArrayList<Publicacao> pubs = new ArrayList<Publicacao>();
 		
@@ -456,12 +435,12 @@ public class FacebookService {
 			for (Post post : myFeedConnectionPage){
  				 if (post.getMessage() != null) {
  					
- 					Publicacao pub = salvarPublicacao(post, usuario);
+ 					Publicacao pub = salvarPublicacao(post, usuarioMidiaSocial);
  					
  					List<Comment> listComment = post.getComments().getData();
      				for (Iterator<Comment> i = listComment.iterator();i.hasNext();) {
-     					
-     					salvarComentario(i.next(), pub.getIdMidia(), usuario);
+     					pub = Publicacao.pesquisaPostIdMidia(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+post.getId());
+     					salvarComentario(i.next(), pub, usuarioMidiaSocial);
 					 }
  				 }
  			 }

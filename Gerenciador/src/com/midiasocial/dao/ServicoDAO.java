@@ -11,9 +11,9 @@ import com.midiasocial.model.Servico;
 			super(session, classe);
 		}
 		
-		public Servico pesquisaUsuarioID(Long id) {
-			System.out.print("pesquisaUsuarioId : " + id);
+		public Servico pesquisaServicoID(Long id) {
 			return (Servico) session.load(Servico.class, id);
 		}
+		
 		
 	}

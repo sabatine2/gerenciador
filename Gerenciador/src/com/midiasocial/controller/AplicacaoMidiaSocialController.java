@@ -2,6 +2,7 @@ package com.midiasocial.controller;
 
 import com.midiasocial.model.AplicacaoMidiaSocial;
 import com.midiasocial.view.AplicacaoMidiaSocialView;
+import com.vaadin.data.util.BeanItemContainer;
 
 public class AplicacaoMidiaSocialController {
 	
@@ -96,7 +97,7 @@ public class AplicacaoMidiaSocialController {
 	}
 	
 	public void defaultTable(){
-		appView.tabelaFiltro.tableMain.setContainerDataSource(AplicacaoMidiaSocial.listaBeans());
+		appView.tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<AplicacaoMidiaSocial>(AplicacaoMidiaSocial.class,AplicacaoMidiaSocial.listaApp()));
 		appView.tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"id", "nome", "redeSocial"});
 	}
 }

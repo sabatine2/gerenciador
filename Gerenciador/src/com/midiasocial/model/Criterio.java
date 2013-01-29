@@ -17,7 +17,6 @@ import javax.persistence.Table;
 
 import com.midiasocial.dao.CriterioDAO;
 import com.principal.helper.HibernateUtil;
-import com.vaadin.data.util.BeanItemContainer;
 
 @Entity
 @Table(name = "criterio")
@@ -116,25 +115,9 @@ public class Criterio {
 		return palavra;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static BeanItemContainer listaBens(){
-		BeanItemContainer<Criterio>beans = new BeanItemContainer<Criterio>(Criterio.class);
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		CriterioDAO criterioDAO = new CriterioDAO(s, Criterio.class);
-	  
-		List workouts = criterioDAO.list();
-		
-		for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
-			Criterio wo = (Criterio) iterator.next();
-			beans.addBean(wo);
-       	}	
-		 //s.close();
-		 return beans;
-	}
 	
 	@SuppressWarnings("rawtypes")
-	public static List listaUsuario(){
+	public static List listaAll(){
 		
 		org.hibernate.Session s = HibernateUtil.openSession();
 		CriterioDAO criterioDAO = new CriterioDAO(s, Criterio.class);

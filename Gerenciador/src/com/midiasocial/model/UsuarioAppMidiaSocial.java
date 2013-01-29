@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import com.vaadin.data.util.BeanItemContainer;
 import com.midiasocial.dao.UsuarioAppMidiaSocialDAO;
 import com.principal.helper.HibernateUtil;
 
@@ -188,23 +187,6 @@ public class UsuarioAppMidiaSocial {
 	 */
 	public void setPublicacao(Collection<Publicacao> publicacao) {
 		this.publicacao = publicacao;
-	}
-
-	@SuppressWarnings("rawtypes")
-	public static BeanItemContainer listaBens(){
-		BeanItemContainer<UsuarioAppMidiaSocial>beans = new BeanItemContainer<UsuarioAppMidiaSocial>(UsuarioAppMidiaSocial.class);
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(s, UsuarioAppMidiaSocial.class);
-	  
-		List workouts = usuarioDAO.list();
-		
-		for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
-			UsuarioAppMidiaSocial wo = (UsuarioAppMidiaSocial) iterator.next();
-			beans.addBean(wo);
-       	}	
-		 //s.close();
-		 return beans;
 	}
 	
 	@SuppressWarnings("rawtypes")

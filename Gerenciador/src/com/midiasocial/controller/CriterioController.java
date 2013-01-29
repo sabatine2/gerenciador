@@ -3,6 +3,7 @@ package com.midiasocial.controller;
 import com.midiasocial.model.Criterio;
 import com.midiasocial.model.PalavraChaveMidia;
 import com.midiasocial.view.CriterioView;
+import com.vaadin.data.util.BeanItemContainer;
 
 import de.steinwedel.vaadin.MessageBox;
 
@@ -118,7 +119,7 @@ public class CriterioController {
 	}
 	
 	public void defaultTable(){
-		criterioView.tabelaFiltro.tableMain.setContainerDataSource(Criterio.listaBens());
+		criterioView.tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<Criterio>(Criterio.class, Criterio.listaAll()));
 		criterioView.tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"id", "nome", "status", "prioridade"});
 	}
 }

@@ -3,6 +3,7 @@ package com.midiasocial.view;
 import com.abstracts.view.ViewComponente;
 import com.midiasocial.controller.UsuarioPubMidiaSocialController;
 import com.midiasocial.model.UsuarioPubMidiaSocial;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
@@ -137,8 +138,9 @@ public class UsuarioPubMidiaSocialView extends ViewComponente {
 		defaultTable();		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void defaultTable(){
-		tabelaFiltro.tableMain.setContainerDataSource(UsuarioPubMidiaSocial.listaBens());
+		tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<UsuarioPubMidiaSocial>(UsuarioPubMidiaSocial.class,UsuarioPubMidiaSocial.listaUsuario()));
 		tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"idInterno", "nome", "screenName"});
 		
 	}
