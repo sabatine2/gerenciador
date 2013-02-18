@@ -172,16 +172,16 @@ public class MidiaSocialServiceView extends ViewComponente {
 	public void editar() {
 		try{
 			Servico servico = servicoForm.getServico();
+			if(serviceController.alterar(servico)){
+			
 			removeComponent(getComponent());
 			addComponent(modoLayoutTable);
 			setComponent(modoLayoutTable);
-			
-			if(serviceController.alterar(servico)){
-			
+				
 			MessageBox mb = new MessageBox(getWindow(), 
 						"Alterar", 
                         MessageBox.Icon.INFO, 
-                        "Serivco Alterado",  
+                        "Servico Alterado",  
                         new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
               	mb.show();
 			}
