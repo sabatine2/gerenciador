@@ -84,8 +84,7 @@ public class ComentarioView extends HorizontalLayout{
 		String text = comentario.getMensagem();
 		String regex = "(\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
 		text.replaceAll(regex, "<a target=\"_blank\" href=\"$1\">$1</a>");
-		Label labelMensagem = new Label(text,Label.CONTENT_RAW);
-		panelMensagem.addComponent(labelMensagem);
+		panelMensagem.addComponent(new Label(text,Label.CONTENT_RAW));
 		panelMensagem.setCaption(comentario.getNomeUsuario() + "   -   "
 		+ comentario.getDataCriacaoMidia());
 		

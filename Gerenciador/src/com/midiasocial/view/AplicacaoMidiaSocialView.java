@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.midiasocial.controller.AplicacaoMidiaSocialController;
 import com.midiasocial.model.AplicacaoMidiaSocial;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -39,7 +40,7 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
 	@Override
 	public void modoTabela() {
 		
-		tabelaFiltro = new TabelaFiltro("AplicaÁıes");
+		tabelaFiltro = new TabelaFiltro("Aplicação");
 		tabelaFiltro.filterField.addListener(new TextChangeListener() {
 			
 			public void textChange(TextChangeEvent event) {
@@ -73,10 +74,10 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
  						MessageBox mb = new MessageBox(getWindow(), 
  							"Remover", 
  							MessageBox.Icon.QUESTION, 
- 							"Remover AplicaÁ„o?",
+ 							"Remover Aplicação?",
  							new MessageBox.ButtonConfig(MessageBox.ButtonType.YES, "Sim"),
  							new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Nao"));
- 				  	mb.show(new MessageBox.EventListener() {
+ 							mb.show(new MessageBox.EventListener() {
  				  		 
  						public void buttonClicked(ButtonType buttonType) {
  							
@@ -87,7 +88,7 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
  									MessageBox mb = new MessageBox(getWindow(), 
  										"Remover", 
  										MessageBox.Icon.INFO, 
- 										"AplicaÁ„o Removida",  
+ 										"Aplicação Removida",  
  										new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
  									mb.show();
  									System.out.println("RESULTADO TARGET: "+target);
@@ -154,7 +155,7 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
 				MessageBox mb = new MessageBox(getWindow(), 
 						"Alterar", 
                         MessageBox.Icon.INFO, 
-                        "AplicaÁ„o Alterada",  
+                        "Aplicação Alterada",  
                         new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
               	mb.show();
 	 		
@@ -197,41 +198,52 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
 		if (isRemover) {
 			AplicacaoMidiaSocial app = ( AplicacaoMidiaSocial )target;
 			System.out.println("remover target" + " " +app.getId());
-	      	this.appController.remover(app.getId());
+	      	this.appController.remover(app);
 		}
 		else {
 			try{
 				MessageBox mb = new MessageBox(getWindow(), 
 					"Remover", 
 					MessageBox.Icon.QUESTION, 
-					"Remover AplicaÁ„o?",
+					"Remover Aplicação?",
 					new MessageBox.ButtonConfig(MessageBox.ButtonType.YES, "Sim"),
-					new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Nao"));
+					new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Não"));
 				mb.show(new MessageBox.EventListener() {	 
 				
 					public void buttonClicked(ButtonType buttonType) {	
+						
 						if (buttonType.equals(buttonType.YES)) {
-							appController.removerButton(appController.getApp());
-							removeComponent(getComponent());
-							addComponent(modoLayoutTable);
-							setComponent(modoLayoutTable);
-							isRemover = true;
-					
-							buttonAdicionar.setVisible(true);
-							buttonDeletar.setVisible(false);
-							buttonClonar.setVisible(false);
-							buttonEditar.setVisible(false);
-							buttonSalvar.setVisible(false);
-							buttonVoltar.setVisible(false);
 							
-							MessageBox mb = new MessageBox(getWindow(), 
-								"Remover", 
-								MessageBox.Icon.INFO, 
-								"AplicaÁ„o Removida",  
-								new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
-							mb.show();
+							if(appController.remover(appController.getApp())){
+								removeComponent(getComponent());
+								addComponent(modoLayoutTable);
+								setComponent(modoLayoutTable);
+								isRemover = true;
+						
+								buttonAdicionar.setVisible(true);
+								buttonDeletar.setVisible(false);
+								buttonClonar.setVisible(false);
+								buttonEditar.setVisible(false);
+								buttonSalvar.setVisible(false);
+								buttonVoltar.setVisible(false);
+								
+								MessageBox mb = new MessageBox(getWindow(), 
+									"Remover", 
+									MessageBox.Icon.INFO, 
+									"Aplicação removida",  
+									new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
+								mb.show();
+								refreshTable();
+							}
+							else {
+								   MessageBox mb = new MessageBox(getWindow(), 
+										"Remover", 
+										MessageBox.Icon.ERROR, 
+										"Aplicação não removida",  
+										new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
+									mb.show();
+								 }
 						}
-						else {}
 					}
 				});
 			}catch(Exception e){	
@@ -267,7 +279,7 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
 				MessageBox mb = new MessageBox(getWindow(), 
 						"Cadastrar", 
                         MessageBox.Icon.INFO, 
-                        "AplicaÁ„o Cadastrada",  
+                        "Aplicação Cadastrada",  
                         new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
               	mb.show(); 
 			
@@ -324,7 +336,7 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
 		verticalLayout.setSpacing(true);
 		
 		Panel panelConectar = new Panel();
-		panelConectar.setCaption("Cadastrar AplicaÁ„o");
+		panelConectar.setCaption("Cadastrar Aplicação");
 		panelConectar.setImmediate(true);
 		panelConectar.setWidth("500px");
 		panelConectar.setHeight("130px");
@@ -372,19 +384,6 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
 		return verticalLayout;
 	}
 	
-	/*public OAuthListener oauthListener = new OAuthListener() {
-		 
-        public void failed(String reason) {
-              System.out.print("Login failed");
-        }
-
-		public void userAuthenticated(User user) {
-			this.user = user;
-			
-			userForm.getUserInfo(user.getName(), user.getScreenName());
-		}
-    };*/
-	
 	private AplicacaoMidiaSocial getApp(){
 		
 		app = appController.getApp();
@@ -395,5 +394,14 @@ public class AplicacaoMidiaSocialView extends ViewComponente {
 		app.setDataCriacao(new Date());
 		
 		return app;
+	}
+	
+	public void refreshTable(){
+		defaultTable();		
+	}
+	
+	public void defaultTable(){
+		tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<AplicacaoMidiaSocial>(AplicacaoMidiaSocial.class,AplicacaoMidiaSocial.listaApp()));
+		tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"id", "nome", "redeSocial"});
 	}
 }

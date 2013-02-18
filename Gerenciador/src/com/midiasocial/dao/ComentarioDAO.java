@@ -10,39 +10,38 @@ import org.hibernate.criterion.Restrictions;
 import com.midiasocial.model.Comentario;
 import com.midiasocial.model.Publicacao;
 import com.midiasocial.model.UsuarioAppMidiaSocial;
+import com.principal.helper.HibernateHelper;
 import com.abstracts.dao.DAO;
 	
 	public class ComentarioDAO extends DAO<Comentario> {
 		
-		public ComentarioDAO(Session session, Class<?> classe) {
-			super(session, classe);
+		public ComentarioDAO(Class<?> classe) {
+			super(classe);
 		}
 		
 		public Comentario pesquisaComentarioID(Long id) {
-			System.out.print("pesquisaComentarioId : " + id);
-			return (Comentario) session.load(Comentario.class, id);
+			return (Comentario) load(id);
 		}
 		
 		public Comentario pesquisaComentarioNome(String nome) {
-			System.out.print("pesquisaComentarioNome : " + nome);
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Comentario.class);
 			c.add(Restrictions.ilike("nome", "%" + nome + "%"));
-
 			return (Comentario)c.uniqueResult();
 		}
 		
 		@SuppressWarnings("unchecked")
 		public List<Comentario> pesquisaComentarios(String nome){
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Comentario.class);
 			c.add(Restrictions.ilike("nome", "%" + nome + "%"));
 			c.addOrder(Order.asc("nome"));
-			
 			return c.list();
 		}
 	
 		
 		public List<Comentario> listaOffCurtir(){
-				
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Comentario.class);
 			c.add(Restrictions.eq("curtirOffline", true));
 			c.addOrder(Order.asc("dataCriacao"));
@@ -51,7 +50,7 @@ import com.abstracts.dao.DAO;
 		}
 		
 		public List<Comentario> listaOffComentario(){
-			
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Comentario.class);
 			c.add(Restrictions.eq("comentarOffline", true));
 			c.addOrder(Order.asc("dataCriacao"));
@@ -60,7 +59,7 @@ import com.abstracts.dao.DAO;
 		}
 		
 		public List<Comentario> listaOffCurtirRemover(){
-			
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Comentario.class);
 			c.add(Restrictions.eq("curtirRemoverOffline", true));
 			c.addOrder(Order.asc("dataCriacao"));
@@ -69,7 +68,7 @@ import com.abstracts.dao.DAO;
 		}
 		
 		public List<Comentario> listaOffDeletar(){
-			
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Comentario.class);
 			c.add(Restrictions.eq("deletarOffline", true));
 			c.addOrder(Order.asc("dataCriacao"));
@@ -78,37 +77,29 @@ import com.abstracts.dao.DAO;
 		}
 		
 		public List<Comentario> listaComentarioPublicacao(Publicacao publicacao){
-			
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Comentario.class);
 			c.add(Restrictions.eq("publicacao", publicacao));
 			return c.list();
 		}
+		
 		/**
 		 * Utilizando HQL 
-		 * @param id
+		 * @param usuarioAppMidiaSocial
 		 * @return
 		 */
 		public List<Comentario> buscaComentariosOff(UsuarioAppMidiaSocial usuarioAppMidiaSocial){
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Query q = session.createQuery("select p from " + Comentario.class.getName() + " as p inner join p.publicacao as pub where pub.usuarioAppMidiaSocial eq :usuarioAppMidiaSocial");
-			
 			q.setParameter("usuarioAppMidiaSocial", usuarioAppMidiaSocial);
-			
 			return (List<Comentario>) q.list();
 		}    
 		    
 		public Comentario buscaComentarios(String idMidia){
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Query q = session.createQuery("select p from " + Comentario.class.getName() + " as p where p.idMidia like :idMidia");
-			
 			q.setParameter("idMidia", idMidia);
-			
 			return (Comentario)q.uniqueResult();
 		}
 		
-		public Comentario buscaComentarios(Long id){
-			Query q = session.createQuery("select p from " + Comentario.class.getName() + " as p where p.idInterno like :idInterno");
-			
-			q.setParameter("idInterno", id);
-			
-			return (Comentario)q.uniqueResult();
-		}
 	}

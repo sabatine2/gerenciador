@@ -2,6 +2,7 @@ package com.midiasocial.view.menu;
 
 import java.util.Iterator;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.controller.AplicacaoMidiaSocialController;
 import com.midiasocial.controller.CriterioController;
 import com.midiasocial.controller.MidiaSocialMenuController;
@@ -26,9 +27,14 @@ public class MidiaSocialMenu extends HorizontalSplitPanel implements ClickListen
 	
 	private CssLayout menu;
 	private MidiaSocialMenuController midiaSocialMenuController;
+	private AbsoluteLayout layoutApp;
 	
 	public MidiaSocialMenu(MidiaSocialMenuController midiaSocialMenuController){
 		
+		layoutApp = new AbsoluteLayout();
+		layoutApp.setHeight("100.0%");
+		layoutApp.setWidth("100.0%");
+		  
 		//Estilo e posi��o da barra
 	    addStyleName("small blue white");
 	    setSplitPosition(16);
@@ -43,68 +49,49 @@ public class MidiaSocialMenu extends HorizontalSplitPanel implements ClickListen
 	    setFirstComponent(menu);
 	    
 	    //Categoria App
-        Label labelFuncionalidades = new Label("Aplicacoes");
+        Label labelFuncionalidades = new Label("Aplicac�es");
         labelFuncionalidades.addStyleName("section");
         menu.addComponent(labelFuncionalidades);
         
         //Botï¿œo App
-        NativeButton buttonApp = new NativeButton("Lista Aplicações");
+        NativeButton buttonApp = new NativeButton("Aplicac�es");
         buttonApp.setHeight("30px");
-        buttonApp.addStyleName("selected");
         buttonApp.addListener(this);
         menu.addComponent(buttonApp);
      
-        AbsoluteLayout layoutApp = new AbsoluteLayout();
-    	layoutApp.setHeight("100.0%");
-    	layoutApp.setWidth("100.0%");
-    	
-    	AplicacaoMidiaSocialController appController = new AplicacaoMidiaSocialController();
-    	
-    	layoutApp.addComponent(appController.getView(), "top:0.0px;left:0.0px;");
-        buttonApp.setData(layoutApp);
+        AplicacaoMidiaSocialController appController = new AplicacaoMidiaSocialController();
+        appController.carregaControle();
+        buttonApp.setData(appController);
+        
+        layoutApp.addComponent(appController.getView(), "top:0.0px;left:0.0px;");
+        setSecondComponent(layoutApp);
         
         //Categoria Usuario
-        Label labelUsuarioApp = new Label("Usuario Aplicacao");
+        Label labelUsuarioApp = new Label("Usuario Aplica��o");
         labelUsuarioApp.addStyleName("section");
         menu.addComponent(labelUsuarioApp);
         
         //Botï¿œo Lista Usuario
-        NativeButton buttonListaUsuarioApp = new NativeButton("Usuario Aplicacao");
+        NativeButton buttonListaUsuarioApp = new NativeButton("Usuario Aplica��o");
         buttonListaUsuarioApp.setHeight("30px");
-        buttonListaUsuarioApp.addStyleName("selected");
         buttonListaUsuarioApp.addListener(this);
         menu.addComponent(buttonListaUsuarioApp);
-        
-        AbsoluteLayout layoutUsuarioApp = new AbsoluteLayout();
-    	layoutUsuarioApp.setHeight("100.0%");
-    	layoutUsuarioApp.setWidth("100.0%");
-    	
-    	UsuarioAppMidiaSocialController usuarioController = new UsuarioAppMidiaSocialController();
-    	
-    	layoutUsuarioApp.addComponent(usuarioController.getView(), "top:0.0px;left:0.0px;");
-        buttonListaUsuarioApp.setData(layoutUsuarioApp);
+        UsuarioAppMidiaSocialController usuarioController = new UsuarioAppMidiaSocialController();
+    	buttonListaUsuarioApp.setData(usuarioController);
         
         
         //Categoria Usuario
-        Label labelUsuarioPub = new Label("Usuario Publicacao");
+        Label labelUsuarioPub = new Label("Usuario Publica��o");
         labelUsuarioPub.addStyleName("section");
         menu.addComponent(labelUsuarioPub);
         
         //Botï¿œo Lista Usuario
-        NativeButton buttonListaUsuarioPub = new NativeButton("Usuario Publicacao");
+        NativeButton buttonListaUsuarioPub = new NativeButton("Usuario Publica��o");
         buttonListaUsuarioPub.setHeight("30px");
-        buttonListaUsuarioPub.addStyleName("selected");
         buttonListaUsuarioPub.addListener(this);
         menu.addComponent(buttonListaUsuarioPub);
-        
-        AbsoluteLayout layoutUsuarioPub = new AbsoluteLayout();
-    	layoutUsuarioPub.setHeight("100.0%");
-    	layoutUsuarioPub.setWidth("100.0%");
-    	
-    	UsuarioPubMidiaSocialController usuarioPubController = new UsuarioPubMidiaSocialController();
-    	
-    	layoutUsuarioPub.addComponent(usuarioPubController.getView(), "top:0.0px;left:0.0px;");
-        buttonListaUsuarioPub.setData(layoutUsuarioPub);
+        UsuarioPubMidiaSocialController usuarioPubController = new UsuarioPubMidiaSocialController();
+    	buttonListaUsuarioPub.setData(usuarioPubController);
         
         //Categoria Home
         Label labelHome = new Label("Home");
@@ -112,20 +99,12 @@ public class MidiaSocialMenu extends HorizontalSplitPanel implements ClickListen
         menu.addComponent(labelHome);
         
         //Botï¿œo Page
-        NativeButton buttonPage = new NativeButton("Pagina");
+        NativeButton buttonPage = new NativeButton("P�gina");
         buttonPage.setHeight("30px");
-        buttonPage.addStyleName("selected");
         buttonPage.addListener(this);
         menu.addComponent(buttonPage);
-        
-        AbsoluteLayout layoutPage = new AbsoluteLayout();
-    	layoutPage.setHeight("100.0%");
-    	layoutPage.setWidth("100.0%");
-    	
-    	PaginaController pageController = new PaginaController();
-    	
-    	layoutPage.addComponent(pageController.getView(), "top:0.0px;left:0.0px;");
-        buttonPage.setData(layoutPage);
+        PaginaController pageController = new PaginaController();
+    	buttonPage.setData(pageController);
         
         //Categoria Pesquisar
         Label labelPesquisar = new Label("Pesquisar");
@@ -135,18 +114,11 @@ public class MidiaSocialMenu extends HorizontalSplitPanel implements ClickListen
         //Botï¿œo Busca Manual
         NativeButton buttonBuscaManual = new NativeButton("Pesquisa");
         buttonBuscaManual.setHeight("30px");
-        buttonBuscaManual.addStyleName("selected");
         buttonBuscaManual.addListener(this);
         menu.addComponent(buttonBuscaManual);
         
-        AbsoluteLayout layoutBuscaManual = new AbsoluteLayout();
-    	layoutBuscaManual.setHeight("100.0%");
-    	layoutBuscaManual.setWidth("100.0%");
-    	
-    	PesquisaManualController manualController = new PesquisaManualController();
-    	
-    	layoutBuscaManual.addComponent(manualController.getView(), "top:0.0px;left:0.0px;");
-        buttonBuscaManual.setData(layoutBuscaManual);
+        PesquisaManualController manualController = new PesquisaManualController();
+    	buttonBuscaManual.setData(manualController);
         
         //Categoria Tï¿œpico
         Label labelTopico = new Label("Criterio");
@@ -156,45 +128,31 @@ public class MidiaSocialMenu extends HorizontalSplitPanel implements ClickListen
         //Botï¿œo Cadastrar Tï¿œpico
         NativeButton buttonTopico = new NativeButton("Criterio");
         buttonTopico.setHeight("30px");
-        buttonTopico.addStyleName("selected");
         buttonTopico.addListener(this);
         menu.addComponent(buttonTopico);
+        CriterioController topicoController = new CriterioController();
+    	buttonTopico.setData(topicoController);
         
-        AbsoluteLayout layoutTopico = new AbsoluteLayout();
-    	layoutTopico.setHeight("100.0%");
-    	layoutTopico.setWidth("100.0%");
-    	
-    	CriterioController topicoController = new CriterioController();
-    	
-    	layoutTopico.addComponent(topicoController.getView(), "top:0.0px;left:0.0px;");
-        buttonTopico.setData(layoutTopico);
-        
-      //Categoria Servico
-        Label labelServico = new Label("Servico");
+        //Categoria Servico
+        Label labelServico = new Label("Servi�o");
         labelServico.addStyleName("section");
         menu.addComponent(labelServico);
         
         //Bot�o Cadastrar T�pico
-        NativeButton buttonServico = new NativeButton("Servico");
+        NativeButton buttonServico = new NativeButton("Servi�o");
         buttonServico.setHeight("30px");
-        buttonServico.addStyleName("selected");
         buttonServico.addListener(this);
         menu.addComponent(buttonServico);
         
-        AbsoluteLayout layoutServico = new AbsoluteLayout();
-        layoutServico.setHeight("100.0%");
-        layoutServico.setWidth("100.0%");
-    	
     	ServicoController servicoController = new ServicoController(midiaSocialMenuController.getGerenciadorController().getSession().getUsuario());
-    	
-    	layoutServico.addComponent(servicoController.getView(), "top:0.0px;left:0.0px;");
-    	buttonServico.setData(layoutServico);
+    	buttonServico.setData(servicoController);
       
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public void buttonClick(ClickEvent event) {
 		System.gc();
+		
 		ComponentContainer p = (ComponentContainer) event.getButton()
                 .getParent();
         for (Iterator iterator = p.getComponentIterator(); iterator
@@ -204,7 +162,11 @@ public class MidiaSocialMenu extends HorizontalSplitPanel implements ClickListen
         }
         event.getButton().addStyleName("selected");
         
-        setSecondComponent((Component) event.getButton()
-                .getData());
+        Controller controler = (Controller) event.getButton().getData();
+	    controler.carregaControle();
+	    
+	    layoutApp.removeAllComponents();
+	    layoutApp.addComponent(controler.getView(), "top:0.0px;left:0.0px;");
+        setSecondComponent(layoutApp);
 	}
 }

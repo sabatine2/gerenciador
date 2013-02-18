@@ -1,35 +1,38 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.model.UsuarioAppMidiaSocial;
 import com.midiasocial.view.UsuarioAppMidiaSocialView;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class UsuarioAppMidiaSocialController {
+public class UsuarioAppMidiaSocialController extends Controller {
 	
 	private UsuarioAppMidiaSocial usuario = null;
 	private UsuarioAppMidiaSocialView usuarioView = null;
 	
 	public UsuarioAppMidiaSocialController(){
-	    usuarioView = new UsuarioAppMidiaSocialView(this);
-	    usuarioView.modoTabela();
-	    refreshTable();
+	    
 	}
 	
 	public boolean salvar(UsuarioAppMidiaSocial usuario){
 		
 		if(usuario.salvar()){
-			refreshTable();
+			usuarioView.refreshTable();
 			return true;
 		}
 		else {
 			return false;
 		}
+	}
+	
+	public void importaDado(){
+		usuario.importarDados();
 	}
 	
 	public boolean alterar(UsuarioAppMidiaSocial usuario){
 		
 		if(usuario.alterar()){
-			refreshTable();
+			usuarioView.refreshTable();
 			return true;
 		}
 		else {
@@ -37,23 +40,13 @@ public class UsuarioAppMidiaSocialController {
 		}
 	}
 	
-	public boolean removerButton(UsuarioAppMidiaSocial usuario){
-			if(remover(usuario.getIdInterno())){
+	public boolean remover(UsuarioAppMidiaSocial usuario){
+			if(usuario.remover()){
 				return true;
 			}
 			else {
 				return false;
 			}
-	}
-	
-	public boolean remover(Long id){
-		boolean result;
-		System.out.println("ID: "+id);
-		UsuarioAppMidiaSocial usuario = UsuarioAppMidiaSocial.pesquisaUsuarioID(id);
-		
-		result = usuario.remover();
-		refreshTable();
-		return result;
 	}
 	
 	public UsuarioAppMidiaSocial getUsuario() {
@@ -81,7 +74,7 @@ public class UsuarioAppMidiaSocialController {
 	}
 
 	public UsuarioAppMidiaSocialView getView(){
-		refreshTable();
+		usuarioView.refreshTable();
 		return this.usuarioView;
 	}
 	
@@ -92,13 +85,15 @@ public class UsuarioAppMidiaSocialController {
 		Object[] dados = new Object[15];
 		usuarioView.visualizar(dados);
 	}
-	
-	public void refreshTable(){
-		defaultTable();		
+
+	@Override
+	public void carregaControle() {
+		usuarioView = new UsuarioAppMidiaSocialView(this);
+	    usuarioView.modoTabela();
+	    usuarioView.refreshTable();
+		
 	}
 	
-	public void defaultTable(){
-		usuarioView.tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<UsuarioAppMidiaSocial>(UsuarioAppMidiaSocial.class, UsuarioAppMidiaSocial.listaUsuario()));
-		usuarioView.tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"idInterno", "nome", "screenName", "status"});
-	}
+	
+	
 }

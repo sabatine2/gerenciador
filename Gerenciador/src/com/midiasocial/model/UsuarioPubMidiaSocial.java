@@ -3,7 +3,6 @@ package com.midiasocial.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,38 +13,32 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
+import com.exception.DAOException;
 import com.midiasocial.dao.UsuarioPubMidiaSocialDAO;
-import com.principal.helper.HibernateUtil;
 
 @Entity
-@Table(name = "usuariopubmediasocial")
+@Table(name = "MidiaUsuarioPub")
 public class UsuarioPubMidiaSocial {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "userpub_idInterno")
+	@Column(name = "idInterno", unique = true)
 	private Long idInterno;
 	
-	@Column(name = "userpub_idmidia", unique = true)
+	@Column(name = "idmidia", unique = true)
 	private String idMidia;
-	
-	@Column(name = "userapp_nome")
 	private String nome;
-	
-	@Column(name = "userapp_screenName")
+	private String email;
+	private String localizacao;
+	@Column(name = "screenname")
 	private String screenName;
-	
-	@Column(name = "userapp_foto")
+	@Column(name = "fotourl")
 	private String fotoUrl;
-	
-	@Column(name = "userpub_fotoPerfil")
+	@Column(name = "fotoperfil")
 	private String fotoPerfilUrl;
-	
-	@Column(name = "userpub_urlPerfil")
+	@Column(name = "urlperfil")
 	private String urlPerfil = " ";
-	
-	@Column(name = "userpub_redeSocial")
+	@Column(name = "redesocial")
 	private String nomeRedeSocial = " ";
 	
 	@OneToMany(mappedBy = "usuarioPubMidiaSocial", targetEntity = Publicacao.class, fetch = FetchType.LAZY, cascade={CascadeType.ALL})
@@ -107,6 +100,15 @@ public class UsuarioPubMidiaSocial {
 		this.fotoUrl = fotoUrl;
 	}
 	
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	/**
 	 * @return the urlPerfil
 	 */
@@ -135,25 +137,25 @@ public class UsuarioPubMidiaSocial {
 		this.nomeRedeSocial = nomeRedeSocial;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static List listaUsuario(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(s, UsuarioPubMidiaSocial.class);
-	  
-		List workouts = usuarioDAO.list();
-		
-		 //s.close();
-		 return workouts;
+	
+	public String getLocalizacao() {
+		return localizacao;
+	}
+
+	public void setLocalizacao(String localizacao) {
+		this.localizacao = localizacao;
+	}
+
+	public static List<UsuarioPubMidiaSocial> listaUsuario(){
+		UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(UsuarioPubMidiaSocial.class);
+		return  usuarioDAO.list();
+	
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static UsuarioPubMidiaSocial pesquisaUsuarioIdMidia(String id){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(s, UsuarioPubMidiaSocial.class);
-	  
-		return usuarioDAO.pesquisaUsuarioIdMidia(id);
+		UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(UsuarioPubMidiaSocial.class);
+		UsuarioPubMidiaSocial usuario = usuarioDAO.pesquisaUsuarioIdMidia(id);
+		return usuario;
 		
 	}
 	
@@ -162,10 +164,8 @@ public class UsuarioPubMidiaSocial {
 		UsuarioPubMidiaSocial usuario = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(s, UsuarioPubMidiaSocial.class);
-	        usuario = usuarioDAO.buscaUsuarios(idInterno);
-	    	s.close();
+		 	UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO( UsuarioPubMidiaSocial.class);
+	        usuario = usuarioDAO.load(idInterno);
 	    	return usuario;
 	    }
 		catch (Exception e) {
@@ -178,10 +178,8 @@ public class UsuarioPubMidiaSocial {
 		UsuarioPubMidiaSocial usuario = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(s, UsuarioPubMidiaSocial.class);
-	    	usuario = usuarioDAO.buscaUsuarios(id);
-	    	s.close();
+			UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(UsuarioPubMidiaSocial.class);
+	    	usuario = usuarioDAO.load(id);
 	    	return usuario;
 	    }
 		catch (Exception e) {
@@ -189,53 +187,36 @@ public class UsuarioPubMidiaSocial {
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean salvar(){
-		
-		UsuarioPubMidiaSocial usuario = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(s, UsuarioPubMidiaSocial.class);
+		  	UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(UsuarioPubMidiaSocial.class);
 	        usuarioDAO.save(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean remover(){
-		
-		UsuarioPubMidiaSocial usuario = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(s, UsuarioPubMidiaSocial.class);
+		  	UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(UsuarioPubMidiaSocial.class);
 	        usuarioDAO.delete(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean alterar(){
 	
-		UsuarioPubMidiaSocial usuario = null;
-	
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(s, UsuarioPubMidiaSocial.class);
+			UsuarioPubMidiaSocialDAO usuarioDAO = new UsuarioPubMidiaSocialDAO(UsuarioPubMidiaSocial.class);
 			usuarioDAO.merge(this);
-        	s.close();
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}

@@ -15,31 +15,31 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.exception.DAOException;
 import com.midiasocial.dao.CriterioDAO;
-import com.principal.helper.HibernateUtil;
 
 @Entity
-@Table(name = "criterio")
+@Table(name = "MidiaCriterio")
 public class Criterio {
 
 	@Id
 	@GeneratedValue
-	@Column(name= "criterio_id")
+	@Column(name= "id")
 	private Long id;
 	
-	@Column(name = "criterio_nome")
+	@Column(name = "nome")
 	private String nome = "";
 	
-	@Column(name = "criterio_status")
+	@Column(name = "status")
 	private String status = "";
 	
-	@Column(name = "criterio_prioridade")
+	@Column(name = "prioridade")
 	private String prioridade = "";
 	
-	@Column(name = "criterio_observacao")
+	@Column(name = "observacao")
 	private String observacao = "";
 	
-	@Column(name = "criterio_dataCriacao")
+	@Column(name = "dataCriacao")
 	private Date dataCriacao;
 	
 	@OneToMany(mappedBy = "criterio", targetEntity = PalavraChaveMidia.class, fetch = FetchType.LAZY, cascade={CascadeType.ALL})
@@ -117,27 +117,19 @@ public class Criterio {
 	
 	
 	@SuppressWarnings("rawtypes")
-	public static List listaAll(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		CriterioDAO criterioDAO = new CriterioDAO(s, Criterio.class);
-	  
-		List workouts = criterioDAO.list();
-		
-		 //s.close();
-		 return workouts;
+	public static List listaUsuario(){
+		CriterioDAO criterioDAO = new CriterioDAO(Criterio.class);
+		return criterioDAO.list();
 	}
 	
 	public Criterio pesquisaCriterioID(){
 		
-		Criterio usuario = null;
+		Criterio criterio = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	CriterioDAO criterioDAO = new CriterioDAO(s, Criterio.class);
-	        usuario = criterioDAO.buscaCriterios(id);
-	    	s.close();
-	    	return usuario;
+			CriterioDAO criterioDAO = new CriterioDAO(Criterio.class);
+	        criterio = criterioDAO.load(id);
+	    	return criterio;
 	    }
 		catch (Exception e) {
 			return null;
@@ -146,67 +138,47 @@ public class Criterio {
 	
 	public static Criterio pesquisaCriterioID(Long id){
 		
-		Criterio usuario = null;
+		Criterio criterio = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	CriterioDAO criterioDAO = new CriterioDAO(s, Criterio.class);
-	    	usuario = criterioDAO.buscaCriterios(id);
-	    	s.close();
-	    	return usuario;
+			CriterioDAO criterioDAO = new CriterioDAO(Criterio.class);
+	    	criterio = criterioDAO.load(id);
+	    	return criterio;
 	    }
 		catch (Exception e) {
 			return null;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean salvar(){
-		
-		Criterio usuario = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	CriterioDAO criterioDAO = new CriterioDAO(s, Criterio.class);
+		 	CriterioDAO criterioDAO = new CriterioDAO( Criterio.class);
 	        criterioDAO.save(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean remover(){
-		
-		Criterio usuario = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	CriterioDAO criterioDAO = new CriterioDAO(s, Criterio.class);
+		 	CriterioDAO criterioDAO = new CriterioDAO(Criterio.class);
 	        criterioDAO.delete(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean alterar(){
-	
-		Criterio usuario = null;
-	
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			CriterioDAO criterioDAO = new CriterioDAO(s, Criterio.class);
+			CriterioDAO criterioDAO = new CriterioDAO(Criterio.class);
 			criterioDAO.merge(this);
-        	s.close();
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}

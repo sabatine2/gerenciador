@@ -206,9 +206,8 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 	@Override
 	public void remover(Object target) {
 		if (isRemover) {
-			UsuarioAppMidiaSocial user = ( UsuarioAppMidiaSocial )target;
-			System.out.println("remover target" + " " +user.getIdInterno());
-	      	this.userController.remover(user.getIdInterno());
+			UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial)target;
+			this.userController.remover(user);
 		}
 		else {
 			try{
@@ -223,28 +222,38 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 					public void buttonClicked(ButtonType buttonType) {	
 						if (buttonType.equals(buttonType.YES)) {
 							
-							userController.removerButton(userForm.getUser());
-							removeComponent(getComponent());
-							addComponent(modoLayoutTable);
-							setComponent(modoLayoutTable);
-							isRemover = true;
-					
-							buttonAdicionar.setVisible(true);
-							buttonDeletar.setVisible(false);
-							buttonClonar.setVisible(false);
-							buttonEditar.setVisible(false);
-							buttonSalvar.setVisible(false);
-							buttonVoltar.setVisible(false);
-							
-							MessageBox mb = new MessageBox(getWindow(), 
-								"Remover", 
-								MessageBox.Icon.INFO, 
-								"Usuario Removido",  
-								new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
-							mb.show();
+							if(userController.remover(userForm.getUser())){
+								removeComponent(getComponent());
+								addComponent(modoLayoutTable);
+								setComponent(modoLayoutTable);
+								isRemover = true;
+						
+								buttonAdicionar.setVisible(true);
+								buttonDeletar.setVisible(false);
+								buttonClonar.setVisible(false);
+								buttonEditar.setVisible(false);
+								buttonSalvar.setVisible(false);
+								buttonVoltar.setVisible(false);
+								
+								MessageBox mb = new MessageBox(getWindow(), 
+									"Remover", 
+									MessageBox.Icon.INFO, 
+									"Usuario Removido",  
+									new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
+								mb.show();
+								
+								refreshTable();
+							}
+							else {
+								MessageBox mb = new MessageBox(getWindow(), 
+										"Remover", 
+										MessageBox.Icon.ERROR, 
+										"Usuario N‹o Removido",  
+										new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
+									mb.show();
+							}
 						}
-						else {}
-					}
+					} 
 				});
 			}catch(Exception e){	
 				msgErro("remover.view.button: "+e.getMessage());
@@ -280,17 +289,27 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 			
 			
 			if(this.userController.salvar(userForm.getUser())){
+				MessageBox mb = new MessageBox(getWindow(), 
+ 						"Importantdo dados", 
+                         MessageBox.Icon.INFO, 
+                         this.userController.getUsuario().getFanpageScreenName(),  
+                         new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
+               	mb.show(); 
+				
 				removeComponent(getComponent());
 				addComponent(modoLayoutTable);
 				setComponent(modoLayoutTable);
-				MessageBox mb = new MessageBox(getWindow(), 
+				
+				mb = new MessageBox(getWindow(), 
 						"Cadastrar", 
                         MessageBox.Icon.INFO, 
                         "Usuario Cadastrado",  
                         new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
               	mb.show(); 
-			
-				buttonAdicionar.setVisible(true);
+              	
+              	this.userController.importaDado();
+			  
+              	buttonAdicionar.setVisible(true);
 				buttonDeletar.setVisible(false);
 				buttonClonar.setVisible(false);
 				buttonEditar.setVisible(false);
@@ -393,12 +412,18 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 	private BeanItemContainer listaApp(){
 	
 		BeanItemContainer<AplicacaoMidiaSocial> beanItem = new BeanItemContainer<AplicacaoMidiaSocial>(AplicacaoMidiaSocial.class);
-		List listApp = AplicacaoMidiaSocial.listaApp();
-		for (int i = 0; i < listApp.size(); i++) {
-		
-			beanItem.addItem(listApp.get(i));
-		}
+		beanItem.addAll(AplicacaoMidiaSocial.listaApp());
 		return beanItem;
+	}
+	
+	public void refreshTable(){
+		defaultTable();		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void defaultTable(){
+		tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<UsuarioAppMidiaSocial>(UsuarioAppMidiaSocial.class, UsuarioAppMidiaSocial.listaUsuario()));
+		tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"idInterno", "nome", "screenName", "status"});
 	}
 	
 	public OAuthListener oauthListener = new OAuthListener() {

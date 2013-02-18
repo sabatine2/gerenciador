@@ -1,17 +1,21 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.view.PaginaView;
 
-public class PaginaController {
+public class PaginaController extends Controller {
 
 	private PaginaView pageView = null;
 	
-	public PaginaController(){
-			pageView = new PaginaView(this);
-		}
+	public PaginaController(){}
 	
 	public PaginaView getView(){
 		
 		return this.pageView;
+	}
+
+	@Override
+	public void carregaControle() {
+		pageView = new PaginaView(this);
 	}
 }

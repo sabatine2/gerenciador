@@ -8,21 +8,17 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.abstracts.dao.DAO;
+import com.principal.helper.HibernateHelper;
 import com.usuario.model.Usuario;
     
     public class UsuarioDAO extends DAO<Usuario> {
 		
-		public UsuarioDAO(Session session, Class<?> classe) {
-			super(session, classe);
-		}
-		
-		public Usuario pesquisaUsuarioById(Long id) {
-			System.out.print("pesquisaUsuarioById : " + id);
-			return (Usuario) session.load(Usuario.class, id);
+		public UsuarioDAO(Class<?> classe) {
+			super(classe);
 		}
 		
 		public Usuario pesquisaUsuarioByNome(String nome) {
-			System.out.print("pesquisaUsuarioByNome : " + nome);
+			Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Usuario.class);
 			c.add(Restrictions.eq("nome", nome));
         	return (Usuario)c.uniqueResult();
@@ -30,6 +26,7 @@ import com.usuario.model.Usuario;
 		
 		@SuppressWarnings("unchecked")
 		public List<Usuario> pesquisaUsuarios(String nome){
+			Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(Usuario.class);
 			c.add(Restrictions.ilike("nome", "%" + nome + "%"));
 			c.addOrder(Order.asc("nome"));
@@ -38,16 +35,16 @@ import com.usuario.model.Usuario;
 		}
 		
 		public Usuario buscaUsuario(Long id){
+			Session session = HibernateHelper.currentSession();
 			Query q = session.createQuery("select p from " + Usuario.class.getName() + " as p where p.id like :id");
-			
 			q.setParameter("id", id);
 			
 			return (Usuario)q.uniqueResult();
 		}
 		
 		public Usuario autenticaUsuario(String nome, String senha){
+			Session session = HibernateHelper.currentSession();
 			Query q = session.createQuery("select p from " + Usuario.class.getName() + " as p where p.nome like :nome and p.senha = :senha");
-			
 			q.setParameter("nome", nome);
 			q.setParameter("senha", senha);
 					
@@ -56,11 +53,13 @@ import com.usuario.model.Usuario;
 		
 		@SuppressWarnings("unchecked")
 		public List<Usuario> listaUsuario(){
+			Session session = HibernateHelper.currentSession();
 			Query q = session.createQuery("select p.nome, p.senha, p.nivel from " + Usuario.class.getName() + " as p");
 			return q.list();
 		}
 		
 		public void deleteUsuarioNome(String nome){
+			Session session = HibernateHelper.currentSession();
 			Query q = session.createQuery("delete from " + Usuario.class.getName() + " as p where p.nome = "+nome);
 			q.executeUpdate();
 			

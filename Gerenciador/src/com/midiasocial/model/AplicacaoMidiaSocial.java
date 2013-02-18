@@ -3,7 +3,6 @@ package com.midiasocial.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,31 +14,38 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.exception.DAOException;
 import com.midiasocial.dao.AplicacaoMidiaSocialDAO;
-import com.principal.helper.HibernateUtil;
+
+/**
+ * Cadastrar e gerenciar as aplicações criadas nas redes sociais
+ * 
+ * @author 
+ * 
+ */
 
 @Entity
-@Table(name = "appmidiasocial")
+@Table(name = "MidiaApp")
 public class AplicacaoMidiaSocial {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "app_id")
+	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "app_nome")
+	@Column(name = "nome")
 	private String nome = "";
 	
-	@Column(name = "app_dataCricao")
+	@Column(name = "datacriacao")
 	private Date dataCriacao;
 	
-	@Column(name = "app_apikey")
+	@Column(name = "apikey")
 	private String apiKey;
 	
-	@Column(name = "app_apisecret")
+	@Column(name = "apisecret")
 	private String apiSecret;
 	
-	@Column(name = "app_redesocial")
+	@Column(name = "redesocial")
 	private String redeSocial = "";
 
 	@OneToMany(mappedBy = "appMidiaSocial", targetEntity = UsuarioAppMidiaSocial.class, fetch = FetchType.LAZY, cascade={CascadeType.ALL})
@@ -104,14 +110,9 @@ public class AplicacaoMidiaSocial {
 
 	@SuppressWarnings("rawtypes")
 	public static List listaApp(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(s, AplicacaoMidiaSocial.class);
-	  
-		List workouts = appDAO.list();
-		
-		 //s.close();
-		 return workouts;
+		AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(AplicacaoMidiaSocial.class);
+	    List workouts = appDAO.list();
+		return workouts;
 	}
 	
 	public AplicacaoMidiaSocial pesquisaAppID(){
@@ -119,10 +120,8 @@ public class AplicacaoMidiaSocial {
 		AplicacaoMidiaSocial app = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(s, AplicacaoMidiaSocial.class);
-	        app = appDAO.buscaApps(id);
-	    	s.close();
+		  	AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(AplicacaoMidiaSocial.class);
+	        app = appDAO.load(id);
 	    	return app;
 	    }
 		catch (Exception e) {
@@ -135,10 +134,8 @@ public class AplicacaoMidiaSocial {
 		AplicacaoMidiaSocial app = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(s, AplicacaoMidiaSocial.class);
-	    	app = appDAO.buscaApps(id);
-	    	s.close();
+		  	AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(AplicacaoMidiaSocial.class);
+	    	app = appDAO.load(id);
 	    	return app;
 	    }
 		catch (Exception e) {
@@ -146,53 +143,36 @@ public class AplicacaoMidiaSocial {
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean salvar(){
-		
-		AplicacaoMidiaSocial app = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(s, AplicacaoMidiaSocial.class);
+		  	AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(AplicacaoMidiaSocial.class);
 	        appDAO.save(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean remover(){
-		
-		AplicacaoMidiaSocial app = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(s, AplicacaoMidiaSocial.class);
+		  	AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(AplicacaoMidiaSocial.class);
 	        appDAO.delete(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
+			System.out.println("Erro Deletando" + e.getMessage());
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean alterar(){
-	
-		AplicacaoMidiaSocial app = null;
-	
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(s, AplicacaoMidiaSocial.class);
+			AplicacaoMidiaSocialDAO appDAO = new AplicacaoMidiaSocialDAO(AplicacaoMidiaSocial.class);
 			appDAO.merge(this);
-        	s.close();
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}

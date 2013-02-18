@@ -8,7 +8,9 @@ import org.vaadin.teemu.wizards.event.WizardStepActivationEvent;
 import org.vaadin.teemu.wizards.event.WizardStepSetChangedEvent;
 
 import com.principal.controller.GerenciadorController;
+import com.principal.helper.AplicacaoHelper;
 import com.principal.model.Aplicacao;
+import com.principal.view.install.EtapaBancoDadosView;
 import com.principal.view.install.EtapaUsuarioView;
 import com.principal.view.install.EtapaFinal;
 import com.vaadin.Application;
@@ -39,13 +41,14 @@ WizardProgressListener{
         
         
         if(!Aplicacao.isAtivo()){
-	        Window mainWindow = new Window("Persys Gerenciador");
+	        Window mainWindow = new Window("Midia Social");
 	        mainWindow.setContent(mainLayout);
 	        setMainWindow(mainWindow);
 	
 	        wizard = new Wizard();
 	        wizard.setUriFragmentEnabled(true);
 	        wizard.addListener(this);
+	        wizard.addStep(new EtapaBancoDadosView(), "Banco de Dados");
 	        wizard.addStep(new EtapaUsuarioView(), "Usuario");
 	        wizard.addStep(new EtapaFinal(wizard), "Conclusao");
 	        wizard.setHeight("600px");
@@ -60,6 +63,7 @@ WizardProgressListener{
 	        Window mainWindow = new Window("Gerenciador", main);
 	        setMainWindow(mainWindow);
 	        app = this;
+	        AplicacaoHelper.APLICACAO = Aplicacao.getAplicacao();
 	        gerenciador = new GerenciadorController(mainWindow, main);
 	    }
    }

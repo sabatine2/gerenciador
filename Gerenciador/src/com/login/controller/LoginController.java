@@ -26,6 +26,11 @@ public class LoginController {
 		String nome  = (String) dados[0];
 		String senha =(String) dados[1];
 		
+		Usuario usuario2 = new Usuario();
+		usuario2.setNome("admin");
+		usuario2.setSenha("admin");
+		usuario2.salvar();
+		
 		try{
 		Usuario usuario = Usuario.autenticaUsu(nome, senha);
 	    	if(usuario != null){

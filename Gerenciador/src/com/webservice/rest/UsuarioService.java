@@ -18,8 +18,7 @@ import javax.ws.rs.core.MediaType;
 import org.hibernate.Session;
 
 import com.abstracts.dao.DAO;
-import com.cliente.model.Cliente;
-import com.principal.helper.HibernateUtil;
+import com.principal.helper.HibernateHelper;
 import com.usuario.dao.UsuarioDAO;
 import com.usuario.model.Usuario;
 
@@ -29,11 +28,9 @@ public class UsuarioService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Usuario getUsuario() {
-		Session s = (Session) HibernateUtil.openSession();
-		UsuarioDAO usuarioDAO = new UsuarioDAO(s, Usuario.class);
+		UsuarioDAO usuarioDAO = new UsuarioDAO(Usuario.class);
 		Usuario usuario = usuarioDAO.buscaUsuario(1l);
 	    usuario.setSenha(null);
-		s.close();
 		return usuario;
 	}
 	

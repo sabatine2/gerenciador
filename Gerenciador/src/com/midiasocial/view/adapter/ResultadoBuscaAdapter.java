@@ -18,7 +18,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 
 /**
- * A container that uses the Twitter GET API to retrieve its results
+ * Adaptador para os resultados obtidos no twitter
  * 
  * @author 
  * 
@@ -48,8 +48,6 @@ public class ResultadoBuscaAdapter extends IndexedContainer implements
     /**
      * Default constructor
      * 
-     * @param queryString
-     *            The query string to search for
      */
     public ResultadoBuscaAdapter() {
 	     addContainerProperty(NOME, String.class, null);
@@ -105,14 +103,14 @@ public class ResultadoBuscaAdapter extends IndexedContainer implements
 			    item.getItemProperty(MENSAGEM).setValue(resultado.getMensagem());
 			    item.getItemProperty(DATA_CRIACAO_MIDIA).setValue(resultado.getDataCriacaoMidia());
 			    this.resultado = resultado;
-			    System.out.println(resultado.getMensagem());
+			    logger.log(Level.INFO,"Resultado Encontrado: "+resultado.getMensagem());
 			 }
 	    }
     	return list.size();
 	  }
 
     /**
-     * Makes the HTTP Request
+     * Realiza a conex‹o HTTP
      * 
      * @param uri
      *            The uri to make the request to
@@ -171,7 +169,7 @@ public class ResultadoBuscaAdapter extends IndexedContainer implements
     }
 
 	/**
-	 * @return the publicacao
+	 * @return um resultado busca
 	 */
 	public com.midiasocial.model.ResultadoBusca getResultadoBusca() {
 		return resultado;

@@ -23,6 +23,7 @@ import java.util.Locale;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.midiasocial.model.Anexo;
 import com.midiasocial.model.Comentario;
 import com.midiasocial.model.Publicacao;
 import com.midiasocial.model.ResultadoBusca;
@@ -54,6 +55,7 @@ public class TwitterService{
 	
 	private short currentPage = 1;
 	private boolean querying = false;
+	@SuppressWarnings("unused")
 	private boolean queryIsQueued = false;
 	
 	public TwitterService(String consumerKey, String consumerSecret, String accessT, String accessTokenSecret){
@@ -343,18 +345,18 @@ public class TwitterService{
 	
 	public Status mostrarStatusPublicacao(Long id){
 	
-		try {
-			     
 			AccessToken accessToken = new AccessToken(accessT,accessTokenSecret);
 			TwitterFactory factory = new TwitterFactory();
 			Twitter twitter = factory.getInstance();
 			twitter.setOAuthConsumer(consumerKey,consumerSecret);
 			twitter.setOAuthAccessToken(accessToken);
-	        return twitter.showStatus(id);
-	     } catch (TwitterException te) {
-	           te.printStackTrace();
-	           return null;
-	     }
+			Status status;
+			try {
+		        status = twitter.showStatus(id);
+		        return status;
+			  } catch (Exception te) {
+		           return null;
+		     }
 	}
 	
 	public void curtirPublicacao(Publicacao pub, int modo){
@@ -671,8 +673,6 @@ public class TwitterService{
 	  
 			
 		for (Status status : statuses) {
-			System.out.println("postToPublish" +  status.getText());
-			
 			   if(status.getInReplyToStatusId() == -1l){
 	      		   Status rt = status.getRetweetedStatus();
 	      		   if(rt == null){
@@ -687,8 +687,6 @@ public class TwitterService{
 		 }
 	
 	 public Publicacao salvarPublicacao(Status status){
-		System.out.println("salvarPublicacao");
-			
 		Publicacao pub = new Publicacao();
    	    pub.setIdMidia(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+String.valueOf(status.getId()));
    	    pub.setMensagem(status.getText());
@@ -698,10 +696,14 @@ public class TwitterService{
    	    pub.setNomeUsuario(status.getUser().getName());
 		pub.setUsuarioAppMidiaSocial(usuarioMidiaSocial);
 		if(status.getMediaEntities().length > 0 ){
-				MediaEntity[] media = status.getMediaEntities();
-				if(media[0] != null){
-					pub.setAnexoUrl(status.getMediaEntities()[0].getMediaURL());
-				}
+			MediaEntity[] media = status.getMediaEntities();
+			if(media[0] != null){
+				Anexo anexo = new Anexo();
+				anexo.setAnexoUrl(status.getMediaEntities()[0].getMediaURL());
+				anexo.setPublicacao(pub);
+				anexo.setDataCriacao(new Date());
+				pub.addAnexo(anexo);
+			}
 		}
 		Date dataPost = null;  
 		String datePost = status.getCreatedAt().toLocaleString();
@@ -765,6 +767,7 @@ public class TwitterService{
 		usuarioPub.setFotoUrl(user.getOriginalProfileImageURL());
 		usuarioPub.setFotoPerfilUrl(user.getOriginalProfileImageURL());
 		usuarioPub.setUrlPerfil(user.getURL());
+		usuarioPub.setLocalizacao(user.getLocation());
 		usuarioPub.setNomeRedeSocial(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial());
 	    usuarioPub.salvar();
 		return usuarioPub;

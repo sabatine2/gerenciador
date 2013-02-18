@@ -1,9 +1,7 @@
 package com.midiasocial.model;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,55 +10,55 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.exception.DAOException;
 import com.midiasocial.dao.ComentarioDAO;
-import com.principal.helper.HibernateUtil;
 
 @Entity
-@Table(name = "comentario")
+@Table(name = "MidiaComentario")
 public class Comentario {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "id_comentario")
+	@Column(name = "id")
 	private Long idInterno;
 	
-	@Column(name = "id_midia", unique = true)
+	@Column(name = "idmidia", unique = true)
 	private String idMidia;
 	
-	@Column(name = "comentario_idusuario")
+	@Column(name = "idusuario")
 	private String idUsuario;
 	
-	@Column(name = "comentario_nomeusuario")
+	@Column(name = "nomeusuario")
 	private String nomeUsuario;
 	
-	@Column(name = "comentario_mensagem")
+	@Column(name = "mensagem")
 	private String mensagem;
 	
-	@Column(name = "comentario_datacriacao")
+	@Column(name = "datacriacao")
 	private Date dataCriacao;
 	
-	@Column(name = "comentario_datacriaacao_midia")
+	@Column(name = "datacriaacaomidia")
 	private Date dataCriacaoMidia;
 	
-	@Column(name = "comentario_curtir")
+	@Column(name = "curtir")
 	private boolean curtir;
 	
-	@Column(name = "comentario_deletado")
+	@Column(name = "deletado")
 	private boolean deletado;
 	
-	@Column(name = "comentario_datadeletado")
+	@Column(name = "datadeletado")
 	private Date dataDeletado;
 		
-	@Column(name = "comentario_comentaroffline")
+	@Column(name = "comentaroffline")
 	private boolean comentarOffline;
 	
-	@Column(name = "comentario_curtiroffline")
+	@Column(name = "curtiroffline")
 	private boolean curtirOffline;
 	
-	@Column(name = "comentario_curtirremoveroffline")
+	@Column(name = "curtirremoveroffline")
 	private boolean curtirRemoverOffline;
 	
-	@Column(name = "comentario_deletaroffline")
+	@Column(name = "deletaroffline")
 	private boolean deletarOffline;
 	
 	@ManyToOne
@@ -224,12 +222,9 @@ public class Comentario {
 	@SuppressWarnings("rawtypes")
 	public static List listaComentario(){
 		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-		  
+		ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		List workouts = comentarioDAO.list();
-			
-		//s.close();
+	
 		return workouts;
 	}
 		
@@ -238,10 +233,9 @@ public class Comentario {
 		Comentario comentario = null;
 			
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-		    ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-		    comentario = comentarioDAO.buscaComentarios(idInterno);
-		    s.close();
+			 ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
+		    comentario = comentarioDAO.load(idInterno);
+		
 	    	return comentario;
 		}
 		catch (Exception e) {
@@ -254,10 +248,8 @@ public class Comentario {
 		Comentario comentario = null;
 			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-	    	comentario = comentarioDAO.buscaComentarios(id);
-		   	s.close();
+		 	ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
+	    	comentario = comentarioDAO.load(id);
 		   	return comentario;
 		}
 		catch (Exception e) {
@@ -271,10 +263,8 @@ public class Comentario {
 		Comentario com = null;
 			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
+		  	ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 	    	com = comentarioDAO.buscaComentarios(idMidia);
-		   	s.close();
 		   	return com;
 		}
 		catch (Exception e) {
@@ -283,109 +273,90 @@ public class Comentario {
 	}
 	
 	public static List<Comentario> listOffCurtir(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-		
+		ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		List<Comentario> listCom = comentarioDAO.listaOffCurtir();
 		return listCom;
 	}
 
 	public static List<Comentario> listOffComentario(){
-	
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-	
+		ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		List<Comentario> listCom = comentarioDAO.listaOffComentario();
 		return listCom;
 	}
 	
 	public static List<Comentario> listOffComentario(UsuarioAppMidiaSocial usuario){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-	
+		ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		List<Comentario> listCom = comentarioDAO.buscaComentariosOff(usuario);
 		return listCom;
 	}
 	
 	public static List<Comentario> listOffCurtirRemover(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-	
+		ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		List<Comentario> listCom = comentarioDAO.listaOffCurtirRemover();
 		return listCom;
 	}
 	
 	public static List<Comentario> listOffDeletar(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-	
+		ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		List<Comentario> listCom = comentarioDAO.listaOffDeletar();
 		return listCom;
 	}
 	
 	public static List<Comentario> listComentarioPublicacao(Publicacao publicacao){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
-	
+		ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		List<Comentario> listCom = comentarioDAO.listaComentarioPublicacao(publicacao);
-	
 		return listCom;
 	}
 		
-	@SuppressWarnings("unused")
 	public boolean salvar(){
 		
-		Comentario comentario = null;
 		setDataCriacao(new Date());
 			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
+		  	ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		    comentarioDAO.save(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 		
-	@SuppressWarnings("unused")
 	public boolean remover(){
 			
-		Comentario comentario = null;
-			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
+		  	ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 		    comentarioDAO.delete(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 		
-	@SuppressWarnings("unused")
 	public boolean alterar(){
-		
-		Comentario comentario = null;
-		
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			ComentarioDAO comentarioDAO = new ComentarioDAO(s, Comentario.class);
+			ComentarioDAO comentarioDAO = new ComentarioDAO(Comentario.class);
 			comentarioDAO.merge(this);
-        	s.close();
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
+
+	@Override
+	public String toString() {
+		return "Comentario [idInterno=" + idInterno + ", idMidia=" + idMidia
+				+ ", idUsuario=" + idUsuario + ", nomeUsuario=" + nomeUsuario
+				+ ", mensagem=" + mensagem + ", dataCriacao=" + dataCriacao
+				+ ", dataCriacaoMidia=" + dataCriacaoMidia + ", curtir="
+				+ curtir + ", deletado=" + deletado + ", dataDeletado="
+				+ dataDeletado + ", comentarOffline=" + comentarOffline
+				+ ", curtirOffline=" + curtirOffline
+				+ ", curtirRemoverOffline=" + curtirRemoverOffline
+				+ ", deletarOffline=" + deletarOffline + "]";
+	}
+	
+	
 }

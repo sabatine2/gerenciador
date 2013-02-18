@@ -8,46 +8,22 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.midiasocial.model.AplicacaoMidiaSocial;
+import com.principal.helper.HibernateHelper;
 import com.abstracts.dao.DAO;
 	
 	public class AplicacaoMidiaSocialDAO extends DAO<AplicacaoMidiaSocial> {
 		
-		public AplicacaoMidiaSocialDAO(Session session, Class<?> classe) {
-			super(session, classe);
-		}
-		
-		public AplicacaoMidiaSocial pesquisaAppID(Long id) {
-			System.out.print("pesquisaAppId : " + id);
-			return (AplicacaoMidiaSocial) session.load(AplicacaoMidiaSocial.class, id);
-		}
-		
-		public AplicacaoMidiaSocial pesquisaAppNome(String nome) {
-			System.out.print("pesquisaAppNome : " + nome);
-			Criteria c = session.createCriteria(AplicacaoMidiaSocial.class);
-			c.add(Restrictions.ilike("nome", "%" + nome + "%"));
-
-			return (AplicacaoMidiaSocial)c.uniqueResult();
+		public AplicacaoMidiaSocialDAO(Class<?> classe) {
+			super(classe);
 		}
 		
 		@SuppressWarnings("unchecked")
 		public List<AplicacaoMidiaSocial> pesquisaApps(String nome){
+			Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(AplicacaoMidiaSocial.class);
 			c.add(Restrictions.ilike("nome", "%" + nome + "%"));
 			c.addOrder(Order.asc("nome"));
 			
 			return c.list();
-		}
-	
-		/**
-		 * Utilizando HQL 
-		 * @param id
-		 * @return
-		 */
-		public AplicacaoMidiaSocial buscaApps(Long id){
-			Query q = session.createQuery("select p from " + AplicacaoMidiaSocial.class.getName() + " as p where p.id like :id");
-			
-			q.setParameter("id", id);
-			
-			return (AplicacaoMidiaSocial)q.uniqueResult();
 		}
 	}

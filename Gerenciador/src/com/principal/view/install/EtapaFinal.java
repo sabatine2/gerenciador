@@ -5,6 +5,7 @@ import java.util.Date;
 import org.vaadin.teemu.wizards.Wizard;
 import org.vaadin.teemu.wizards.WizardStep;
 
+import com.principal.helper.AplicacaoHelper;
 import com.principal.model.Aplicacao;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -23,7 +24,7 @@ public class EtapaFinal implements WizardStep {
     }
 
     public String getCaption() {
-        return "Conclusão";
+        return "Conclusao";
     }
 
     
@@ -43,12 +44,12 @@ public class EtapaFinal implements WizardStep {
 
     public boolean gerarAplicacao(){
     	try{
-	    	Aplicacao app = new Aplicacao();
+	    	Aplicacao app = AplicacaoHelper.APLICACAO;
 	    	app.setAtivo(true);
 	    	app.setDataCriacao(new Date());
 	    	app.geraArquivo(app, "app.xml");
 	    	content.getApplication().getMainWindow()
-              .showNotification("Fim da instalação!");
+              .showNotification("Fim da instalacao!");
 			  
 	    	return true;
     	}

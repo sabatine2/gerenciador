@@ -1,14 +1,16 @@
 package com.midiasocial.controller;
 
 import java.io.IOException;
+
+import com.abstracts.controller.Controller;
 import com.midiasocial.model.Publicacao;
 import com.midiasocial.model.UsuarioAppMidiaSocial;
 import com.midiasocial.service.FacebookService;
 import com.midiasocial.service.TwitterService;
 import com.midiasocial.view.PublicacaoView;
-import com.restfb.types.User;
+import com.vaadin.ui.Component;
 
-public class PublicacaoController {
+public class PublicacaoController extends Controller{
 
 	private FacebookService fbService;
 	private PublicacaoView publicacaoView;
@@ -18,8 +20,6 @@ public class PublicacaoController {
 	public PublicacaoController(UsuarioAppMidiaSocial user, Publicacao publicacao){
 		this.user = user;
 		this.publicacao = publicacao;
-		
-		
 		publicacaoView = new PublicacaoView(this);
 	}
 	
@@ -110,5 +110,17 @@ public class PublicacaoController {
 
 	public void setPublicacao(Publicacao publicacao) {
 		this.publicacao = publicacao;
+	}
+
+	@Override
+	public void carregaControle() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Component getView() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

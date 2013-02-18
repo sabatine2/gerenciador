@@ -1,7 +1,6 @@
 package com.midiasocial.model;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,11 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.exception.DAOException;
 import com.midiasocial.dao.ServicoAtualizacaoDAO;
-import com.principal.helper.HibernateUtil;
 
 @Entity
-@Table(name = "servicoatualizacao")
+@Table(name = "MidiaServicoAtualizacao")
 public class ServicoAtualizacao {
 
 	@Id
@@ -28,7 +27,7 @@ public class ServicoAtualizacao {
 	@Column(name = "dataencerramento")
 	private Date dataEncerramento;
 	
-	@Column(name = "homeMonitorada")
+	@Column(name = "homemonitorada")
 	private String homeMonitorada;
 	
 	@Column(name = "mensagemerro", length = 65000)
@@ -78,55 +77,62 @@ public class ServicoAtualizacao {
 	
 	@SuppressWarnings("rawtypes")
 	public static List listaServico(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO(s, ServicoAtualizacao.class);
-	  
-		List workouts = servicoDAO.list();
-		
+		ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO( ServicoAtualizacao.class);
+	  List workouts = servicoDAO.list();
 		return workouts;
 	}
 	
 	public static ServicoAtualizacao pesquisaUltimaAtualizacao(){
-		org.hibernate.Session s = HibernateUtil.openSession();
-	    ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO(s, ServicoAtualizacao.class);
+		ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO( ServicoAtualizacao.class);
 	    ServicoAtualizacao servicoAtualizacao = servicoDAO.pesquisaUltimaAtualizacao();
-	    s.close();
 	    return servicoAtualizacao;
 	}
 	
-	public void salvar(){
-		org.hibernate.Session s = HibernateUtil.openSession();
-	    ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO(s, ServicoAtualizacao.class);
-	    servicoDAO.save(this);
-	    s.close();
-	}
+	public boolean salvar(){
+		ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO( ServicoAtualizacao.class);
+	    try {
+			servicoDAO.save(this);
+			return true;
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	  }
 	
 	public boolean remover(){
 	
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO(s, ServicoAtualizacao.class);
+			ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO( ServicoAtualizacao.class);
 	        servicoDAO.delete(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
+	
 	public boolean alterar(){
 		
 	    try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO(s, ServicoAtualizacao.class);
+			ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO( ServicoAtualizacao.class);
 			servicoDAO.merge(this);
-        	s.close();
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
+	}
+	
+	public static boolean removerAll(){
+		 try{
+				ServicoAtualizacaoDAO servicoDAO = new ServicoAtualizacaoDAO( ServicoAtualizacao.class);
+				servicoDAO.removerAll();
+	        	return true;
+			}
+			catch (Exception e) {
+				return false;
+			}	
 	}
 }

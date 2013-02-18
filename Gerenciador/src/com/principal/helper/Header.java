@@ -1,16 +1,11 @@
 package com.principal.helper;
 
 
-import com.auditor.controller.OrganizacaoController;
-import com.cliente.controller.ClienteController;
-import com.despesas.controller.DespesasController;
-import com.funcionario.controller.FuncionarioController;
 import com.midiasocial.controller.MidiaSocialMenuController;
 import com.midiasocial.view.menu.MidiaSocialMenu;
 import com.principal.controller.GerenciadorController;
 import com.principal.gerenciador.GerenciadorApplication;
 import com.principal.view.menu.Menu;
-import com.ticket.controller.OrdemController;
 import com.usuario.model.Usuario;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.Resource;
@@ -80,82 +75,6 @@ public class Header extends CssLayout {
 		//home.setIcon(res);
 		title.addStyleName("left");
 		left.addComponent(home);
-		
-		//
-		Button auditor = new Button("Auditor", new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				AbsoluteLayout verticalLayoutOrganizacao = new AbsoluteLayout();
-				verticalLayoutOrganizacao.setHeight("100.0%");
-		    	verticalLayoutOrganizacao.setWidth("100.0%");
-		   
-		    	OrganizacaoController orgController = new OrganizacaoController();
-		    	verticalLayoutOrganizacao.addComponent(orgController.getMenuAuditor(), "top:0.0px;left:0.0px;");
-				alterarMenu(orgController.getMenuAuditor());
-			}
-		});
-		auditor.setStyleName("borderless");
-		title.addStyleName("left");
-		left.addComponent(auditor);
-		
-		
-		//
-		Button cliente = new Button("Cliente", new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				AbsoluteLayout verticalLayoutOrganizacao = new AbsoluteLayout();
-				verticalLayoutOrganizacao.setHeight("100.0%");
-		    	verticalLayoutOrganizacao.setWidth("100.0%");
-		   
-		    	ClienteController clienteController = new ClienteController();
-		    	
-		    	verticalLayoutOrganizacao.addComponent(clienteController.menuCliente, "top:0.0px;left:0.0px;");
-				
-				alterarMenu(clienteController.getMenuCliente());
-			}
-		});
-		cliente.setStyleName("borderless");
-		title.addStyleName("left");
-		left.addComponent(cliente);
-		
-		//
-		Button funcionario = new Button("Funcionario", new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-			   FuncionarioController funcionarioController = new FuncionarioController();
-		       alterarMenu(funcionarioController.getMenuFuncionario());
-			}
-		});
-		funcionario.setStyleName("borderless");
-		title.addStyleName("left");
-		left.addComponent(funcionario);
-		
-		//
-		Button ordemServico = new Button("Atendimento", new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				OrdemController ordemController = new OrdemController(gerenciadorController.getSession().getUsuario());
-		    	alterarMenu(ordemController.getMenuOrdem());
-			}
-		});
-		ordemServico.setStyleName("borderless");
-		title.addStyleName("left");
-		left.addComponent(ordemServico);
-		
-		
-		//
-		Button despesas = new Button("Despesas", new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				AbsoluteLayout verticalLayoutOrganizacao = new AbsoluteLayout();
-				verticalLayoutOrganizacao.setHeight("100.0%");
-		    	verticalLayoutOrganizacao.setWidth("100.0%");
-		   
-		    	DespesasController despesasController = new DespesasController();
-		    	
-		    	//verticalLayoutOrganizacao.addComponent(, "top:0.0px;left:0.0px;")
-				
-				alterarMenu(despesasController.getMenuDespesas());
-			}
-		});
-		despesas.setStyleName("borderless");
-		title.addStyleName("left");
-		left.addComponent(despesas);
 		
 		//
 		Button redesSociais = new Button("Redes Sociais", new Button.ClickListener() {

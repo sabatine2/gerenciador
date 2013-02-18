@@ -3,9 +3,12 @@ package com.midiasocial.view;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.midiasocial.controller.PublicacaoController;
+import com.midiasocial.model.Anexo;
 import com.midiasocial.model.Publicacao;
 import com.midiasocial.service.FacebookService;
 import com.vaadin.terminal.ExternalResource;
@@ -90,8 +93,10 @@ public class PublicacaoView extends Panel {
 		
 		anexo = new Button("",new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                    getWindow().addWindow(buildAnexoWindow(publicacaoController.getPublicacao().getAnexoUrl()));
-                    System.out.println(publicacaoController.getPublicacao().getAnexoUrl());
+            	for(Iterator<Anexo> i = publicacaoController.getPublicacao().getAnexo().iterator(); i.hasNext();){
+                    Anexo anexo = i.next();
+            		getWindow().addWindow(buildAnexoWindow(anexo.getAnexoUrl()));
+            	} 
             }
 	    });
 	    anexo.setStyleName(BaseTheme.BUTTON_LINK);
@@ -208,7 +213,9 @@ public class PublicacaoView extends Panel {
 		panel.setWidth("745px");
 		panel.setHeight("-1px");
 	 	labelMensagem = new Label("",Label.CONTENT_RAW);
-		panel.addComponent(labelMensagem);
+	 	labelMensagem.setWidth("742px");
+	 	labelMensagem.setHeight("-1px");
+	 	panel.addComponent(labelMensagem);
 		layoutPost.addComponent(panel);
 		
 		return layoutPost;
@@ -296,7 +303,8 @@ public class PublicacaoView extends Panel {
 		labelMensagem.setValue(text);
 
 		showComments.setCaption(" "+pub.getComentario().size()+" "+"coment‡rios");
-		if (pub.getAnexoUrl() != null) {
+		
+		if (pub.getAnexo().size() > 0) {
 			anexo.setVisible(true);
 			anexo.setCaption("anexo ");
 		}

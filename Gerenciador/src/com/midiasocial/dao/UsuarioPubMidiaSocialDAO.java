@@ -8,22 +8,18 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.midiasocial.model.UsuarioPubMidiaSocial;
+import com.principal.helper.HibernateHelper;
 import com.abstracts.dao.DAO;
 	
 @SuppressWarnings("unchecked")
 	public class UsuarioPubMidiaSocialDAO extends DAO<UsuarioPubMidiaSocial> {
 		
-		public UsuarioPubMidiaSocialDAO(Session session, Class<?> classe) {
-			super(session, classe);
-		}
-		
-		public UsuarioPubMidiaSocial pesquisaUsuarioID(Long id) {
-			System.out.print("pesquisaUsuarioId : " + id);
-			return (UsuarioPubMidiaSocial) session.load(UsuarioPubMidiaSocial.class, id);
+		public UsuarioPubMidiaSocialDAO(Class<?> classe) {
+			super(classe);
 		}
 		
 		public UsuarioPubMidiaSocial pesquisaUsuarioNome(String nome) {
-			System.out.print("pesquisaUsuarioNome : " + nome);
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(UsuarioPubMidiaSocial.class);
 			c.add(Restrictions.ilike("nome", "%" + nome + "%"));
 
@@ -31,6 +27,7 @@ import com.abstracts.dao.DAO;
 		}
 		
 		public UsuarioPubMidiaSocial pesquisaUsuarioIdMidia(String id){
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Criteria c = session.createCriteria(UsuarioPubMidiaSocial.class);
 			c.add(Restrictions.eq("idMidia", id));
 			return (UsuarioPubMidiaSocial) c.uniqueResult();
@@ -42,16 +39,15 @@ import com.abstracts.dao.DAO;
 		 * @return
 		 */
 		public UsuarioPubMidiaSocial buscaUsuarios(Long id){
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Query q = session.createQuery("select p from " + UsuarioPubMidiaSocial.class.getName() + " as p where p.idInterno like :idInterno");
-			
 			q.setParameter("idInterno", id);
-			
 			return (UsuarioPubMidiaSocial)q.uniqueResult();
 		}
 		
 		public List<UsuarioPubMidiaSocial> buscaStatus(){
+			org.hibernate.Session session = HibernateHelper.currentSession();
 			Query q = session.createQuery("select * from " + UsuarioPubMidiaSocial.class.getName() + " where user_status = 'Ativo'");
-			
 			return q.list();			
 		}
 	}

@@ -1,8 +1,9 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.view.PesquisaManualView;
 
-public class PesquisaManualController {
+public class PesquisaManualController extends Controller{
 
 	private PesquisaManualView pesquisaView = null;
 	
@@ -14,5 +15,11 @@ public class PesquisaManualController {
 	public PesquisaManualView getView(){
 		
 		return this.pesquisaView;
+	}
+
+	@Override
+	public void carregaControle() {
+		// TODO Auto-generated method stub
+		
 	}
 }

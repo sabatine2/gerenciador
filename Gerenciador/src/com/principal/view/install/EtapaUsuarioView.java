@@ -32,7 +32,7 @@ public class EtapaUsuarioView implements WizardStep {
         
         
         
-    	final TextField nomeTextField = new TextField("Usuário");
+    	final TextField nomeTextField = new TextField("Usuario");
     	final PasswordField senhaPasswordField = new PasswordField("Senha");
     	final Button salvarButton = new Button("Salvar");
     	
@@ -72,8 +72,8 @@ public class EtapaUsuarioView implements WizardStep {
 
     private Label getText() {
         return new Label(
-                "<h2>Gerenciador Persys</h2><p>Início da aplicação: "
-                        + "criação do usuário adminstrador.</p><p>Informe o nome e a senha do usuário adminstrador.</p>",
+                "<h2>Gerenciador Persys</h2><p>Inicio da aplicacao: "
+                        + "criacao do usuario adminstrador.</p><p>Informe o nome e a senha do usuario adminstrador.</p>",
                 Label.CONTENT_XHTML);
     }
 
@@ -89,7 +89,7 @@ public class EtapaUsuarioView implements WizardStep {
     public boolean onAdvance() {
     	 if (!permitir) {
             content.getApplication().getMainWindow()
-                     .showNotification("Não é permitido");
+                     .showNotification("Nao permitido");
          }
     	 return permitir;
     }

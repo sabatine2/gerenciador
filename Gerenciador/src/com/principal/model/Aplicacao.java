@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -24,8 +27,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.exception.DAOException;
 import com.principal.dao.AplicacaoDAO;
-import com.principal.helper.HibernateUtil;
+import com.principal.helper.HibernateHelper;
 import com.vaadin.data.util.BeanItemContainer;
 
 @XmlRootElement(name = "aplicacao")
@@ -44,6 +48,14 @@ public class Aplicacao {
 	private String  versaoAplicacao = "1.0";
 	@XmlElement(name = "versaodata")
 	private Date  versaoAplicacaoData = new Date();
+	@XmlElement(name = "urlbanco")
+	private String url;
+	@XmlElement(name = "usuarioBanco")
+	private String usuarioBanco;
+	@XmlElement(name = "senhaBanco")
+	private String senhaBanco;
+	@XmlElement(name = "sucessoBanco")
+	private Boolean sucessoBanco;
 	
 	public Aplicacao(){}
 
@@ -95,6 +107,39 @@ public class Aplicacao {
 		this.versaoAplicacaoData = versaoAplicacaoData;
 	}
 
+	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUsuarioBanco() {
+		return usuarioBanco;
+	}
+
+	public void setUsuarioBanco(String usuarioBanco) {
+		this.usuarioBanco = usuarioBanco;
+	}
+
+	public String getSenhaBanco() {
+		return senhaBanco;
+	}
+
+	public void setSenhaBanco(String senhaBanco) {
+		this.senhaBanco = senhaBanco;
+	}
+
+	public Boolean getSucessoBanco() {
+		return sucessoBanco;
+	}
+
+	public void setSucessoBanco(Boolean sucessoBanco) {
+		this.sucessoBanco = sucessoBanco;
+	}
+
 	@Override
 	public String toString() {
 		return "Aplicacao [id=" + id + ", dataCriacao=" + dataCriacao
@@ -103,6 +148,16 @@ public class Aplicacao {
 				+ ", versaoAplicacaoData=" + versaoAplicacaoData + "]";
 	}
 	
+	/**
+     * Gera um arquivo xml no disco
+     * 
+     * @param obj
+     *            O objeto que deseja gerar o xml
+     * @param fileName
+     *            Nome do arquivo xml
+     * @return Returna uma string com o xml resultante
+     * 
+     */
 	public String geraArquivo(Object obj, String fileName){
 		final StringWriter out = new StringWriter();
 		Marshaller marshaller = null;
@@ -152,6 +207,24 @@ public class Aplicacao {
 	   return app.getAtivo();
 	} 
 	
+	public static Aplicacao getAplicacao(){
+		   
+		   Aplicacao app = (Aplicacao) carregaArquivo(Aplicacao.class, "app.xml");
+		   if(app == null){
+			  app = new Aplicacao();
+			  app.geraArquivo(app, "app.xml"); 
+		   }
+		   
+		   return app;
+		} 
+	
+	 /**
+     * Verifica se o arquivo de configuração existe
+     * 
+     * 
+     * @return Returna true quando existe e false quando ainda não existe
+     * 
+     */
 	public static Object carregaArquivo(Class classe,String fileName){
 		
 		JAXBContext context = null;
@@ -164,6 +237,26 @@ public class Aplicacao {
 		    e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+     * Verifica a conexão com o banco de dados
+     * 
+     * @return Returna true para ok e false para falha
+     * 
+     */
+	public boolean testaConexao() throws DAOException{
+		
+		sucessoBanco = true;
+         
+         try {
+				HibernateHelper.testeConexao(this);
+			 } catch (DAOException e1) {
+			    sucessoBanco = false;
+			    throw new DAOException(e1.getMessage());
+			 } 
+         
+         return sucessoBanco;
 	}
 	
 }

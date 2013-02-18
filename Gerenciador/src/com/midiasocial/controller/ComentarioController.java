@@ -1,12 +1,13 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.model.Comentario;
 import com.midiasocial.model.UsuarioAppMidiaSocial;
 import com.midiasocial.service.FacebookService;
 import com.midiasocial.service.TwitterService;
 import com.midiasocial.view.ComentarioView;
 
-public class ComentarioController {
+public class ComentarioController{
 
 	private ComentarioView comentarioView;
 	private Comentario comentario;
@@ -15,7 +16,6 @@ public class ComentarioController {
 	public ComentarioController(UsuarioAppMidiaSocial user, Comentario comentario){
 		this.comentario = comentario;
 		this.user = user;
-		
 		comentarioView = new ComentarioView(this);
 	}
 	
@@ -66,4 +66,5 @@ public class ComentarioController {
 	public void setComentarioView(ComentarioView comentarioView) {
 		this.comentarioView = comentarioView;
 	}
+
 }

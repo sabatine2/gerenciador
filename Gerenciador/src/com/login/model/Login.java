@@ -14,13 +14,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.Session;
 
+import com.exception.DAOException;
 import com.login.dao.LoginDAO;
-import com.principal.helper.HibernateUtil;
+import com.principal.helper.HibernateHelper;
 import com.usuario.model.Usuario;
 @XmlRootElement
 @XmlAccessorType( XmlAccessType.FIELD )
 @Entity
-@Table(name = "login")
+@Table(name = "Midia_login")
 public class Login {
 
 	@Id
@@ -136,8 +137,7 @@ public class Login {
 
 	public static List<Login> buscaAtivo(){
 		try{
-		  Session s = HibernateUtil.openSession();
-	  	  LoginDAO loginDAO = new LoginDAO(s, Login.class);
+		  LoginDAO loginDAO = new LoginDAO(Login.class);
 		  return loginDAO.buscaLoginAtivos();
 		}
 		catch (Exception e){
@@ -147,8 +147,7 @@ public class Login {
 	
 	public static List<Login> buscaLoginUsuarioAtivo(Usuario usuario){
 		try{
-		  Session s = HibernateUtil.openSession();
-	  	  LoginDAO loginDAO = new LoginDAO(s, Login.class);
+		  LoginDAO loginDAO = new LoginDAO(Login.class);
 		  return loginDAO.buscaLoginUsuarioAtivo(usuario);
 		}
 		catch (Exception e){
@@ -158,8 +157,7 @@ public class Login {
 	
 	public List<Login> buscaLoginUsuarioAtivo(){
 		try{
-		  Session s = HibernateUtil.openSession();
-	  	  LoginDAO loginDAO = new LoginDAO(s, Login.class);
+		  LoginDAO loginDAO = new LoginDAO(Login.class);
 		  return loginDAO.buscaLoginUsuario(this.getUsuario());
 		}
 		catch (Exception e){
@@ -169,8 +167,7 @@ public class Login {
 	
 	public static List<Login> buscaLoginUsuario(Usuario usuario){
 		try{
-		  Session s = HibernateUtil.openSession();
-	  	  LoginDAO loginDAO = new LoginDAO(s, Login.class);
+		  LoginDAO loginDAO = new LoginDAO(Login.class);
 		  return loginDAO.buscaLoginUsuario(usuario);
 		}
 		catch (Exception e){
@@ -180,8 +177,7 @@ public class Login {
 	
 	public static Login ultimoLogin(Usuario usuario){
 		try{
-		  Session s = HibernateUtil.openSession();
-	  	  LoginDAO loginDAO = new LoginDAO(s, Login.class);
+		  LoginDAO loginDAO = new LoginDAO( Login.class);
 		  return loginDAO.utimoLogin(usuario);
 		}
 		catch (Exception e){
@@ -190,21 +186,26 @@ public class Login {
 	}
 	
 	public void salvar(){
-		Session s = HibernateUtil.openSession();
-		LoginDAO loginDAO = new LoginDAO(s, Login.class);
-		loginDAO.save(this);
-		s.close();
+		LoginDAO loginDAO = new LoginDAO(Login.class);
+		try {
+			loginDAO.save(this);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		loginDAO = null;
-		s = null;
+		
 	}
 	
 	public void alterar(){
-		Session s = HibernateUtil.openSession();
-		LoginDAO loginDAO = new LoginDAO(s, Login.class);
-		loginDAO.merge(this);
-		s.close();
+		LoginDAO loginDAO = new LoginDAO(Login.class);
+		try {
+			loginDAO.merge(this);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		loginDAO = null;
-		s = null;
 	}
 	
 	@Override

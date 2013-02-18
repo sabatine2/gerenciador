@@ -1,50 +1,68 @@
 package com.midiasocial.model;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.exception.DAOException;
 import com.midiasocial.dao.ResultadoBuscaDAO;
-import com.principal.helper.HibernateUtil;
+
+/**
+ * Indica quais buscas foram realizadas
+ * 
+ * @author 
+ * 
+ */
 
 @Entity
-@Table(name = "resultadoBusca")
+@Table(name = "MidiaResultadoBusca")
 public class ResultadoBusca {
 
 	@Id
-	@Column(name = "resultado_idMidia", unique = true)
+	@GeneratedValue
+	@Column(name = "id")
+	private Long idInterno;
+	
+	@Column(name = "idmidia", unique = true)
 	private String idMidia;
 
-	@Column(name = "resultado_datacriacao")
+	@Column(name = "datacriacao")
 	private Date dataCriacao;
 
-	@Column(name = "resultado_datacriacaomidia")
+	@Column(name = "datacriacaomidia")
 	private Date dataCriacaoMidia;
 	
-	@Column(name = "resultado_mensagem")
+	@Column(name = "mensagem")
 	private String mensagem;
 	
-	@Column(name = "resultado_idusuario")
+	@Column(name = "idusuario")
 	private String idUsuario;
 	
-	@Column(name = "resultado_nome")
+	@Column(name = "nome")
 	private String nomeUsuario;
 	
-	@Column(name = "resultado_redeSocial")
+	@Column(name = "redesocial")
 	private String redeSocial;
 	
-	@Column(name = "resultado_fotourl")
+	@Column(name = "fotourl")
 	private String fotoUrl;
 	
 	public ResultadoBusca(){}
 	
-	
-	//METODOS
+	public Long getIdInterno() {
+		return idInterno;
+	}
+
+
+	public void setIdInterno(Long idInterno) {
+		this.idInterno = idInterno;
+	}
+
 	/**
 	 * @return the idMidia
 	 */
@@ -173,43 +191,18 @@ public class ResultadoBusca {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static List listaPost(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		ResultadoBuscaDAO postDAO = new ResultadoBuscaDAO(s, ResultadoBusca.class);
-		  
-		List workouts = postDAO.list();
-			
-		//s.close();
-		return workouts;
-		
+	public static List listaResultado(){
+		ResultadoBuscaDAO resultadoDAO = new ResultadoBuscaDAO(ResultadoBusca.class);
+		return resultadoDAO.list();
 	}
 		
-	public static ResultadoBusca pesquisaPostID(Long id){
+	public static ResultadoBusca pesquisaResultadoID(Long id){
 			
 		ResultadoBusca post = null;
 			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	ResultadoBuscaDAO postDAO = new ResultadoBuscaDAO(s, ResultadoBusca.class);
-	    	post = postDAO.buscaPosts(id);
-		   	s.close();
-		   	return post;
-		}
-		catch (Exception e) {
-			return null;
-		}	
-	}
-	
-	public static ResultadoBusca pesquisaPostIdMidia(String idMidia){
-		
-		ResultadoBusca post = null;
-			
-		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	ResultadoBuscaDAO postDAO = new ResultadoBuscaDAO(s, ResultadoBusca.class);
-	    	post = postDAO.buscaPosts(idMidia);
-		   	s.close();
+		 	ResultadoBuscaDAO resultadoDAO = new ResultadoBuscaDAO(ResultadoBusca.class);
+	    	post = resultadoDAO.load(id);
 		   	return post;
 		}
 		catch (Exception e) {
@@ -217,53 +210,35 @@ public class ResultadoBusca {
 		}	
 	}
 		
-	@SuppressWarnings("unused")
 	public boolean salvar(){
-		
-		ResultadoBusca post = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	ResultadoBuscaDAO postDAO = new ResultadoBuscaDAO(s, ResultadoBusca.class);
-		    postDAO.save(this);
-	    	s.close();
+		  	ResultadoBuscaDAO resultadoDAO = new ResultadoBuscaDAO(ResultadoBusca.class);
+		    resultadoDAO.save(this);
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 		
-	@SuppressWarnings("unused")
 	public boolean remover(){
-			
-		ResultadoBusca post = null;
-			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	ResultadoBuscaDAO postDAO = new ResultadoBuscaDAO(s, ResultadoBusca.class);
-		    postDAO.delete(this);
-	    	s.close();
+		  	ResultadoBuscaDAO resultadoDAO = new ResultadoBuscaDAO(ResultadoBusca.class);
+		    resultadoDAO.delete(this);
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 		
-	@SuppressWarnings("unused")
 	public boolean alterar(){
-		
-		ResultadoBusca post = null;
-		
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			ResultadoBuscaDAO postDAO = new ResultadoBuscaDAO(s, ResultadoBusca.class);
-			postDAO.merge(this);
-        	s.close();
+			ResultadoBuscaDAO resultadoDAO = new ResultadoBuscaDAO(ResultadoBusca.class);
+			resultadoDAO.merge(this);
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}

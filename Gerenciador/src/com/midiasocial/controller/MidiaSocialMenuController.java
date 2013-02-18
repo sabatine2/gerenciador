@@ -1,9 +1,10 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.view.menu.MidiaSocialMenu;
 import com.principal.controller.GerenciadorController;
 
-public class MidiaSocialMenuController {
+public class MidiaSocialMenuController{
 
 	private GerenciadorController gerenciadorController;
 	private MidiaSocialMenu midiaSocialMenu;
@@ -28,6 +29,6 @@ public class MidiaSocialMenuController {
 	public void setGerenciadorController(GerenciadorController gerenciadorController) {
 		this.gerenciadorController = gerenciadorController;
 	}
-	
+
 	
 }

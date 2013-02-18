@@ -125,15 +125,6 @@ public class UsuarioConectadosView extends ViewComponente{
 
 	public void visualizar(Object usuario) {
 		Usuario u = (Usuario) usuario;
-		if(u.getFuncionario() != null){
-		    PainelInfo p = new PainelInfo("Usuario", u.getId(), u.getFuncionario().getNome(), u.getFuncionario().getDataCadastro(), u.getFuncionario().getDataUltimaAlteracao(), u.getFuncionario().getImagem());
-		    com.vaadin.ui.Window windows = new com.vaadin.ui.Window();
-		    windows.addComponent(p);
-		    windows.setWidth("500px");
-		    windows.setHeight("210px");
-		    windows.center();
-		    this.getWindow().addWindow(windows);
-		}
 	}
 	
 	@Override

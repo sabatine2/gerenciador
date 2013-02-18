@@ -1,22 +1,19 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.model.Criterio;
 import com.midiasocial.model.PalavraChaveMidia;
 import com.midiasocial.view.CriterioView;
-import com.vaadin.data.util.BeanItemContainer;
-
 import de.steinwedel.vaadin.MessageBox;
 
-public class CriterioController {
+public class CriterioController extends Controller {
 	
 	private Criterio criterio = null;
 	private CriterioView criterioView = null;
 	private PalavraChaveMidia palavra = null;
 	
 	public CriterioController(){
-	    criterioView = new CriterioView(this);
-	    criterioView.modoTabela();
-	    refreshTable();
+	   
 	}
 	
 	public boolean salvar(Criterio criterio){
@@ -39,7 +36,7 @@ public class CriterioController {
 			if(palavrasRepetidas.length() > 0){
 				criterioView.msg("Palavra-chave repetida: "+palavrasRepetidas, MessageBox.Icon.WARN);
 			}
-			refreshTable();
+			criterioView.refreshTable();
 			return true;
 		}
 		else {
@@ -50,7 +47,7 @@ public class CriterioController {
 	public boolean alterar(Criterio criterio){
 		
 		if(criterio.alterar()){
-			refreshTable();
+			criterioView.refreshTable();
 			return true;
 		}
 		else {
@@ -73,7 +70,7 @@ public class CriterioController {
 		Criterio criterio = Criterio.pesquisaCriterioID(id);
 		
 		result = criterio.remover();
-		refreshTable();
+		criterioView.refreshTable();
 		return result;
 	}
 	
@@ -102,7 +99,7 @@ public class CriterioController {
 	}
 
 	public CriterioView getView(){
-		refreshTable();
+		criterioView.refreshTable();
 		return this.criterioView;
 	}
 	
@@ -114,12 +111,11 @@ public class CriterioController {
 		criterioView.visualizar(dados);
 	}
 	
-	public void refreshTable(){
-		defaultTable();		
-	}
-	
-	public void defaultTable(){
-		criterioView.tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<Criterio>(Criterio.class, Criterio.listaAll()));
-		criterioView.tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"id", "nome", "status", "prioridade"});
+	@Override
+	public void carregaControle() {
+		 criterioView = new CriterioView(this);
+		 criterioView.modoTabela();
+		 criterioView.refreshTable();
+		
 	}
 }

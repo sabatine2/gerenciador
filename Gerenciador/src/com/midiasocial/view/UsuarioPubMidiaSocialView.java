@@ -35,7 +35,7 @@ public class UsuarioPubMidiaSocialView extends ViewComponente {
 	public void modoTabela() {
 		
 		
-		tabelaFiltro = new TabelaFiltro("Usuário");
+		tabelaFiltro = new TabelaFiltro("Usuario");
 		tabelaFiltro.filterField.addListener(new TextChangeListener() {
 			
 			/**

@@ -11,21 +11,21 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.exception.DAOException;
 import com.midiasocial.dao.PalavraChaveMidiaDAO;
-import com.principal.helper.HibernateUtil;
 
 @XmlRootElement
 @XmlAccessorType( XmlAccessType.FIELD )
 @Entity
-@Table(name="palavraChaveMidia")
+@Table(name="MidiaPalavraChave")
 public class PalavraChaveMidia {
 	
 	@Id
 	@GeneratedValue
-	@Column(name="pChave_id")
+	@Column(name="id")
 	private Long id = null;
 	
-	@Column(name="palavra_chave", unique = true)
+	@Column(name="palavrachave", unique = true)
 	private String palavraChave = "";
 	
 	@ManyToOne
@@ -65,10 +65,8 @@ public class PalavraChaveMidia {
 		PalavraChaveMidia palavraChave = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	PalavraChaveMidiaDAO pChaveDAO = new PalavraChaveMidiaDAO(s, PalavraChaveMidia.class);
+		  	PalavraChaveMidiaDAO pChaveDAO = new PalavraChaveMidiaDAO(PalavraChaveMidia.class);
 	    	palavraChave = pChaveDAO.buscaPalavraChaves(id);
-;	    	s.close();
 	    	return palavraChave;
 	    }
 		catch (Exception e) {
@@ -77,49 +75,34 @@ public class PalavraChaveMidia {
 	}
 	
 	public boolean salvar(){
-		
 		try{    		
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	PalavraChaveMidiaDAO pChaveDAO = new PalavraChaveMidiaDAO(s, PalavraChaveMidia.class);
+		 	PalavraChaveMidiaDAO pChaveDAO = new PalavraChaveMidiaDAO(PalavraChaveMidia.class);
 	    	pChaveDAO.save(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean remover(){
-		
-		PalavraChaveMidia pChave = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	PalavraChaveMidiaDAO pChaveDAO = new PalavraChaveMidiaDAO(s, PalavraChaveMidia.class);
+			PalavraChaveMidiaDAO pChaveDAO = new PalavraChaveMidiaDAO(PalavraChaveMidia.class);
 	        pChaveDAO.delete(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean alterar(){
-	
-		PalavraChaveMidia pChave = null;
-	
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			PalavraChaveMidiaDAO pChaveDAO = new PalavraChaveMidiaDAO(s, PalavraChaveMidia.class);
+			PalavraChaveMidiaDAO pChaveDAO = new PalavraChaveMidiaDAO(PalavraChaveMidia.class);
 			pChaveDAO.merge(this);
-        	s.close();
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}

@@ -1,24 +1,20 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.model.Servico;
 import com.midiasocial.view.service.MidiaSocialServiceView;
 import com.usuario.model.Usuario;
 
-public class ServicoController {
+public class ServicoController extends Controller {
 	
 	private Servico servico = null;
 	private MidiaSocialServiceView midiaSocialServiceView = null;
-	private Usuario usuario;
 	
 	public ServicoController(Usuario usuario){
-		this.usuario = usuario;
-		midiaSocialServiceView = new MidiaSocialServiceView(this);
-	    midiaSocialServiceView.modoTabela();
-	    getMidiaSocialServiceView().refreshTable();
+		
 	}
 	
 	public void salvar(Servico servico){
-		servico.setUsuario(usuario);
 		servico.salvar();
 	}
 	
@@ -89,8 +85,16 @@ public class ServicoController {
 	}
 	
 	public boolean ativarServico(){
-		getServico().ativar();
+		getServico().inicializarServico();
 		return true;
+	}
+
+	@Override
+	public void carregaControle() {
+		midiaSocialServiceView = new MidiaSocialServiceView(this);
+	    midiaSocialServiceView.modoTabela();
+	    getMidiaSocialServiceView().refreshTable();
+		
 	}
 	
 }

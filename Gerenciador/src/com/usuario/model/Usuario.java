@@ -9,10 +9,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.funcionario.model.Funcionario;
+import com.exception.DAOException;
 import com.login.model.Login;
 import com.principal.helper.Hash;
-import com.principal.helper.HibernateUtil;
+import com.principal.helper.HibernateHelper;
 import com.sun.xml.internal.bind.CycleRecoverable;
 import com.usuario.dao.*;
 import com.vaadin.data.util.BeanItemContainer;
@@ -20,7 +20,7 @@ import com.vaadin.data.util.BeanItemContainer;
 @XmlRootElement
 @XmlAccessorType( XmlAccessType.FIELD )
 @Entity
-@Table(name="usuario")
+@Table(name="Midia_usuario")
 public class Usuario implements Serializable , CycleRecoverable{
 
 	/**
@@ -31,28 +31,25 @@ public class Usuario implements Serializable , CycleRecoverable{
 
 	@Id
 	@GeneratedValue
-	@Column(name = "usuarioid")
+	@Column(name = "id")
 	private Long id = null;
 	
 	@XmlElement
-	@Column (name = "usuarionome", unique = true , nullable = false, length=50)
+	@Column (name = "nome", unique = true , nullable = false, length=50)
 	private String nome = "";
 	
-	@Column (name = "usuariosenha")
+	@Column (name = "senha")
 	private String senha = "";
 	
 	@Transient
 	private String senhaConfirmacao = "";
 	
-	@Column (name = "usuarionivel", nullable = false, length=15)
+	@Column (name = "nivel", nullable = false, length=15)
 	private String nivel = "";
 	
 	@Transient
 	private Login login = null;
 
-	@OneToOne
-	@JoinColumn(name = "funcionario")
-	private Funcionario funcionario = null;
 	
 	public Usuario(){}
 	
@@ -120,22 +117,6 @@ public class Usuario implements Serializable , CycleRecoverable{
 		this.login = login;
 	}
 
-
-	/**
-	 * @return the funcionario
-	 */
-	
-	public Funcionario getFuncionario() {
-		return funcionario;
-	}
-	
-	/**
-	 * @param funcionario the funcionario to set
-	 */
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
-	}
-
 	public static boolean autentica(String nome, String senha){
 		
 		Usuario usuario = Usuario.autenticaUsuario(nome, senha);
@@ -160,9 +141,7 @@ public class Usuario implements Serializable , CycleRecoverable{
 	
 	
 	public static ArrayList<Usuario> listaUsuario(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		UsuarioDAO usuarioDAO = new UsuarioDAO(s, Usuario.class);
+		UsuarioDAO usuarioDAO = new UsuarioDAO(Usuario.class);
 		ArrayList<Usuario> workouts = new ArrayList<Usuario>();
 		workouts.addAll(usuarioDAO.list());
 		
@@ -171,8 +150,7 @@ public class Usuario implements Serializable , CycleRecoverable{
 
 	public static BeanItemContainer<Usuario> listaBens(){
 		BeanItemContainer<Usuario>beans = new BeanItemContainer<Usuario>(Usuario.class);
-		org.hibernate.Session s = HibernateUtil.openSession();
-		UsuarioDAO usuarioDAO = new UsuarioDAO(s, Usuario.class);
+		UsuarioDAO usuarioDAO = new UsuarioDAO(Usuario.class);
 	 	beans.addAll(usuarioDAO.list());
 		return beans;
 	}
@@ -181,10 +159,8 @@ public class Usuario implements Serializable , CycleRecoverable{
          Usuario usuario = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioDAO usuarioDAO = new UsuarioDAO(s, Usuario.class);
+		  	UsuarioDAO usuarioDAO = new UsuarioDAO(Usuario.class);
 	        usuario = usuarioDAO.autenticaUsuario(nome, senha);
-	        s.close();
 	    	return usuario;
 	    }
 		catch (Exception e) {
@@ -198,11 +174,9 @@ public class Usuario implements Serializable , CycleRecoverable{
 		Usuario usuario = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioDAO usuarioDAO = new UsuarioDAO(s, Usuario.class);
+	    	UsuarioDAO usuarioDAO = new UsuarioDAO(Usuario.class);
 	        usuario = usuarioDAO.pesquisaUsuarioByNome(nome);
-	        s.close();
-	    	return usuario;
+	      return usuario;
 	    }
 		catch (Exception e) {
 			return null;
@@ -213,14 +187,12 @@ public class Usuario implements Serializable , CycleRecoverable{
 	public boolean salvar(){
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioDAO usuarioDAO = new UsuarioDAO(s, Usuario.class);
+		  UsuarioDAO usuarioDAO = new UsuarioDAO(Usuario.class);
 	    	usuarioDAO.save(this);
-	    	s.close();
 	    	usuarioDAO = null;
 	        return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
@@ -230,13 +202,12 @@ public class Usuario implements Serializable , CycleRecoverable{
 		boolean result = false;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioDAO usuarioDAO = new UsuarioDAO(s, Usuario.class);
+		  	UsuarioDAO usuarioDAO = new UsuarioDAO(Usuario.class);
 	    	result = usuarioDAO.delete(this);
 	        usuarioDAO = null;
-	    	return result;
+	        return result;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
@@ -246,14 +217,12 @@ public class Usuario implements Serializable , CycleRecoverable{
 		boolean result = false;
 		
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			UsuarioDAO usuarioDAO = new UsuarioDAO(s, Usuario.class);
+			UsuarioDAO usuarioDAO = new UsuarioDAO(Usuario.class);
 			result = usuarioDAO.merge(this);
-			s.close();
 			usuarioDAO = null;
 			return result;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}

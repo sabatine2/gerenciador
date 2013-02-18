@@ -10,15 +10,17 @@ import org.hibernate.criterion.Restrictions;
 
 import com.abstracts.dao.DAO;
 import com.login.model.Login;
+import com.principal.helper.HibernateHelper;
 import com.usuario.model.Usuario;
 
 public class LoginDAO extends DAO<Login> {
 	
-	public LoginDAO(Session session, Class<?> classe) {
-		super(session, classe);
+	public LoginDAO( Class<?> classe) {
+		super(classe);
 	}
 
 	public List<Login> buscaLoginUsuario(Usuario usario) {
+		Session session = HibernateHelper.openSession();
 		Criteria c = session.createCriteria(Login.class);
 		c.add(Restrictions.eq("usuario", usario));
     	return c.list();
@@ -26,7 +28,8 @@ public class LoginDAO extends DAO<Login> {
 
 	@SuppressWarnings("unchecked")
 	public List<Login> buscaLoginUsuarioAtivo(Usuario usuario){
-	    Query q =  session.createQuery("select p from " + Login.class.getName() + " as p where p.ativo = 1 and p.usuario like :usuario");
+		Session session = HibernateHelper.openSession();
+		Query q =  session.createQuery("select p from " + Login.class.getName() + " as p where p.ativo = 1 and p.usuario like :usuario");
 		q.setParameter("usuario", usuario);
 		return q.list();
 	}
@@ -34,11 +37,13 @@ public class LoginDAO extends DAO<Login> {
 
 	@SuppressWarnings("unchecked")
 	public List<Login> buscaLoginAtivos(){
-	    Query q =  session.createQuery("select p from " + Login.class.getName() + " as p where p.ativo = 1");
+		Session session = HibernateHelper.openSession();
+		Query q =  session.createQuery("select p from " + Login.class.getName() + " as p where p.ativo = 1");
 		return q.list();
 	}
 	
 	public Login utimoLogin(Usuario usario){
+		Session session = HibernateHelper.openSession();
 		Criteria c = session.createCriteria(Login.class);
 		c.add(Restrictions.eq("usuario", usario));
 		c.addOrder(Order.desc("dataCreate"));

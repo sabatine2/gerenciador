@@ -1,24 +1,23 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.model.AplicacaoMidiaSocial;
 import com.midiasocial.view.AplicacaoMidiaSocialView;
 import com.vaadin.data.util.BeanItemContainer;
 
-public class AplicacaoMidiaSocialController {
+public class AplicacaoMidiaSocialController extends Controller{
 	
 	private AplicacaoMidiaSocial app = null;
 	private AplicacaoMidiaSocialView appView = null;
 	
 	public AplicacaoMidiaSocialController(){
-	    appView = new AplicacaoMidiaSocialView(this);
-	    appView.modoTabela();
-	    refreshTable();
+	   
 	}
 	
 	public boolean salvar(AplicacaoMidiaSocial app){
 		
 		if(app.salvar()){
-			refreshTable();
+			appView.refreshTable();
 			return true;
 		}
 		else {
@@ -29,7 +28,7 @@ public class AplicacaoMidiaSocialController {
 	public boolean alterar(AplicacaoMidiaSocial app){
 		
 		if(app.alterar()){
-			refreshTable();
+			appView.refreshTable();
 			return true;
 		}
 		else {
@@ -37,23 +36,13 @@ public class AplicacaoMidiaSocialController {
 		}
 	}
 	
-	public boolean removerButton(AplicacaoMidiaSocial app){
-			if(remover(app.getId())){
+	public boolean remover(AplicacaoMidiaSocial app){
+			if(app.remover()){
 				return true;
 			}
 			else {
 				return false;
 			}
-	}
-	
-	public boolean remover(Long id){
-		boolean result;
-		System.out.println("ID: "+id);
-		AplicacaoMidiaSocial app = AplicacaoMidiaSocial.pesquisaAppID(id);
-		
-		result = app.remover();
-		refreshTable();
-		return result;
 	}
 	
 	public AplicacaoMidiaSocial getApp() {
@@ -76,7 +65,7 @@ public class AplicacaoMidiaSocialController {
 	}
 
 	public AplicacaoMidiaSocialView getView(){
-		refreshTable();
+		appView.refreshTable();
 		return this.appView;
 	}
 	
@@ -91,13 +80,14 @@ public class AplicacaoMidiaSocialController {
 		dados[3] = app.getRedeSocial();
 		appView.visualizar(dados);
 	}
-	
-	public void refreshTable(){
-		defaultTable();		
+
+	@Override
+	public void carregaControle() {
+		 appView = new AplicacaoMidiaSocialView(this);
+		 appView.modoTabela();
+		 appView.refreshTable();
+		
 	}
 	
-	public void defaultTable(){
-		appView.tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<AplicacaoMidiaSocial>(AplicacaoMidiaSocial.class,AplicacaoMidiaSocial.listaApp()));
-		appView.tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"id", "nome", "redeSocial"});
-	}
+
 }

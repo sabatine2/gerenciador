@@ -2,7 +2,6 @@ package com.midiasocial.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,54 +14,56 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.exception.DAOException;
 import com.midiasocial.dao.UsuarioAppMidiaSocialDAO;
-import com.principal.helper.HibernateUtil;
+import com.midiasocial.service.MidiaSocialService;
 
 @Entity
-@Table(name = "usuarioappmediasocial")
+@Table(name = "MidiaUsuarioApp")
 public class UsuarioAppMidiaSocial {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "userapp_idInterno")
+	@Column(name = "idinterno")
 	private Long idInterno;
 	
-	@Column(name = "userapp_id")
+	@Column(name = "id")
 	private String idMidia;
 	
-	@Column(name = "userapp_nome")
+	@Column(name = "nome")
 	private String nome = "";
 	
-	@Column(name = "userapp_screenName")
+	@Column(name = "screenName")
 	private String screenName = "";
 	
-	@Column(name = "userapp_foto")
+	@Column(name = "fotourl")
 	private String fotoUrl;
 	
-	@Column(name = "userapp_status")
+	@Column(name = "status")
 	private String status;
 		
-	@Column(name = "userapp_tokenaccess")
+	@Column(name = "tokenaccess")
 	private String tokenAccess = "";
 	
-	@Column(name = "userapp_tokenaccess_secret")
+	@Column(name = "tokenaccesssecret")
 	private String tokenAccessSecret = "";
 	
-	@Column(name = "userapp_consumerkey")
+	@Column(name = "consumerkey")
 	private String consumerKey = "";
 	
-	@Column(name = "userapp_consumersecret")
+	@Column(name = "consumersecret")
 	private String consumerSecret = "";
 	
 	
-@Column(name = "userapp_fanpageid")
+@Column(name = "fanpageid")
 	private String fanpageId;
 
-	@Column(name = "userapp_fanpagescreenname")
+	@Column(name = "fanpagescreenname")
 	private String fanpageScreenName = "";
 	
 	@ManyToOne
-	@JoinColumn( name = "app_id")
+	@JoinColumn( name = "idapp")
     private AplicacaoMidiaSocial appMidiaSocial;
 	
 	@OneToMany(mappedBy = "usuarioAppMidiaSocial", targetEntity = Publicacao.class, fetch = FetchType.LAZY, cascade={CascadeType.ALL})
@@ -191,14 +192,16 @@ public class UsuarioAppMidiaSocial {
 	
 	@SuppressWarnings("rawtypes")
 	public static List listaUsuario(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(s, UsuarioAppMidiaSocial.class);
-	  
-		List workouts = usuarioDAO.list();
-		
-		 //s.close();
-		 return workouts;
+		UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(UsuarioAppMidiaSocial.class);
+	    List workouts = usuarioDAO.list();
+		return workouts;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static List listaUsuarioAtivo(){
+		UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO( UsuarioAppMidiaSocial.class);
+	    List workouts = usuarioDAO.listaAtivo();
+		return workouts;
 	}
 	
 	public UsuarioAppMidiaSocial pesquisaUsuarioID(){
@@ -206,10 +209,8 @@ public class UsuarioAppMidiaSocial {
 		UsuarioAppMidiaSocial usuario = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(s, UsuarioAppMidiaSocial.class);
+		  	UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO( UsuarioAppMidiaSocial.class);
 	        usuario = usuarioDAO.buscaUsuarios(idInterno);
-	    	s.close();
 	    	return usuario;
 	    }
 		catch (Exception e) {
@@ -222,10 +223,8 @@ public class UsuarioAppMidiaSocial {
 		UsuarioAppMidiaSocial usuario = null;
 		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(s, UsuarioAppMidiaSocial.class);
-	    	usuario = usuarioDAO.buscaUsuarios(id);
-	    	s.close();
+		  	UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO( UsuarioAppMidiaSocial.class);
+	    	usuario = usuarioDAO.load(id);
 	    	return usuario;
 	    }
 		catch (Exception e) {
@@ -233,54 +232,41 @@ public class UsuarioAppMidiaSocial {
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean salvar(){
-		
-		UsuarioAppMidiaSocial usuario = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(s, UsuarioAppMidiaSocial.class);
+		    UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(UsuarioAppMidiaSocial.class);
 	        usuarioDAO.save(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean remover(){
-		
-		UsuarioAppMidiaSocial usuario = null;
-		
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(s, UsuarioAppMidiaSocial.class);
+		  	UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO( UsuarioAppMidiaSocial.class);
 	        usuarioDAO.delete(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 	
-	@SuppressWarnings("unused")
 	public boolean alterar(){
-	
-		UsuarioAppMidiaSocial usuario = null;
-	
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO(s, UsuarioAppMidiaSocial.class);
+			UsuarioAppMidiaSocialDAO usuarioDAO = new UsuarioAppMidiaSocialDAO( UsuarioAppMidiaSocial.class);
 			usuarioDAO.merge(this);
-        	s.close();
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
+	}
+	
+	public void importarDados(){
+		MidiaSocialService midia = new MidiaSocialService();
+		midia.servico(this);
 	}
 }

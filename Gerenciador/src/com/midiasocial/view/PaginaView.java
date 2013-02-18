@@ -4,19 +4,23 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.tools.ant.taskdefs.Sleep;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.auditor.helper.Conexao;
 import com.github.wolfie.refresher.Refresher;
 import com.github.wolfie.refresher.Refresher.RefreshListener;
+import com.jensjansson.pagedtable.PagedTable;
 import com.midiasocial.controller.ComentarioController;
 import com.midiasocial.controller.PublicacaoController;
 import com.midiasocial.controller.PaginaController;
 import com.midiasocial.model.Comentario;
 import com.midiasocial.model.Publicacao;
 import com.midiasocial.model.UsuarioAppMidiaSocial;
+import com.principal.helper.HibernateHelper;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbsoluteLayout;
@@ -42,7 +46,9 @@ public class PaginaView extends Panel {
 	
 	private ComboBox cbUsuario;
 	private Panel panelConectar;
+	
 	private Panel panelPost;
+	
 	private AbsoluteLayout layoutPanel;
 	private Button buttonCarregar;
 	private VerticalLayout verticalLayout;
@@ -77,7 +83,7 @@ public class PaginaView extends Panel {
 		panelConectar = new Panel();
 		panelConectar.setCaption("Pagina");
 		panelConectar.setImmediate(true);
-		panelConectar.setWidth("855px");
+		panelConectar.setWidth("875px");
 		panelConectar.setHeight("90px");
 		
 		layoutPanel = new AbsoluteLayout();
@@ -100,7 +106,16 @@ public class PaginaView extends Panel {
 			public void buttonClick(ClickEvent event) {
 				try {
 					if (user == null) {
-						addComponent(buildPanelPost());
+						if(panelPost != null){
+							removeComponent(panelPost);
+							addComponent(buildPanelPost());
+						}
+						else{
+							addComponent(buildPanelPost());
+						}
+						verticalLayout.removeComponent(publicacaoLayout);
+						publicacaoLayout = null;
+						publicacaoLayout = new VerticalLayout();
 						loadUserTimeLine();
 						verticalLayout.addComponent(publicacaoLayout);
 						final Refresher refresher = new Refresher();
@@ -130,28 +145,28 @@ public class PaginaView extends Panel {
 	private BeanItemContainer listaUsuario(){
 		
 		BeanItemContainer<UsuarioAppMidiaSocial> beanItem = new BeanItemContainer<UsuarioAppMidiaSocial>(UsuarioAppMidiaSocial.class);
-		List listUser = UsuarioAppMidiaSocial.listaUsuario();
-		for (int i = 0; i < listUser.size(); i++) {
-			
-			beanItem.addItem(listUser.get(i));
-		}
+		beanItem.addAll(UsuarioAppMidiaSocial.listaUsuarioAtivo());
 		return beanItem;
 	}
 	
 	private void loadUserTimeLine(){
 		
 		publicacaoLayout.removeAllComponents();
-		publicacaoController = new PublicacaoController(user, null);
 		
+	    IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty("publicacoes", PublicacaoView.class, null);
+        
+	    publicacaoController = new PublicacaoController(user, null);
 		user = (UsuarioAppMidiaSocial)cbUsuario.getValue();
-		List<Publicacao> listPub = new Publicacao().listaPost(user);
+		List<Publicacao> listPub = new Publicacao().listaPublicacao(user);
 		
 		for (int i = 0; i < listPub.size(); i++) {
 			
+			Item item = container.addItem(i);
 			Publicacao pub = listPub.get(i);
 			
 				PublicacaoController publicacaoController = new PublicacaoController(user, pub);
-				publicacaoLayout.addComponent(publicacaoController.getPublicacaoView());
+				item.getItemProperty("publicacoes").setValue(publicacaoController.getPublicacaoView());
 				publicacaoController.carregarPublicacao();
 			
 				if (pub.isCurtir()) {
@@ -182,6 +197,16 @@ public class PaginaView extends Panel {
 					}
 				}
 		  }
+		
+		if(listPub.size() > 0){
+		    PagedTable table = new PagedTable();
+		    table.setContainerDataSource(container);
+		    table.setPageLength(20);
+		    publicacaoLayout.addComponent(table);
+		}else{
+			 publicacaoLayout.addComponent(new Label("Nenhuma Publicação"));
+		}
+	
 	}
 	
 	private boolean isUserLikes(String json) throws JSONException{
@@ -200,7 +225,7 @@ public class PaginaView extends Panel {
 		//Build panel
 		panelPost = new Panel("Publicar");
 		panelPost.setImmediate(false);
-		panelPost.setWidth("855px");
+		panelPost.setWidth("875px");
 		panelPost.setHeight("-1px");
 		
 		GridLayout layoutPanel = new GridLayout( 2, 2 );

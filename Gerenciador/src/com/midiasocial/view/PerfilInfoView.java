@@ -42,7 +42,7 @@ public class PerfilInfoView extends Window {
 		setDraggable(false);
 		setModal(true);
 		setWidth("418px");
-		setHeight("506px");
+		setHeight("546px");
 	
 		((VerticalLayout) getContent()).setSizeFull();
 

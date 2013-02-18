@@ -3,7 +3,6 @@ package com.midiasocial.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,81 +16,81 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.exception.DAOException;
 import com.midiasocial.dao.PublicacaoDAO;
-import com.principal.helper.HibernateUtil;
 
 @Entity
-@Table(name = "publicacao")
+@Table(name = "MidiaPublicacao")
 public class Publicacao {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "publicacao_id")
+	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "publicacao_idmidia", unique = true)
+	@Column(name = "idmidia", unique = true)
 	private String idMidia;
 
-	@Column(name = "publicacao_datacriacao")
+	@Column(name = "datacriacao")
 	private Date dataCriacao;
 
-	@Column(name = "publicacao_datacriacaomidia")
+	@Column(name = "datacriacaomidia")
 	private Date dataCriacaoMidia;
 	
-	@Column(name = "publicacao_dataconsumido")
+	@Column(name = "dataconsumido")
 	private Date dataConsumido;
 	
-	@Column(name = "publicacao_mensagem", length=65000)
+	@Column(name = "mensagem", length=65000)
 	private String mensagem;
 	
-	@Column(name = "publicacao_idusuario")
+	@Column(name = "idusuario")
 	private String idUsuario;
 	
-	@Column(name = "publicacao_nome")
+	@Column(name = "nomeusuario")
 	private String nomeUsuario;
 		
-	@Column(name = "publicacao_curtir")
+	@Column(name = "curtir")
 	private boolean curtir;
 	
 	
-	@Column(name = "publicacao_deletado")
+	@Column(name = "deletado")
 	private boolean deletado;
 	
-	@Column(name = "publicacao_datadeletado")
+	@Column(name = "datadeletado")
 	private Date dataDeletado;
 	
-	@Column(name = "publicacao_fotourl")
+	@Column(name = "fotourl")
 	private String fotoUrl;
 	
-	@Column(name = "publicacao_anexorl")
-	private String anexoUrl;
-	
-	@Column(name = "publicacao_iddestino")
+	@Column(name = "iddestino")
 	private String idDestino;
 	
-	@Column(name = "publicacao_publicaroffline")
+	@Column(name = "publicaroffline")
 	private boolean publicarOffline;
 	
-	@Column(name = "publicacao_curtiroffline")
+	@Column(name = "curtiroffline")
 	private boolean curtirOffline;
 	
-	@Column(name = "publicacao_curtirremoveroffline")
+	@Column(name = "curtirremoveroffline")
 	private boolean curtirRemoverOffline;
 	
-	@Column(name = "publicacao_deletaroffline")
+	@Column(name = "deletaroffline")
 	private boolean deletarOffline;
 	
 	@ManyToOne
-	@JoinColumn(name = "publicacao_usuarioapp")
+	@JoinColumn(name = "usuarioapp")
 	private UsuarioAppMidiaSocial usuarioAppMidiaSocial;
 	
 	@ManyToOne
-	@JoinColumn( name = "userpub_idInterno")
+	@JoinColumn( name = "idinterno")
     private UsuarioPubMidiaSocial usuarioPubMidiaSocial;
 	
 	@OneToMany(mappedBy = "publicacao", targetEntity = Comentario.class, fetch = FetchType.LAZY, cascade={CascadeType.ALL})
     private Collection<Comentario> comentario = new ArrayList<Comentario>(); 
 	
+	@OneToMany(mappedBy = "publicacao", targetEntity = Anexo.class, fetch = FetchType.LAZY, cascade={CascadeType.ALL})
+    private Collection<Anexo> anexo = new ArrayList<Anexo>(); 
+
 	public Publicacao(){}
 
 	public Long getId() {
@@ -187,20 +186,6 @@ public class Publicacao {
 	}
 
 		/**
-	 * @return the anexoUrl
-	 */
-	public String getAnexoUrl() {
-		return anexoUrl;
-	}
-
-	/**
-	 * @param anexoUrl the anexoUrl to set
-	 */
-	public void setAnexoUrl(String anexoUrl) {
-		this.anexoUrl = anexoUrl;
-	}
-
-	/**
 	 * @return the idDestino
 	 */
 	public String getIdDestino() {
@@ -308,71 +293,62 @@ public class Publicacao {
 		this.fotoUrl = fotoUrl;
 	}
 	
+	
 	//METODOS
 		
-	@SuppressWarnings("rawtypes")
-	public static List listaPost(){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		List workouts = postDAO.list();
-		return workouts;
-		
+	public Collection<Anexo> getAnexo() {
+		return anexo;
+	}
+
+	public void setAnexo(Collection<Anexo> anexo) {
+		this.anexo = anexo;
+	}
+	
+	public void addAnexo(Anexo anexo) {
+		this.anexo.add(anexo);
+	}
+
+	public static List<Publicacao> listaPost(){
+		PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
+		return postDAO.list();
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static List listaPost(UsuarioAppMidiaSocial app){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
+	public static List listaPublicacao(UsuarioAppMidiaSocial app){
+		PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
 		List workouts = postDAO.pesquisaPosts(app);
 		return workouts;
 	}
 	
 	
-	public static List<Publicacao> listOffPublicacao(UsuarioAppMidiaSocial usuario){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		
-		List<Publicacao> listPub = postDAO.listaOffPublicacao(usuario);
+	public static List<Publicacao> listOffPublicacao(){
+		PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
+		List<Publicacao> listPub = postDAO.listaOffPublicacao();
 		return listPub;
 	}
 	
 	public static List<Publicacao> listOffCurtir(UsuarioAppMidiaSocial usuario){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		
+		PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
 		List<Publicacao> listPub = postDAO.listaOffCurtir(usuario);
 		return listPub;
 	}
 	
 	public static List<Publicacao> listOffCurtirRemover(UsuarioAppMidiaSocial usuario){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		
+		PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
 		List<Publicacao> listPub = postDAO.listaOffCurtirRemover(usuario);
 		return listPub;
 	}
 	
-	public static List<Publicacao> listOffDeletar(UsuarioAppMidiaSocial usuario){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		
-		List<Publicacao> listPub = postDAO.listaOffDeletar(usuario);
+	public static List<Publicacao> listOffDeletar(){
+		PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
+		List<Publicacao> listPub = postDAO.listaOffDeletar();
 		return listPub;
 	}
 	
 	public static List<Publicacao> listLastUpdate(String idUsuarioMidia){
-		
-		org.hibernate.Session s = HibernateUtil.openSession();
-		PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		
+	
+		PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
 		List<Publicacao> list = postDAO.listlastUpdate(idUsuarioMidia);
-		
 		return list;
 	}
 
@@ -382,11 +358,9 @@ public class Publicacao {
 		Publicacao post = null;
 			
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-		    PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-		    post = postDAO.buscaPosts(id);
-		    s.close();
-	    	return post;
+		    PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
+		    post = postDAO.load(id);
+		  return post;
 		}
 		catch (Exception e) {
 			return null;
@@ -398,10 +372,8 @@ public class Publicacao {
 		Publicacao post = null;
 			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
-	    	post = postDAO.buscaPosts(id);
-		   	s.close();
+			PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
+	    	post = postDAO.load(id);
 		   	return post;
 		}
 		catch (Exception e) {
@@ -414,10 +386,8 @@ public class Publicacao {
 		Publicacao post = null;
 			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-	    	PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
+		  	PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
 	    	post = postDAO.buscaPosts(idMidia);
-		   	s.close();
 		   	return post;
 		}
 		catch (Exception e) {
@@ -425,56 +395,39 @@ public class Publicacao {
 		}	
 	}
 		
-	@SuppressWarnings("unused")
 	public boolean salvar(){
 		
-		Publicacao post = null;
 		setDataCriacao(new Date());
 			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
+		  	PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
 		    postDAO.save(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 		
-	@SuppressWarnings("unused")
 	public boolean remover(){
-			
-		Publicacao post = null;
-			
 		try{
-		  	org.hibernate.Session s = HibernateUtil.openSession();
-		  	PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
+		  	PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
 		    postDAO.delete(this);
-	    	s.close();
 	    	return true;
 	    }
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}
 		
-	
-	
-	@SuppressWarnings("unused")
 	public boolean alterar(){
 		
-		Publicacao post = null;
-		
 		try{
-			org.hibernate.Session s = HibernateUtil.openSession();
-			PublicacaoDAO postDAO = new PublicacaoDAO(s, Publicacao.class);
+			PublicacaoDAO postDAO = new PublicacaoDAO(Publicacao.class);
 			postDAO.merge(this);
-        	s.close();
         	return true;
 		}
-		catch (Exception e) {
+		catch (DAOException e) {
 			return false;
 		}	
 	}

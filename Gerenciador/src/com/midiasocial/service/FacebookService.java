@@ -17,6 +17,7 @@ import java.util.Locale;
 
 import org.json.JSONException;
 
+import com.midiasocial.model.Anexo;
 import com.midiasocial.model.Comentario;
 import com.midiasocial.model.Publicacao;
 import com.midiasocial.model.ResultadoBusca;
@@ -35,9 +36,12 @@ import com.restfb.types.Comment;
 import com.restfb.types.FacebookType;
 import com.restfb.types.Post;
 
-@SuppressWarnings({"deprecation", "static-access", "unused"})
+@SuppressWarnings({"unused"})
 public class FacebookService {
 
+	public static int MODO_OFF = 1;
+	public static int MODO_ON = 0;
+	
 	public static Connection<Post> getUserTimeLineRT(UsuarioAppMidiaSocial usuarioMidiaSocial){
 		
 		Connection<Post> myFeed = null;
@@ -61,12 +65,15 @@ public class FacebookService {
 	
 	public Connection<Post> getUserTimeLineData(UsuarioAppMidiaSocial usuarioMidiaSocial, Date dataInicial){
 		UsuarioAppMidiaSocial user = (UsuarioAppMidiaSocial) usuarioMidiaSocial;
-		System.out.println("data inicial "+ dataInicial.toLocaleString());
-		Parameter.with("since",dataInicial.toLocaleString());
+		Timestamp desde = new Timestamp(dataInicial.getTime()); 
+		Timestamp ate = new Timestamp(System.currentTimeMillis());  
 		FacebookClient facebookClient = new DefaultFacebookClient(usuarioMidiaSocial.getTokenAccess());
-		Connection<Post> myFeed = facebookClient.fetchConnection(usuarioMidiaSocial.getFanpageScreenName()+"/feed", Post.class);
+		Connection<Post> myFeed = facebookClient.fetchConnection(usuarioMidiaSocial.getFanpageScreenName()+"/feed", Post.class,	Parameter.with("since",1359465965));
+		
 		return myFeed;
 	}
+	
+	
 	
 	private static boolean isUserLikes(UsuarioAppMidiaSocial usuarioMidiaSocial, String idComment) throws JSONException{
 		
@@ -101,7 +108,10 @@ public class FacebookService {
 				}
 			}while( (comment == null) && (tentativas < 3) );
 			
-			salvarComentario(comment, publicacao, usuarioMidiaSocial);
+			Comentario comentario = new Comentario();
+			comentario.setPublicacao(publicacao);
+				
+			salvarComentario(comment, comentario, usuarioMidiaSocial,MODO_ON);
 			
 		} catch (FacebookNetworkException fe) {
 			
@@ -319,15 +329,7 @@ public class FacebookService {
 						resultado.setFotoUrl("https://graph.facebook.com/"+post.getFrom().getId()+"/picture");
 						resultado.setIdUsuario(post.getFrom().getId());
 						resultado.setNomeUsuario(post.getFrom().getName());
-						Date dataPost = null;  
-						String datePost = post.getCreatedTime().toLocaleString();
-						DateFormat dfPost = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
-						try {
-							dataPost = dfPost.parse(datePost);
-						} catch (ParseException e1) {
-							e1.printStackTrace();
-						}
-						resultado.setDataCriacaoMidia(dataPost);
+						resultado.setDataCriacaoMidia(post.getCreatedTime());
 						resultado.setRedeSocial("Facebook");
 					    listaResultadoFacebook.add(resultado);
 					 }
@@ -345,17 +347,14 @@ public class FacebookService {
 		pub.setIdUsuario(post.getFrom().getId());
 		pub.setNomeUsuario(post.getFrom().getName());
 		pub.setUsuarioAppMidiaSocial(usuarioMidiaSocial);
-		pub.setAnexoUrl(post.getPicture());
-			
-		Date dataPost = null;  
-		String datePost = post.getCreatedTime().toLocaleString();
-		DateFormat dfPost = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
-		try {
-			dataPost = dfPost.parse(datePost);
-		} catch (ParseException e1) {
-			e1.printStackTrace();
+		if(post.getPicture() != null){
+			Anexo anexo = new Anexo();
+			anexo.setAnexoUrl(post.getPicture());
+			anexo.setPublicacao(pub);
+			anexo.setDataCriacao(new Date());
+			pub.addAnexo(anexo);
 		}
-		pub.setDataCriacaoMidia(dataPost);
+		pub.setDataCriacaoMidia(post.getCreatedTime());
 		
 		UsuarioPubMidiaSocial usuarioMidiaSocialPub = UsuarioPubMidiaSocial.pesquisaUsuarioIdMidia(post.getFrom().getId()); 
 		
@@ -381,49 +380,42 @@ public class FacebookService {
 		usuarioMidiaSocialPub.setFotoUrl("https://graph.facebook.com/"+user.getId()+"/picture");
 		usuarioMidiaSocialPub.setFotoPerfilUrl("https://graph.facebook.com/"+user.getId()+"/picture?width=148&height=148");
 		usuarioMidiaSocialPub.setNomeRedeSocial("Facebook");
+		usuarioMidiaSocialPub.setEmail(user.getEmail());
+		usuarioMidiaSocialPub.setLocalizacao(user.getLocale());
 		usuarioMidiaSocialPub.setUrlPerfil("http://www.facebook.com/"+user.getUsername());
 		usuarioMidiaSocialPub.salvar();
 		
 		return usuarioMidiaSocialPub;
 	}
 	
-	public Comentario salvarComentario(Comment comment, Publicacao pub, UsuarioAppMidiaSocial usuarioMidiaSocial){
+	public static Comentario salvarComentario(Comment comment, Comentario comentario, UsuarioAppMidiaSocial usuarioMidiaSocial, int modo){
 		
-		Comentario c = new Comentario();	
-
-		c.setIdMidia(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+comment.getId());
-		c.setIdUsuario(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+comment.getFrom().getId());
-		c.setMensagem(comment.getMessage());
-		c.setNomeUsuario(comment.getFrom().getName());
-		c.setComentarOffline(false);
-		c.setCurtirOffline(false);
-		c.setCurtirRemoverOffline(false);
-		c.setPublicacao(pub);
-			
-		Date dataComment = null;  
-		String dateComment = comment.getCreatedTime().toLocaleString();
-		DateFormat dfComment = new SimpleDateFormat("DD/MM/yyyy HH:mm:ss");
-		try {
-			dataComment = dfComment.parse(dateComment);
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
-		
-		c.setDataCriacaoMidia(dataComment);
+		comentario.setIdMidia(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+comment.getId());
+		comentario.setIdUsuario(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+comment.getFrom().getId());
+		comentario.setMensagem(comment.getMessage());
+		comentario.setNomeUsuario(comment.getFrom().getName());
+		comentario.setComentarOffline(false);
+		comentario.setCurtirOffline(false);
+		comentario.setCurtirRemoverOffline(false);
+		comentario.setDataCriacaoMidia(comment.getCreatedTime());
 			
          try {
-				if (isUserLikes(usuarioMidiaSocial, c.getIdMidia())) {
-					c.setCurtir(true);
+				if (isUserLikes(usuarioMidiaSocial, comentario.getIdMidia())) {
+					comentario.setCurtir(true);
 				}
 				else {
-					c.setCurtir(false);
+					comentario.setCurtir(false);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 			
-			c.salvar();
-			return c;
+         if(modo == MODO_ON)
+        	 comentario.salvar();
+         else{
+        	 comentario.alterar(); 
+         }
+			return comentario;
 	}
 	
 	public ArrayList<Publicacao> postToPublish(Connection<Post> posts, UsuarioAppMidiaSocial usuarioMidiaSocial){
@@ -440,11 +432,46 @@ public class FacebookService {
  					List<Comment> listComment = post.getComments().getData();
      				for (Iterator<Comment> i = listComment.iterator();i.hasNext();) {
      					pub = Publicacao.pesquisaPostIdMidia(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+post.getId());
-     					salvarComentario(i.next(), pub, usuarioMidiaSocial);
+     					Comentario comentario = new Comentario();
+     					comentario.setPublicacao(pub);
+     					salvarComentario(i.next(), comentario, usuarioMidiaSocial,MODO_ON);
 					 }
  				 }
  			 }
  		}
+		return pubs;
+	}
+	
+	public ArrayList<Publicacao> postToPublish(Connection<Post> posts, UsuarioAppMidiaSocial usuarioMidiaSocial, Date date){
+
+		ArrayList<Publicacao> pubs = new ArrayList<Publicacao>();
+		boolean parar = false;
+
+		for (List<Post> myFeedConnectionPage : posts){
+
+			for (Post post : myFeedConnectionPage){
+				if (post.getMessage() != null) {
+					if(date.compareTo(post.getUpdatedTime()) < 0){ 
+
+						Publicacao pub = salvarPublicacao(post, usuarioMidiaSocial);
+
+						List<Comment> listComment = post.getComments().getData();
+						for (Iterator<Comment> i = listComment.iterator();i.hasNext();) {
+							pub = Publicacao.pesquisaPostIdMidia(usuarioMidiaSocial.getAppMidiaSocial().getRedeSocial()+":"+post.getId());
+							Comentario comentario = new Comentario();
+							comentario.setPublicacao(pub);
+							salvarComentario(i.next(), comentario, usuarioMidiaSocial,MODO_ON);
+						}
+					}else{
+						parar = true;
+				    	break;
+					}	
+				}	 
+			}
+			if(parar){
+				break;	
+			}
+		}
 		return pubs;
 	}
 }

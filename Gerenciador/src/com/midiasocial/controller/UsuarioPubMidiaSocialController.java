@@ -1,16 +1,17 @@
 package com.midiasocial.controller;
 
+import com.abstracts.controller.Controller;
 import com.midiasocial.model.UsuarioPubMidiaSocial;
+import com.midiasocial.service.MidiaSocialService;
 import com.midiasocial.view.UsuarioPubMidiaSocialView;
 
-public class UsuarioPubMidiaSocialController {
+public class UsuarioPubMidiaSocialController extends Controller {
 	
 	private UsuarioPubMidiaSocial usuario = null;
 	private UsuarioPubMidiaSocialView usuarioView = null;
 	
 	public UsuarioPubMidiaSocialController(){
-	    usuarioView = new UsuarioPubMidiaSocialView(this);
-	    usuarioView.modoTabela();
+	   
 	}
 	
 	public boolean salvar(UsuarioPubMidiaSocial usuario){
@@ -86,6 +87,15 @@ public class UsuarioPubMidiaSocialController {
 		return this.usuarioView;
 	}
 	
+	public void importarPagina(){
+		
+	}
+
+	@Override
+	public void carregaControle() {
+		 usuarioView = new UsuarioPubMidiaSocialView(this);
+		 usuarioView.modoTabela();
+	}
 	
 	
 }

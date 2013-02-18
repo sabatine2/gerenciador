@@ -4,6 +4,7 @@ import com.midiasocial.controller.CriterioController;
 import com.midiasocial.model.Criterio;
 import com.midiasocial.view.form.CriterioForm;
 import com.midiasocial.view.form.PalavraChaveMidiaForm;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -69,7 +70,7 @@ public class CriterioView extends ViewComponente {
  							MessageBox.Icon.QUESTION, 
  							"Remover Criterio?",
  							new MessageBox.ButtonConfig(MessageBox.ButtonType.YES, "Sim"),
- 							new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Nao"));
+ 							new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "N‹o"));
  				  	mb.show(new MessageBox.EventListener() {
  				  		 
  						public void buttonClicked(ButtonType buttonType) {
@@ -204,7 +205,7 @@ public class CriterioView extends ViewComponente {
 				MessageBox mb = new MessageBox(getWindow(), 
 					"Remover", 
 					MessageBox.Icon.QUESTION, 
-					"Remover Usuï¿½rio?",
+					"Remover Criterio?",
 					new MessageBox.ButtonConfig(MessageBox.ButtonType.YES, "Sim"),
 					new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Nao"));
 				mb.show(new MessageBox.EventListener() {	 
@@ -283,7 +284,7 @@ public class CriterioView extends ViewComponente {
 			}
 		}catch(Exception e){	
 			System.out.println("ERRO SALVAR");
-			msg("Conecte-se antes de salvar", MessageBox.Icon.ERROR);
+			msg("Erro ao salvar " + e.getMessage(), MessageBox.Icon.ERROR);
 		}
 	}
 
@@ -320,5 +321,14 @@ public class CriterioView extends ViewComponente {
 
 	public void setpChaveForm(PalavraChaveMidiaForm pChaveForm) {
 		this.pChaveForm = pChaveForm;
+	}
+	
+	public void refreshTable(){
+		defaultTable();		
+	}
+	
+	public void defaultTable(){
+		tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<Criterio>(Criterio.class, Criterio.listaUsuario()));
+		tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"id", "nome", "status", "prioridade"});
 	}
 }
