@@ -36,7 +36,7 @@ public class EtapaBancoDadosView implements WizardStep {
         content.setSpacing(true);
         
         
-        final TextField urlTextField = new TextField("URL");
+        final TextField urlTextField = new TextField("URL ()");
     	final TextField userTextField = new TextField("Usuario");
     	final PasswordField senhaPasswordField = new PasswordField("Senha");
     	final Button salvarButton = new Button("Salvar");
