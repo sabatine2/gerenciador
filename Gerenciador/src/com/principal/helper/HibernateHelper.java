@@ -18,8 +18,7 @@ public class HibernateHelper{
 
 	private final static SessionFactory sessionFactory;
 	private static ThreadLocal<Session> sessions = new ThreadLocal<Session>();
-	private static ServiceRegistry serviceRegistry;
-	public static Connection con        = null;  
+	private static ServiceRegistry      serviceRegistry;
 	
 	static {
 		try {

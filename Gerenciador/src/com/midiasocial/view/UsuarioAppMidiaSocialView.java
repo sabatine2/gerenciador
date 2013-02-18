@@ -290,7 +290,7 @@ public class UsuarioAppMidiaSocialView extends ViewComponente {
 			
 			if(this.userController.salvar(userForm.getUser())){
 				MessageBox mb = new MessageBox(getWindow(), 
- 						"Importantdo dados", 
+ 						"Dados importados da conta", 
                          MessageBox.Icon.INFO, 
                          this.userController.getUsuario().getFanpageScreenName(),  
                          new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));

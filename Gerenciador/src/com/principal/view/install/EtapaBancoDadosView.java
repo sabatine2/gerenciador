@@ -91,7 +91,7 @@ public class EtapaBancoDadosView implements WizardStep {
     private Label getText() {
         return new Label(
                 "<h2>Gerenciador</h2><p>Inicio da aplicacao: "
-                        + "criacao da conexao com o banco de dados adminstrador.</p><p>Informe o nome e a senha do usuario adminstrador.</p>",
+                        + "criacao da conexao com o banco de dados adminstrador.</p><p>Informe a url, o nome e a senha do usuario.</p>",
                 Label.CONTENT_XHTML);
     }
 

@@ -22,6 +22,10 @@ import de.steinwedel.vaadin.MessageBox.ButtonType;
 
 public class MidiaSocialServiceView extends ViewComponente {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public ServicoController serviceController;
 	public TabelaFiltro tabelaFiltro;
 	public boolean iser;
@@ -37,6 +41,11 @@ public class MidiaSocialServiceView extends ViewComponente {
 		tabelaFiltro = new TabelaFiltro("Servico");
 		tabelaFiltro.filterField.addListener(new TextChangeListener() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void textChange(TextChangeEvent event) {
 				//filtro(event);  
 			}
@@ -44,6 +53,11 @@ public class MidiaSocialServiceView extends ViewComponente {
 		
 		tabelaFiltro.tableMain.addListener(new ItemClickListener() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			/**
 			 * ITEM CLICK EVENTO
 			 */
@@ -60,6 +74,11 @@ public class MidiaSocialServiceView extends ViewComponente {
 		tabelaFiltro.tableMain.addActionHandler(new Action.Handler() {
 
  			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			/**
 			 * ITEM CLICK BOTAO DIREITO EVENTO
 			 */
 			public void handleAction(Action action, Object sender, final Object target) {
@@ -73,16 +92,21 @@ public class MidiaSocialServiceView extends ViewComponente {
  							new MessageBox.ButtonConfig(MessageBox.ButtonType.NO, "Nao"));
  				  	mb.show(new MessageBox.EventListener() {
  				  		 
- 						public void buttonClicked(ButtonType buttonType) {
+ 						/**
+						 * 
+						 */
+						private static final long serialVersionUID = 1L;
+
+						public void buttonClicked(ButtonType buttonType) {
  							
  							if (buttonType.equals(buttonType.YES)) {
  								try {
  									tabelaFiltro.tableMain.removeItem(target);
  									remover(target);
  									MessageBox mb = new MessageBox(getWindow(), 
- 										"er", 
+ 										"Remoção", 
  										MessageBox.Icon.INFO, 
- 										"Servico ido",  
+ 										"Servico removido",  
  										new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
  									mb.show();
  									System.out.println("RESULTADO TARGET: "+target);
@@ -148,10 +172,11 @@ public class MidiaSocialServiceView extends ViewComponente {
 	public void editar() {
 		try{
 			Servico servico = servicoForm.getServico();
-			serviceController.editar(servico);
 			removeComponent(getComponent());
 			addComponent(modoLayoutTable);
 			setComponent(modoLayoutTable);
+			
+			if(serviceController.alterar(servico)){
 			
 			MessageBox mb = new MessageBox(getWindow(), 
 						"Alterar", 
@@ -159,7 +184,8 @@ public class MidiaSocialServiceView extends ViewComponente {
                         "Serivco Alterado",  
                         new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
               	mb.show();
-	 		
+			}
+			
 			buttonAdicionar.setVisible(true);
 			buttonDeletar.setVisible(false);
 			buttonClonar.setVisible(false);
@@ -263,39 +289,10 @@ public class MidiaSocialServiceView extends ViewComponente {
 			}
 		});	
 		
-		//ativar servico
-		if(serviceController.getServico().isAtivo())
-			buttonEditar.setCaption("Desativar");
-		else 
-			buttonEditar.setCaption("Ativar");
-		
-		buttonEditar.setVisible(true);
-		buttonEditar.addListener(new ClickListener() {
-			
-			@Override
-			public void buttonClick(ClickEvent event) {
-				if (serviceController.alterarServico()){
-					MessageBox mb = new MessageBox(getWindow(), 
-							"Servico", 
-			                MessageBox.Icon.INFO, "Servico Ativo",  
-			                new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
-			      	mb.show(); 
-			      	buttonEditar.setCaption("Desativar");
-				}
-				else{
-					MessageBox mb = new MessageBox(getWindow(), 
-							"Servico", 
-			                MessageBox.Icon.INFO, "Servico desativado",  
-			                new MessageBox.ButtonConfig(ButtonType.OK, "Ok"));
-			      	mb.show(); 
-			      	buttonEditar.setCaption("Ativar");
-				}
-			}
-		});
-		
 		buttonAdicionar.setVisible(false);
 		buttonDeletar.setVisible(false);
 		buttonSalvar.setVisible(false);
+		buttonEditar.setVisible(true);
 		buttonVoltar.setVisible(true);
 	}
 	
@@ -314,6 +311,5 @@ public class MidiaSocialServiceView extends ViewComponente {
 	
 	public void defaultTable(){
 		tabelaFiltro.tableMain.setContainerDataSource(new BeanItemContainer<Servico>(Servico.class, Servico.listaServico()));
-		//midiaSocialServiceView.tabelaFiltro.tableMain.setVisibleColumns(new Object[]{"idInterno", "nome", "screenName", "status"});
 	}
 }

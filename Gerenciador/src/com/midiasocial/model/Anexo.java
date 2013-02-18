@@ -23,7 +23,7 @@ public class Anexo {
 		
 	@Column(name = "anexourl")
 	private String anexoUrl;
-		
+	
 	@ManyToOne
 	@JoinColumn(name = "publicacao")
 	private Publicacao publicacao;

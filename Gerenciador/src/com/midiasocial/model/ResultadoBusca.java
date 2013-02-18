@@ -57,8 +57,7 @@ public class ResultadoBusca {
 	public Long getIdInterno() {
 		return idInterno;
 	}
-
-
+	
 	public void setIdInterno(Long idInterno) {
 		this.idInterno = idInterno;
 	}
