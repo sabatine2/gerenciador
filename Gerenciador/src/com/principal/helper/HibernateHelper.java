@@ -35,6 +35,7 @@ public class HibernateHelper{
 			System.setProperty("hibernate.connection.url",dados.getUrl());
 			System.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLServer2008Dialect");
 			/*
+			
 			System.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 			*/
 			System.setProperty("hibernate.show_sql","false");
@@ -97,34 +98,4 @@ public class HibernateHelper{
        }  
    }  
 	
-	public static boolean testeConexao(Aplicacao app) throws DAOException{
-		 //jdbc:sqlserver://localhost:1433;databaseName=CRM_MIDIA
-		 String url             = app.getUrl();  
-		 String user            = app.getUsuarioBanco();  
-		 String pwd             = app.getSenhaBanco();  
-		 
-		 boolean sucesso = false;
-		 
-	     try {  
-	    	 try {
-			    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
-			 } catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			 con = DriverManager.getConnection(url, user, pwd);  
-	         con.setAutoCommit(false);  
-	         sucesso = true;
-	         
-	     } catch (ClassNotFoundException e) {  
-	    	 throw new DAOException("Ocorreu um erro no sistema ao se conectar em" + url  
-	                 + "\n, se o problema persistir contate o administrador:\n Driver n‹o encontrado!");
-	     } catch (SQLException e) {  
-	    	 throw new DAOException("Ocorreu um erro no sistema, se o problema persistir contate o administrador:\n Erro na Conex‹o com Banco\n"+ e);  
-	     }  
-	    
-	     return sucesso;
-	  }
 }

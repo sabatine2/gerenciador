@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
@@ -239,8 +240,9 @@ public class Aplicacao {
 		return null;
 	}
 	
+
 	/**
-     * Verifica a conexão com o banco de dados
+     * Verifica a conex‹o com o banco de dados
      * 
      * @return Returna true para ok e false para falha
      * 
@@ -248,15 +250,36 @@ public class Aplicacao {
 	public boolean testaConexao() throws DAOException{
 		
 		sucessoBanco = true;
-         
-         try {
-				HibernateHelper.testeConexao(this);
-			 } catch (DAOException e1) {
-			    sucessoBanco = false;
-			    throw new DAOException(e1.getMessage());
-			 } 
-         
-         return sucessoBanco;
+         //jdbc:sqlserver://localhost:1433;databaseName=CRM_MIDIA
+		String url             = getUrl();  
+		String user            = getUsuarioBanco();  
+		String pwd             = getSenhaBanco();  
+		Connection con  = null;  
+			 
+		     try {  
+		    	 try {
+				    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+				 } catch (InstantiationException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				 con = DriverManager.getConnection(url, user, pwd);  
+		         con.setAutoCommit(false);  
+		         sucessoBanco = true;
+		         
+		     } catch (ClassNotFoundException e) {  
+		    	 sucessoBanco = false;
+		    	 throw new DAOException("Ocorreu um erro no sistema ao se conectar em" + url  
+		                 + "\n, se o problema persistir contate o administrador:\n Driver n‹o encontrado!");
+		    	
+		     } catch (SQLException e) {  
+		    	 sucessoBanco = false;
+		    	 throw new DAOException("Ocorreu um erro no sistema, se o problema persistir contate o administrador:\n Erro na Conex‹o com Banco\n"+ e);  
+		    
+		     }  
+		 return sucessoBanco;
 	}
 	
 }
